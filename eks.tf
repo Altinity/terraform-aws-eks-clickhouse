@@ -4,13 +4,13 @@ resource "aws_eks_cluster" "this" {
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids              = [for s in aws_subnet.my_subnet : s.id]
+    subnet_ids              = [for s in aws_subnet.this : s.id]
     endpoint_private_access = true
     endpoint_public_access  = true
   }
 }
 
-resource "aws_iam_openid_connect_provider" "eks_oidc_provider" {
+resource "aws_iam_openid_connect_provider" "this" {
   url            = aws_eks_cluster.this.identity[0].oidc[0].issuer
   client_id_list = ["sts.amazonaws.com"]
 
@@ -26,7 +26,7 @@ resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "node-group-1"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [for s in aws_subnet.my_subnet : s.id]
+  subnet_ids      = [for s in aws_subnet.this : s.id]
 
   scaling_config {
     desired_size = 2
