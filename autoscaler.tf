@@ -80,6 +80,6 @@ resource "null_resource" "cluster_autoscaler" {
   }
 
   triggers = {
-    always_run = "${timestamp()}"
+    manifest   = local_file.autoscaler_manifest.content
   }
 }

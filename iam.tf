@@ -62,11 +62,6 @@ resource "aws_iam_policy" "eks_admin_policy" {
         Action   = "iam:PassRole",
         Resource = aws_iam_role.eks_cluster_role.arn
       },
-      {
-        Effect   = "Allow",
-        Action   = "ssm:StartSession",
-        Resource = "arn:aws:ssm:*:*:document/AWS-StartPortForwardingSession"
-      }
     ]
   })
 }

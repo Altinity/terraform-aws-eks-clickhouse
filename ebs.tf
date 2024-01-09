@@ -57,7 +57,6 @@ resource "null_resource" "apply_ebs_csi_driver" {
   }
 
   triggers = {
-    always_run = "${timestamp()}"
     manifest   = local_file.ebs_csi_driver_manifest.content
   }
 }
