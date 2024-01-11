@@ -30,7 +30,6 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachmen
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
 }
 
-
 resource "aws_iam_policy" "eks_admin_policy" {
   name        = "${local.cluster_name}-eks-admin-policy"
   description = "EKS Admin Policy"
@@ -88,7 +87,6 @@ resource "aws_iam_role_policy_attachment" "eks_admin_attach" {
   policy_arn = aws_iam_policy.eks_admin_policy.arn
 }
 
-
 resource "aws_iam_role" "eks_node_role" {
   name = "${local.cluster_name}-eks-node-role"
 
@@ -145,6 +143,7 @@ resource "aws_iam_openid_connect_provider" "this" {
   }
 }
 
+// TODO: Rework this
 resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "node-group-1"

@@ -6,13 +6,13 @@ data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
 
 data "aws_eks_cluster" "this" {
-  name = local.cluster_name
-  depends_on = [ aws_eks_cluster.this]
+  name       = local.cluster_name
+  depends_on = [aws_eks_cluster.this]
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = local.cluster_name
-  depends_on = [ aws_eks_cluster.this]
+  name       = local.cluster_name
+  depends_on = [aws_eks_cluster.this]
 }
 
 provider "kubernetes" {
@@ -26,12 +26,12 @@ provider "kubernetes" {
 locals {
   cluster_version = "1.27"
   region          = "sa-east-1"
-  cluster_name    = "nachos-cluster"
+  cluster_name    = "clickhouse-cluster"
   account_id      = data.aws_caller_identity.current.account_id
   azs             = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  image_tag        = "v1.26.1"
-  replicas     = 2
+  image_tag = "v1.26.1"
+  replicas  = 2
 
   tags = {}
 

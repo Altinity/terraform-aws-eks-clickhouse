@@ -16,10 +16,7 @@ resource "aws_subnet" "this" {
   cidr_block              = local.subnets[count.index].cidr_block
   availability_zone       = local.subnets[count.index].az
   map_public_ip_on_launch = true
-
-  tags = {
-    Name = "nachos-subnet-${count.index + 1}"
-  }
+  tags                    = local.tags
 }
 
 resource "aws_route_table" "this" {

@@ -502,21 +502,21 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
     name      = "ebs-csi-node"
     namespace = "kube-system"
     labels = {
-      "app.kubernetes.io/name"      = "aws-ebs-csi-driver"
-      "app.kubernetes.io/instance"  = "aws-ebs-csi-driver"
-      "helm.sh/chart"               = "aws-ebs-csi-driver-2.20.0"
-      "app.kubernetes.io/version"   = "1.20.0"
-      "app.kubernetes.io/component" = "csi-driver"
-      "app.kubernetes.io/managed-by"= "Helm"
+      "app.kubernetes.io/name"       = "aws-ebs-csi-driver"
+      "app.kubernetes.io/instance"   = "aws-ebs-csi-driver"
+      "helm.sh/chart"                = "aws-ebs-csi-driver-2.20.0"
+      "app.kubernetes.io/version"    = "1.20.0"
+      "app.kubernetes.io/component"  = "csi-driver"
+      "app.kubernetes.io/managed-by" = "Helm"
     }
   }
 
   spec {
     selector {
       match_labels = {
-        "app" = "ebs-csi-node"
-        "app.kubernetes.io/name"      = "aws-ebs-csi-driver"
-        "app.kubernetes.io/instance"  = "aws-ebs-csi-driver"
+        "app"                        = "ebs-csi-node"
+        "app.kubernetes.io/name"     = "aws-ebs-csi-driver"
+        "app.kubernetes.io/instance" = "aws-ebs-csi-driver"
       }
     }
 
@@ -530,13 +530,13 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
     template {
       metadata {
         labels = {
-          "app" = "ebs-csi-node"
-          "app.kubernetes.io/name"      = "aws-ebs-csi-driver"
-          "app.kubernetes.io/instance"  = "aws-ebs-csi-driver"
-          "helm.sh/chart"               = "aws-ebs-csi-driver-2.20.0"
-          "app.kubernetes.io/version"   = "1.20.0"
-          "app.kubernetes.io/component" = "csi-driver"
-          "app.kubernetes.io/managed-by"= "Helm"
+          "app"                          = "ebs-csi-node"
+          "app.kubernetes.io/name"       = "aws-ebs-csi-driver"
+          "app.kubernetes.io/instance"   = "aws-ebs-csi-driver"
+          "helm.sh/chart"                = "aws-ebs-csi-driver-2.20.0"
+          "app.kubernetes.io/version"    = "1.20.0"
+          "app.kubernetes.io/component"  = "csi-driver"
+          "app.kubernetes.io/managed-by" = "Helm"
         }
       }
 
@@ -567,16 +567,16 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
         }
 
         security_context {
-          fs_group   = 0
-          run_as_group = 0
+          fs_group        = 0
+          run_as_group    = 0
           run_as_non_root = false
-          run_as_user  = 0
+          run_as_user     = 0
         }
 
         # Define containers here
         container {
-          name  = "ebs-plugin"
-          image = "public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver:v1.20.0"
+          name              = "ebs-plugin"
+          image             = "public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver:v1.20.0"
           image_pull_policy = "IfNotPresent"
 
           args = [
@@ -601,8 +601,8 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
           }
 
           volume_mount {
-            name       = "kubelet-dir"
-            mount_path = "/var/lib/kubelet"
+            name              = "kubelet-dir"
+            mount_path        = "/var/lib/kubelet"
             mount_propagation = "Bidirectional"
           }
 
@@ -617,7 +617,7 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
           }
 
           port {
-            name          = "healthz"
+            name           = "healthz"
             container_port = 9808
             protocol       = "TCP"
           }
@@ -645,8 +645,8 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
           }
 
           security_context {
-            privileged = true
-            read_only_root_filesystem  = true
+            privileged                = true
+            read_only_root_filesystem = true
           }
         }
 
@@ -1123,9 +1123,9 @@ resource "kubernetes_storage_class" "gp3" {
   storage_provisioner = "ebs.csi.aws.com"
 
   parameters = {
-    encrypted  = "true"
-    fsType     = "ext4"
-    type       = "gp3"
+    encrypted = "true"
+    fsType    = "ext4"
+    type      = "gp3"
   }
 
   reclaim_policy         = "Delete"
