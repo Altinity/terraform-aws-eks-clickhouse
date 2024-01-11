@@ -2,26 +2,12 @@ resource "aws_vpc" "this" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-
-  tags = {
-    Name = "nachos-vpc"
-  }
+  tags                 = local.tags
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
-
-  tags = {
-    Name = "nachos-gateway"
-  }
-}
-
-locals {
-  subnets = [
-    { cidr_block = "10.0.1.0/24", az = "sa-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "sa-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "sa-east-1c" }
-  ]
+  tags   = local.tags
 }
 
 resource "aws_subnet" "this" {
@@ -44,9 +30,7 @@ resource "aws_route_table" "this" {
     gateway_id = aws_internet_gateway.this.id
   }
 
-  tags = {
-    Name = "nachos-root-table"
-  }
+  tags = local.tags
 }
 
 resource "aws_route_table_association" "this" {
@@ -59,10 +43,6 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${local.region}.s3"
   vpc_endpoint_type = "Gateway"
-
-  route_table_ids = [aws_route_table.this.id]
-
-  tags = {
-    Name = "nachos-s3-endpoint"
-  }
+  route_table_ids   = [aws_route_table.this.id]
+  tags              = local.tags
 }
