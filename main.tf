@@ -16,11 +16,12 @@ data "aws_eks_cluster_auth" "this" {
 }
 
 provider "kubernetes" {
+  config_path            = "~/.kube/config"
   host                   = data.aws_eks_cluster.this.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.this.token
+  config_context         = data.aws_eks_cluster.this.arn
 }
-
 
 // TODO: Move most of this to variables
 locals {
@@ -41,4 +42,7 @@ locals {
     { cidr_block = "10.0.2.0/24", az = "sa-east-1b" },
     { cidr_block = "10.0.3.0/24", az = "sa-east-1c" }
   ]
+
+  public_access_cidrs = []
+  instance_types      = ["t3.medium"]
 }

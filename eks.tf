@@ -128,7 +128,10 @@ resource "aws_eks_cluster" "this" {
     subnet_ids              = [for s in aws_subnet.this : s.id]
     endpoint_private_access = true
     endpoint_public_access  = true
+    public_access_cidrs     = length(local.public_access_cidrs) > 0 ? local.public_access_cidrs : ["0.0.0.0/0"]
   }
+
+  tags = local.tags
 }
 
 resource "aws_iam_openid_connect_provider" "this" {
@@ -143,12 +146,21 @@ resource "aws_iam_openid_connect_provider" "this" {
   }
 }
 
-// TODO: Rework this
+resource "random_string" "node_group_name" {
+  length  = 6
+  lower   = true
+  upper   = false
+  special = false
+}
+
+// TODO: Re-work and set autoscaler properly!
 resource "aws_eks_node_group" "this" {
+  for_each = { for s in aws_subnet.this : s.id => s }
+
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "node-group-1"
+  node_group_name = "${local.cluster_name}-node-group-${each.key}-${random_string.node_group_name.result}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [for s in aws_subnet.this : s.id]
+  subnet_ids      = [each.value.id]
 
   scaling_config {
     desired_size = 2
@@ -156,6 +168,9 @@ resource "aws_eks_node_group" "this" {
     min_size     = 1
   }
 
-  instance_types = ["t3.medium"]
+  instance_types = local.instance_types
   disk_size      = 20
+
+  tags = local.tags
 }
+
