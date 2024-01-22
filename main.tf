@@ -30,8 +30,8 @@ locals {
   account_id   = data.aws_caller_identity.current.account_id
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  cluster_version = "1.27"
-  image_tag       = "v1.27.1"
+  cluster_version = "1.26"
+  image_tag       = "v1.26.1"
   replicas        = 2
 
   tags = {}

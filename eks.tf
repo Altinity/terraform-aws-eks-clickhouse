@@ -153,14 +153,13 @@ resource "random_string" "node_group_name" {
   special = false
 }
 
-// TODO: Re-work and set autoscaler properly!
 resource "aws_eks_node_group" "this" {
-  for_each = { for s in aws_subnet.this : s.id => s }
+  count = length(aws_subnet.this)
 
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${local.cluster_name}-node-group-${each.key}-${random_string.node_group_name.result}"
+  node_group_name = "${local.cluster_name}-node-group-${count.index}-${random_string.node_group_name.result}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [each.value.id]
+  subnet_ids      = [aws_subnet.this[count.index].id]
 
   scaling_config {
     desired_size = 2
@@ -171,6 +170,12 @@ resource "aws_eks_node_group" "this" {
   instance_types = local.instance_types
   disk_size      = 20
 
-  tags = local.tags
+  tags = merge(
+    local.tags,
+    {
+      "k8s.io/cluster-autoscaler/enabled"                      = "true",
+      "k8s.io/cluster-autoscaler/${aws_eks_cluster.this.name}" = "owned"
+    }
+  )
 }
 

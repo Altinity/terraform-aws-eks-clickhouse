@@ -573,7 +573,6 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
           run_as_user     = 0
         }
 
-        # Define containers here
         container {
           name              = "ebs-plugin"
           image             = "public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver:v1.20.0"
@@ -598,6 +597,11 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
                 field_path = "spec.nodeName"
               }
             }
+          }
+
+          env {
+            name  = "AWS_REGION"
+            value = local.region
           }
 
           volume_mount {
@@ -650,8 +654,107 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
           }
         }
 
-        # Additional containers: node-driver-registrar and liveness-probe
-        # ...
+        container {
+          name              = "node-driver-registrar"
+          image             = "public.ecr.aws/eks-distro/kubernetes-csi/node-driver-registrar:v2.8.0-eks-1-27-3"
+          image_pull_policy = "IfNotPresent"
+
+          args = [
+            "--csi-address=$(ADDRESS)",
+            "--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)",
+            "--v=2"
+          ]
+
+          env {
+            name  = "ADDRESS"
+            value = "/csi/csi.sock"
+          }
+
+          env {
+            name  = "DRIVER_REG_SOCK_PATH"
+            value = "/var/lib/kubelet/plugins/ebs.csi.aws.com/csi.sock"
+          }
+
+          liveness_probe {
+            initial_delay_seconds = 30
+            timeout_seconds       = 15
+            period_seconds        = 90
+
+            exec {
+              command = [
+                "/csi-node-driver-registrar",
+                "--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)",
+                "--mode=kubelet-registration-probe"
+              ]
+            }
+          }
+
+          volume_mount {
+            name       = "plugin-dir"
+            mount_path = "/csi"
+          }
+
+          volume_mount {
+            name       = "registration-dir"
+            mount_path = "/registration"
+          }
+
+          volume_mount {
+            name       = "probe-dir"
+            mount_path = "/var/lib/kubelet/plugins/ebs.csi.aws.com/"
+          }
+
+          resources {
+            limits = {
+              cpu    = "200m"
+              memory = "20Mi"
+            }
+
+            requests = {
+              cpu    = "5m"
+              memory = "10Mi"
+            }
+          }
+
+
+
+          security_context {
+            allow_privilege_escalation = false
+            read_only_root_filesystem  = true
+          }
+        }
+
+        container {
+          name              = "liveness-probe"
+          image             = "public.ecr.aws/eks-distro/kubernetes-csi/livenessprobe:v2.10.0-eks-1-27-3"
+          image_pull_policy = "IfNotPresent"
+
+          args = [
+            "--csi-address=/csi/csi.sock"
+          ]
+
+          volume_mount {
+            name       = "plugin-dir"
+            mount_path = "/csi"
+          }
+
+          resources {
+            limits = {
+              cpu    = "200m"
+              memory = "20Mi"
+            }
+
+            requests = {
+              cpu    = "5m"
+              memory = "10Mi"
+            }
+          }
+
+          security_context {
+            allow_privilege_escalation = false
+            read_only_root_filesystem  = true
+          }
+        }
 
         volume {
           name = "kubelet-dir"
@@ -795,7 +898,6 @@ resource "kubernetes_deployment" "ebs_csi_controller" {
           run_as_user     = 1000
         }
 
-        # Define containers here
         container {
           name              = "ebs-plugin"
           image             = "public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver:v1.20.0"
@@ -936,7 +1038,6 @@ resource "kubernetes_deployment" "ebs_csi_controller" {
             read_only_root_filesystem  = true
           }
         }
-
 
         container {
           name              = "csi-attacher"
