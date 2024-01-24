@@ -247,7 +247,7 @@ resource "kubernetes_deployment" "cluster_autoscaler" {
   }
 
   spec {
-    replicas = local.replicas
+    replicas = var.replicas
 
     selector {
       match_labels = {
@@ -278,7 +278,7 @@ resource "kubernetes_deployment" "cluster_autoscaler" {
         service_account_name = "cluster-autoscaler"
 
         container {
-          image = "k8s.gcr.io/autoscaling/cluster-autoscaler:${local.image_tag}"
+          image = "k8s.gcr.io/autoscaling/cluster-autoscaler:${var.image_tag}"
           name  = "cluster-autoscaler"
 
           resources {
@@ -299,7 +299,7 @@ resource "kubernetes_deployment" "cluster_autoscaler" {
             "--cloud-provider=aws",
             "--skip-nodes-with-local-storage=false",
             "--expander=most-pods",
-            "--node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${local.cluster_name}",
+            "--node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${var.cluster_name}",
             "--balance-similar-node-groups",
             "--skip-nodes-with-system-pods=false"
           ]

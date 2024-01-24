@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "ebs_csi_driver_assume_role_policy" {
 }
 
 resource "aws_iam_role" "ebs_csi_driver_role" {
-  name               = "${local.cluster_name}-eks-ebs-csi-driver"
+  name               = "${var.cluster_name}-eks-ebs-csi-driver"
   assume_role_policy = data.aws_iam_policy_document.ebs_csi_driver_assume_role_policy.json
 }
 
@@ -601,7 +601,7 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
 
           env {
             name  = "AWS_REGION"
-            value = local.region
+            value = var.region
           }
 
           volume_mount {
@@ -905,8 +905,8 @@ resource "kubernetes_deployment" "ebs_csi_controller" {
           args = [
             "controller",
             "--endpoint=$(CSI_ENDPOINT)",
-            "--extra-tags=${join(",", [for k, v in local.tags : "${k}=${v}"])}",
-            "--k8s-tag-cluster-id=${local.cluster_name}",
+            "--extra-tags=${join(",", [for k, v in var.tags : "${k}=${v}"])}",
+            "--k8s-tag-cluster-id=${var.cluster_name}",
             "--logging-format=text",
             "--user-agent-extra=helm",
             "--v=5"
@@ -1210,6 +1210,10 @@ resource "kubernetes_csi_driver_v1" "ebs_csi_aws_com" {
   spec {
     attach_required   = true
     pod_info_on_mount = false
+
+    volume_lifecycle_modes = [
+      "Persistent"
+    ]
   }
 }
 

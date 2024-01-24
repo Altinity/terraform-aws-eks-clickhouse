@@ -1,22 +1,22 @@
 resource "aws_vpc" "this" {
-  cidr_block           = local.cidr
+  cidr_block           = var.cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags                 = local.tags
+  tags                 = var.tags
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
-  tags   = local.tags
+  tags   = var.tags
 }
 
 resource "aws_subnet" "this" {
-  count                   = length(local.subnets)
+  count                   = length(var.subnets)
   vpc_id                  = aws_vpc.this.id
-  cidr_block              = local.subnets[count.index].cidr_block
-  availability_zone       = local.subnets[count.index].az
+  cidr_block              = var.subnets[count.index].cidr_block
+  availability_zone       = var.subnets[count.index].az
   map_public_ip_on_launch = true
-  tags                    = local.tags
+  tags                    = var.tags
 }
 
 resource "aws_route_table" "this" {
@@ -27,7 +27,7 @@ resource "aws_route_table" "this" {
     gateway_id = aws_internet_gateway.this.id
   }
 
-  tags = local.tags
+  tags = var.tags
 }
 
 resource "aws_route_table_association" "this" {
@@ -38,8 +38,8 @@ resource "aws_route_table_association" "this" {
 
 resource "aws_vpc_endpoint" "s3_endpoint" {
   vpc_id            = aws_vpc.this.id
-  service_name      = "com.amazonaws.${local.region}.s3"
+  service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = [aws_route_table.this.id]
-  tags              = local.tags
+  tags              = var.tags
 }
