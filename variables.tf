@@ -7,7 +7,6 @@ variable "region" {
 variable "cluster_name" {
   description = "The name of the cluster"
   type        = string
-  default     = "clickhouse-cluster"
 }
 
 variable "cluster_version" {

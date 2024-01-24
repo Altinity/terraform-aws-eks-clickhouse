@@ -16,11 +16,9 @@ data "aws_eks_cluster_auth" "this" {
 }
 
 provider "kubernetes" {
-  config_path            = "~/.kube/config"
   host                   = data.aws_eks_cluster.this.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.this.token
-  config_context         = data.aws_eks_cluster.this.arn
 }
 
 
