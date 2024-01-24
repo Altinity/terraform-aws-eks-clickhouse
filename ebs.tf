@@ -235,13 +235,6 @@ resource "kubernetes_cluster_role" "ebs_external_resizer_role" {
     }
   }
 
-  # Uncomment the following rule if your plugin requires secrets for provisioning
-  # rule {
-  #   api_groups = [""]
-  #   resources  = ["secrets"]
-  #   verbs      = ["get", "list", "watch"]
-  # }
-
   rule {
     api_groups = [""]
     resources  = ["persistentvolumes"]
@@ -297,13 +290,6 @@ resource "kubernetes_cluster_role" "ebs_external_snapshotter_role" {
     resources  = ["events"]
     verbs      = ["list", "watch", "create", "update", "patch"]
   }
-
-  # Uncomment if secrets are needed
-  # rule {
-  #   api_groups = [""]
-  #   resources  = ["secrets"]
-  #   verbs      = ["get", "list"]
-  # }
 
   rule {
     api_groups = ["snapshot.storage.k8s.io"]
@@ -375,7 +361,6 @@ resource "kubernetes_cluster_role_binding" "ebs_csi_node_getter_binding" {
     namespace = "kube-system"
   }
 }
-
 
 resource "kubernetes_cluster_role_binding" "ebs_csi_provisioner_binding" {
   metadata {
@@ -468,7 +453,6 @@ resource "kubernetes_role" "ebs_csi_leases_role" {
   }
 }
 
-
 resource "kubernetes_role_binding" "ebs_csi_leases_rolebinding" {
   metadata {
     name      = "ebs-csi-leases-rolebinding"
@@ -495,7 +479,6 @@ resource "kubernetes_role_binding" "ebs_csi_leases_rolebinding" {
     namespace = "kube-system"
   }
 }
-
 
 resource "kubernetes_daemonset" "ebs_csi_node" {
   metadata {
@@ -796,7 +779,6 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
     }
   }
 }
-
 
 resource "kubernetes_deployment" "ebs_csi_controller" {
   metadata {
@@ -1217,7 +1199,7 @@ resource "kubernetes_csi_driver_v1" "ebs_csi_aws_com" {
   }
 }
 
-resource "kubernetes_storage_class" "gp3" {
+resource "kubernetes_storage_class" "gp3-encrypted" {
   metadata {
     name = "gp3-encrypted"
     annotations = {

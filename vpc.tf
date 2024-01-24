@@ -36,7 +36,7 @@ resource "aws_route_table_association" "this" {
   route_table_id = aws_route_table.this.id
 }
 
-resource "aws_vpc_endpoint" "s3_endpoint" {
+resource "aws_vpc_endpoint" "this" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"

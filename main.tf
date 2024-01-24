@@ -1,5 +1,5 @@
-provider "aws" {
-  region = var.region
+locals {
+  account_id = data.aws_caller_identity.current.account_id
 }
 
 data "aws_caller_identity" "current" {}
@@ -21,7 +21,6 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
-
-locals {
-  account_id = data.aws_caller_identity.current.account_id
+provider "aws" {
+  region = var.region
 }
