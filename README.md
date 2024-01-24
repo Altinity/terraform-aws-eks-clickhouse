@@ -15,7 +15,6 @@ provider "kubernetes" {
 
 module "eks_clickhouse" {
   source  = "github.com/Altinity/terraform-eks-clickhouse"
-  version = "0.1.0"
 
   region  = "us-east-1"
   cidr    = "10.0.0.0/16"
@@ -25,7 +24,7 @@ module "eks_clickhouse" {
     { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
   ]
 }
-
+```
 
 ## Legal
 
