@@ -25,7 +25,7 @@ provider "kubernetes" {
 
 // TODO: Move most of this to variables
 locals {
-  region       = "sa-east-1"
+  region       = "us-east-1"
   cluster_name = "clickhouse-cluster"
   account_id   = data.aws_caller_identity.current.account_id
   azs          = slice(data.aws_availability_zones.available.names, 0, 3)
@@ -38,11 +38,11 @@ locals {
 
   cidr = "10.0.0.0/16"
   subnets = [
-    { cidr_block = "10.0.1.0/24", az = "sa-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "sa-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "sa-east-1c" }
+    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
+    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
+    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
   ]
 
   public_access_cidrs = []
-  instance_types      = ["t3.medium"]
+  instance_types      = ["m5.large"]
 }

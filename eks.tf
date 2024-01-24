@@ -146,18 +146,11 @@ resource "aws_iam_openid_connect_provider" "this" {
   }
 }
 
-resource "random_string" "node_group_name" {
-  length  = 6
-  lower   = true
-  upper   = false
-  special = false
-}
-
 resource "aws_eks_node_group" "this" {
   count = length(aws_subnet.this)
 
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${local.cluster_name}-node-group-${count.index}-${random_string.node_group_name.result}"
+  node_group_name = "${local.cluster_name}-node-group-${count.index}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = [aws_subnet.this[count.index].id]
 
