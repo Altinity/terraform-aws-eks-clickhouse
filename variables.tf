@@ -73,7 +73,7 @@ variable "node_pools_config" {
     }
 
     disk_size      = 20
-    instance_types = ["m5.large"]
+    instance_types = ["m5.large", "m5.4xlarge"]
   }
 }
 

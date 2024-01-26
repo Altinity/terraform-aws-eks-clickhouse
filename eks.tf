@@ -149,13 +149,28 @@ resource "aws_iam_openid_connect_provider" "this" {
   )
 }
 
+locals {
+  node_pool_combinations = flatten([
+    for subnet in aws_subnet.this : [
+      for itype in var.node_pools_config.instance_types : {
+        subnet_id     = subnet.id
+        instance_type = itype
+      }
+    ]
+  ])
+}
+
+output "node_pool_combinations" {
+  value = local.node_pool_combinations
+}
+
 resource "aws_eks_node_group" "this" {
-  count = length(aws_subnet.this)
+  count = length(local.node_pool_combinations)
 
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "${var.cluster_name}-node-group-${count.index}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [aws_subnet.this[count.index].id]
+  subnet_ids      = [local.node_pool_combinations[count.index].subnet_id]
 
   scaling_config {
     desired_size = var.node_pools_config.scaling_config.desired_size
@@ -164,7 +179,7 @@ resource "aws_eks_node_group" "this" {
   }
 
   disk_size      = var.node_pools_config.disk_size
-  instance_types = var.node_pools_config.instance_types
+  instance_types = [local.node_pool_combinations[count.index].instance_type]
 
   tags = merge(
     var.tags,
