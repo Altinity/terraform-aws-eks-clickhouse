@@ -7,6 +7,7 @@ variable "region" {
 variable "cluster_name" {
   description = "The name of the cluster"
   type        = string
+  default     = "clickhouse-cluster-nacho"
 }
 
 variable "cluster_version" {
@@ -43,21 +44,41 @@ variable "cidr" {
 variable "subnets" {
   description = "List of subnets"
   type        = list(map(string))
-  default     = [
+  default = [
     { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
     { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
     { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
   ]
 }
 
+variable "node_pools_config" {
+  description = "Node pools configuration. The module will create a node pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different node pools."
+
+  type = object({
+    scaling_config = object({
+      desired_size = number
+      max_size     = number
+      min_size     = number
+    })
+
+    disk_size      = number
+    instance_types = list(string)
+  })
+
+  default = {
+    scaling_config = {
+      desired_size = 2
+      max_size     = 10
+      min_size     = 0
+    }
+
+    disk_size      = 20
+    instance_types = ["m5.large"]
+  }
+}
+
 variable "public_access_cidrs" {
   description = "List of CIDRs for public access"
   type        = list(string)
   default     = []
-}
-
-variable "instance_types" {
-  description = "List of instance types"
-  type        = list(string)
-  default     = ["m5.large"]
 }

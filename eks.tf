@@ -141,9 +141,12 @@ resource "aws_iam_openid_connect_provider" "this" {
   # The thumbprint for the EKS OIDC Root CA
   thumbprint_list = ["9e99a48a9960b14926bb7f3b02e22da2b0ab7280"]
 
-  tags = {
-    Name = "${var.cluster_name}-eks-irsa"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.cluster_name}-eks-irsa"
+    }
+  )
 }
 
 resource "aws_eks_node_group" "this" {
@@ -154,16 +157,14 @@ resource "aws_eks_node_group" "this" {
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = [aws_subnet.this[count.index].id]
 
-  // TODO: Make this configurable with variables
   scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
+    desired_size = var.node_pools_config.scaling_config.desired_size
+    max_size     = var.node_pools_config.scaling_config.max_size
+    min_size     = var.node_pools_config.scaling_config.min_size
   }
 
-  // TODO: Make this configurable with variables
-  disk_size      = 20
-  instance_types = var.instance_types
+  disk_size      = var.node_pools_config.disk_size
+  instance_types = var.node_pools_config.instance_types
 
   tags = merge(
     var.tags,
