@@ -1,3 +1,5 @@
+**🚨 This module is still under development and not fully tested for production, use it under your own risk**
+
 # terraform-eks-clickhouse
 
 Terraform module for creating EKS clusters optimized for ClickHouse with EBS and autoscaling.
