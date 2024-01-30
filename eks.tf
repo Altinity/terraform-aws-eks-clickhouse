@@ -1,12 +1,12 @@
 locals {
-  node_pool_combinations = flatten([
+  node_pool_combinations = [for idx, np in flatten([
     for subnet in aws_subnet.this : [
       for itype in var.node_pools_config.instance_types : {
         subnet_id     = subnet.id
         instance_type = itype
       }
     ]
-  ])
+  ]) : np]
 }
 
 output "node_pool_combinations" {
@@ -135,21 +135,6 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_eks_cluster" "this" {
-  name     = var.cluster_name
-  version  = var.cluster_version
-  role_arn = aws_iam_role.eks_cluster_role.arn
-
-  vpc_config {
-    subnet_ids              = [for s in aws_subnet.this : s.id]
-    endpoint_private_access = true
-    endpoint_public_access  = true
-    public_access_cidrs     = length(var.public_access_cidrs) > 0 ? var.public_access_cidrs : ["0.0.0.0/0"]
-  }
-
-  tags = var.tags
-}
-
 resource "aws_iam_openid_connect_provider" "this" {
   url            = aws_eks_cluster.this.identity[0].oidc[0].issuer
   client_id_list = ["sts.amazonaws.com"]
@@ -165,13 +150,28 @@ resource "aws_iam_openid_connect_provider" "this" {
   )
 }
 
+resource "aws_eks_cluster" "this" {
+  name     = var.cluster_name
+  version  = var.cluster_version
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids              = [for s in aws_subnet.this : s.id]
+    endpoint_private_access = true
+    endpoint_public_access  = true
+    public_access_cidrs     = length(var.public_access_cidrs) > 0 ? var.public_access_cidrs : ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}
+
 resource "aws_eks_node_group" "this" {
-  count = length(local.node_pool_combinations)
+  for_each = { for idx, np in local.node_pool_combinations : tostring(idx) => np }
 
   cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${var.cluster_name}-node-group-${count.index}"
+  node_group_name = "${var.cluster_name}-node-group-${each.key}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [local.node_pool_combinations[count.index].subnet_id]
+  subnet_ids      = [each.value.subnet_id]
 
   scaling_config {
     desired_size = var.node_pools_config.scaling_config.desired_size
@@ -180,7 +180,7 @@ resource "aws_eks_node_group" "this" {
   }
 
   disk_size      = var.node_pools_config.disk_size
-  instance_types = [local.node_pool_combinations[count.index].instance_type]
+  instance_types = [each.value.instance_type]
 
   tags = merge(
     var.tags,
@@ -190,4 +190,3 @@ resource "aws_eks_node_group" "this" {
     }
   )
 }
-
