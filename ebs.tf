@@ -1219,4 +1219,3 @@ resource "kubernetes_storage_class" "gp3-encrypted" {
   volume_binding_mode    = "WaitForFirstConsumer"
   allow_volume_expansion = true
 }
-

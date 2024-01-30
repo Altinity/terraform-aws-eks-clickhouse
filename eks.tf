@@ -166,6 +166,7 @@ resource "aws_eks_cluster" "this" {
 }
 
 resource "aws_eks_node_group" "this" {
+  # Creates a node group for each combination of subnet and instance type
   for_each = { for idx, np in local.node_pool_combinations : tostring(idx) => np }
 
   cluster_name    = aws_eks_cluster.this.name
@@ -184,6 +185,8 @@ resource "aws_eks_node_group" "this" {
 
   tags = merge(
     var.tags,
+    # These tags allow k8s autoscaller to manage the node groups usign the auto-discovery setup
+    # https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#auto-discovery-setup
     {
       "k8s.io/cluster-autoscaler/enabled"                      = "true",
       "k8s.io/cluster-autoscaler/${aws_eks_cluster.this.name}" = "owned"

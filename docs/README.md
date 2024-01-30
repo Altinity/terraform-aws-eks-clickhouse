@@ -22,6 +22,14 @@ This architecture is designed to provide a scalable, secure, and efficient envir
 
 - **Storage and Resource Access**: Kubernetes roles, role bindings, and service accounts are defined for different components, particularly for the EBS CSI driver, ensuring the right permissions for accessing and managing resources.
 
+## Architecture:
+
+> ADD DIAGRAM HERE
+
+- [VPC & Subnets](./vpc.md)
+- [EKS Cluster & Node Groups](./eks.md)
+- [K8S Autoscaler](./autoscaler.md)
+- [EBS & CSI Driver](./ebs.md)
 
 ## Prerequisites
 
