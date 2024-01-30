@@ -1,3 +1,19 @@
+locals {
+  node_pool_combinations = flatten([
+    for subnet in aws_subnet.this : [
+      for itype in var.node_pools_config.instance_types : {
+        subnet_id     = subnet.id
+        instance_type = itype
+      }
+    ]
+  ])
+}
+
+output "node_pool_combinations" {
+  value = local.node_pool_combinations
+  description = "Node pool combinations based in subnets and instance types"
+}
+
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-eks-cluster-role"
 
@@ -147,21 +163,6 @@ resource "aws_iam_openid_connect_provider" "this" {
       Name = "${var.cluster_name}-eks-irsa"
     }
   )
-}
-
-locals {
-  node_pool_combinations = flatten([
-    for subnet in aws_subnet.this : [
-      for itype in var.node_pools_config.instance_types : {
-        subnet_id     = subnet.id
-        instance_type = itype
-      }
-    ]
-  ])
-}
-
-output "node_pool_combinations" {
-  value = local.node_pool_combinations
 }
 
 resource "aws_eks_node_group" "this" {

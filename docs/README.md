@@ -60,6 +60,7 @@ module "eks_clickhouse" {
   }
 }
 ```
+
 ## Requirements
 
 | Name | Version |
@@ -74,10 +75,6 @@ module "eks_clickhouse" {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.34.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.25.2 |
-
-## Modules
-
-No modules.
 
 ## Resources
 
@@ -158,4 +155,4 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_node_pool_combinations"></a> [node\_pool\_combinations](#output\_node\_pool\_combinations) | n/a |
+| <a name="output_node_pool_combinations"></a> [node\_pool\_combinations](#output\_node\_pool\_combinations) | Node pool combinations based in subnets and instance types |
