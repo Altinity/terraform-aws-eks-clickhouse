@@ -40,7 +40,7 @@ module "eks_clickhouse" {
 
 # Docs
 
-- [Terraform Registry](#)
+- [Terraform Registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest)
 - [Architecture](./docs/)
 
 ## Legal
