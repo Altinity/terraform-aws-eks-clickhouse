@@ -10,11 +10,6 @@ locals {
   ]) : np]
 }
 
-output "node_pool_combinations" {
-  value = local.node_pool_combinations
-  description = "Node pool combinations based in subnets and instance types"
-}
-
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-eks-cluster-role"
 
