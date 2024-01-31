@@ -1,4 +1,5 @@
 locals {
+  # Generate all node pools possible combinations of subnets and instance types
   node_pool_combinations = [for idx, np in flatten([
     for subnet in aws_subnet.this : [
       for itype in var.node_pools_config.instance_types : {
@@ -159,7 +160,7 @@ resource "aws_eks_cluster" "this" {
     subnet_ids              = [for s in aws_subnet.this : s.id]
     endpoint_private_access = true
     endpoint_public_access  = true
-    public_access_cidrs     = length(var.public_access_cidrs) > 0 ? var.public_access_cidrs : ["0.0.0.0/0"]
+    public_access_cidrs     = var.public_access_cidrs
   }
 
   tags = var.tags

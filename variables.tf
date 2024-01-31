@@ -78,7 +78,7 @@ variable "node_pools_config" {
 }
 
 variable "public_access_cidrs" {
-  description = "List of CIDRs for public access"
+  description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }

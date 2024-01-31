@@ -5,18 +5,21 @@ resource "aws_vpc" "this" {
   tags                 = var.tags
 }
 
-resource "aws_internet_gateway" "this" {
-  vpc_id = aws_vpc.this.id
-  tags   = var.tags
-}
-
 resource "aws_subnet" "this" {
   count                   = length(var.subnets)
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.subnets[count.index].cidr_block
   availability_zone       = var.subnets[count.index].az
-  map_public_ip_on_launch = true
   tags                    = var.tags
+
+  # Subnets are public, this means that eks control plane will be accesible over the internet
+  # You can enable IP restrictions at eks cluser level setting the variable `public_access_cidrs`
+  map_public_ip_on_launch = true
+}
+
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+  tags   = var.tags
 }
 
 resource "aws_route_table" "this" {

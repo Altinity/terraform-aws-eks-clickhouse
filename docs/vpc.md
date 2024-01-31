@@ -13,9 +13,9 @@ This Terraform configuration is setting up foundational networking components wi
 
 
 ### Subnets (`aws_subnet.this`):
-- Creates a specified number of subnets within the VPC across different availability zones for high availability.
+- Creates a specified number of **public** subnets within the VPC across different availability zones for high availability.
 - Each subnet is assigned a CIDR block and an availability zone based on the `var.subnets` variable.
-- The `map_public_ip_on_launch` attribute is set to `true`, which means instances launched in these subnets will be assigned a public IP address.
+- The `map_public_ip_on_launch` attribute is set to `true`, which means instances launched in these subnets will be assigned a public IP address. K8S control plane will be accessible from the internet, you can enable IP access restriction using the `public_access_cidrs` variable.
 
 ### Route Table (`aws_route_table.this`):
 - Defines a route table in the VPC.
