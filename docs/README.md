@@ -1,6 +1,6 @@
 # Terraform Module for EKS ClickHouse Cluster
 
-This Terraform module automates the deployment of a [ClickHouse database](https://clickhouse.com) cluster on [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service). It is designed to create and configure the necessary resources for a robust and scalable ClickHouse deployment.
+This Terraform module automates the deployment of a [ClickHouse](https://clickhouse.com) database cluster on [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service). It is designed to create and configure the necessary resources for a robust and scalable ClickHouse deployment.
 
 ## Key Features
 
