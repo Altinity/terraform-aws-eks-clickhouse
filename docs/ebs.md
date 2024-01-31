@@ -9,7 +9,7 @@ This Terraform setup is configuring the AWS Elastic Block Store (EBS) Container 
 - `aws_iam_role_policy_attachment.ebs_csi_driver_policy_attachment`: Attaches the `AmazonEBSCSIDriverPolicy` to the IAM role, granting necessary permissions for the CSI driver to manage EBS volumes.
 
 ### Kubernetes Service Accounts:
-- `kubernetes_service_account.ebs_csi_controller_sa` and `kubernetes_service_account.ebs_csi_node_sa`: These service accounts are used by the EBS CSI driver's controller and node components, respectively. The eks.`amazonaws.com/role-arn` annotation links these accounts to the IAM role created earlier.
+- `kubernetes_service_account.ebs_csi_controller_sa` and `kubernetes_service_account.ebs_csi_node_sa`: These service accounts are used by the EBS CSI driver's controller and node components, respectively. The `eks.amazonaws.com/role-arn` annotation links these accounts to the IAM role created earlier.
 
 
 ### Kubernetes Cluster Roles and Role Bindings:
@@ -23,4 +23,4 @@ This Terraform setup is configuring the AWS Elastic Block Store (EBS) Container 
 - `kubernetes_csi_driver_v1.ebs_csi_aws_com`: Registers the ebs.csi.aws.com CSI driver in the Kubernetes cluster.
 - `kubernetes_storage_class.gp3-encrypted`: Defines a storage class for provisioning EBS volumes. This particular storage class is set to use the gp3 volume type and encrypt the volumes.
 
-> In summary, this Terraform configuration sets up the necessary IAM roles and policies, Kubernetes roles, service accounts, and deployments to enable the AWS EBS CSI driver in an EKS cluster. This setup allows the Kubernetes cluster to dynamically provision EBS volumes as persistent storage for pods, leveraging the capabilities of AWS EBS.
+> 💡 TLDR; This configuration sets up the necessary IAM roles and policies, Kubernetes roles, service accounts, and deployments to enable the AWS EBS CSI driver in an EKS cluster. This setup allows the Kubernetes cluster to dynamically provision EBS volumes as persistent storage for pods, leveraging the capabilities of AWS EBS.

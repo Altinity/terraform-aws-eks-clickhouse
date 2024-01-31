@@ -12,19 +12,17 @@ This Terraform configuration sets up the Cluster Autoscaler for an AWS EKS clust
 - Attaches the created IAM policy to the IAM role, granting the specified permissions to the role.
 
 ### Kubernetes Service Account (`kubernetes_service_account.cluster_autoscaler`):
-- Creates a service account in Kubernetes for the Cluster Autoscaler. The annotation eks.amazonaws.com/role-arn binds this service account to the previously created IAM role.
+- Creates a service account in Kubernetes for the Cluster Autoscaler. The annotation `eks.amazonaws.com/role-arn` binds this service account to the previously created IAM role.
 
 ### Kubernetes Cluster Role and Role Binding (`kubernetes_cluster_role.cluster_autoscaler` and `kubernetes_cluster_role_binding.cluster_autoscaler`):
 - The Cluster Role defines permissions at the cluster level required by the Cluster Autoscaler to function correctly, such as accessing and modifying nodes, pods, and other resources.
 - The Cluster Role Binding grants these permissions to the specified service account.
 
 ### Kubernetes Role and Role Binding for ConfigMaps (`kubernetes_role.cluster_autoscaler` and `kubernetes_role_binding.cluster_autoscaler`):
-- These resources provide permissions specifically for managing ConfigMaps in the kube-system namespace, which is necessary for Cluster Autoscaler's configuration and status reporting.
+- These resources provide permissions specifically for managing `ConfigMaps` in the `kube-system` namespace, which is necessary for Cluster Autoscaler's configuration and status reporting.
 
 ### Kubernetes Deployment (`kubernetes_deployment.cluster_autoscaler`):
 - This deploys the Cluster Autoscaler application in the Kubernetes cluster. It includes the container image for the Cluster Autoscaler, resource requests and limits, and specific configurations like command-line arguments to control its behavior.
-
-### Affinity Settings in Deployment:
 - The deployment configuration includes affinity settings to ensure that the autoscaler pods do not co-locate on the same host, which is a best practice for high availability.
 
-> This setup ensures that the Cluster Autoscaler in Kubernetes has the necessary permissions and configuration to manage node scaling within an AWS EKS cluster. The autoscaler will monitor the load and resource requirements of the pods and adjust the number of nodes in the cluster accordingly.
+> 💡 TLDR; This setup ensures that the Cluster Autoscaler in Kubernetes has the necessary permissions and configuration to manage node scaling within an AWS EKS cluster. The autoscaler will monitor the load and resource requirements of the pods and adjust the number of nodes in the cluster accordingly.

@@ -38,6 +38,11 @@ module "eks_clickhouse" {
 
 > This module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
+# Docs
+
+- [Terraform Registry](#)
+- [Architecture](./docs/)
+
 ## Legal
 
 All code, unless specified otherwise, is licensed under the [Apache-2.0](LICENSE) license.
