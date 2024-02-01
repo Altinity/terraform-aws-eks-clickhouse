@@ -4,7 +4,7 @@
 
 Terraform module for creating EKS clusters optimized for ClickHouse with EBS and autoscaling.
 
-### Usage
+## Usage
 
 ```hcl
 provider "aws" {
@@ -38,10 +38,23 @@ module "eks_clickhouse" {
 
 > This module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
-# Docs
+## Docs
 
 - [Terraform Registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest)
 - [Architecture](https://github.com/Altinity/terraform-aws-eks-clickhouse/tree/master/docs)
+
+## TODO
+
+- [ ] Complete docs and add diagram architecture
+- [ ] Operator installation alternatives:
+  - Use k8s provider `manifest` and split workflow in 2 terraform applies
+  - Install the operator using `null_resource` and `kubectl` (with in memory Kubeconfig)
+  - Install operator using `kubectl` provider
+  - Install the operator manually using `kubectl`
+- [ ] Add examples to spin up clickhouse cluster + zookeper
+- [ ] Add contact info on `README.md`
+- [ ] Add module `examples` directory for TF registry
+- [ ] Analyze using static site for docs (vuepress?)
 
 ## Legal
 
