@@ -6,11 +6,11 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_subnet" "this" {
-  count                   = length(var.subnets)
-  vpc_id                  = aws_vpc.this.id
-  cidr_block              = var.subnets[count.index].cidr_block
-  availability_zone       = var.subnets[count.index].az
-  tags                    = var.tags
+  count             = length(var.subnets)
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = var.subnets[count.index].cidr_block
+  availability_zone = var.subnets[count.index].az
+  tags              = var.tags
 
   # Subnets are public, this means that eks control plane will be accesible over the internet
   # You can enable IP restrictions at eks cluser level setting the variable `public_access_cidrs`

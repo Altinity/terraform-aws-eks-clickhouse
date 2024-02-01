@@ -1,6 +1,6 @@
 **🚨 This module is still under development and not fully tested for production, use it under your own risk**
 
-# terraform-eks-clickhouse
+# terraform-aws-eks-clickhouse
 
 Terraform module for creating EKS clusters optimized for ClickHouse with EBS and autoscaling.
 
@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 module "eks_clickhouse" {
-  source  = "github.com/Altinity/terraform-eks-clickhouse"
+  source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
   cluster_name = "clickhouse-cluster"
   region       = "us-east-1"

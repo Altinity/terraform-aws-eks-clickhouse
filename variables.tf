@@ -73,7 +73,7 @@ variable "node_pools_config" {
     }
 
     disk_size      = 20
-    instance_types = ["m5.large", "m5.4xlarge"]
+    instance_types = ["m5.large"]
   }
 }
 
@@ -81,4 +81,16 @@ variable "public_access_cidrs" {
   description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
   type        = list(string)
   default     = ["0.0.0.0/0"]
+}
+
+variable "clickhouse_operator_path" {
+  description = "Path to the operator YAML file (use it to install a different or custom operator version)"
+  default = "./clickhouse-operator.yaml"
+  type        = string
+}
+
+variable "confirm_operator_manifest_changes" {
+  description = "Confirm to apply manifest changes. Keep this false by default and only set it to true if you are sure about applying manifest changes running `terraform plan -var=\"confirm_operator_manifest_changes=true\"`."
+  type        = bool
+  default     = false
 }
