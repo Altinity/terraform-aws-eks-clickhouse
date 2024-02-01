@@ -2,7 +2,7 @@
 
 This Terraform module sets up an AWS EKS (Elastic Kubernetes Service) cluster with an associated node group configuration. It also establishes the necessary IAM roles and policies for the EKS cluster, node groups, and administrative tasks. Let's break down the key components:
 
-## Policy Attachments
+### Policy Attachments
 - `aws_iam_role.eks_cluster_role`: An IAM role for the EKS cluster with permissions to make AWS API calls on your behalf.
 - `aws_iam_role_policy_attachment` resources: Attach AWS-managed policies to the EKS cluster role. These include policies for EKS cluster management, service roles, and VPC resource controllers.
 - `aws_iam_policy.eks_admin_policy` and `aws_iam_role.eks_admin_role`: Define an administrative policy and role for EKS. This setup includes permissions for creating and managing EKS clusters and associated IAM roles.

@@ -28,6 +28,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 - [EKS Cluster & Node Groups](./eks.md)
 - [K8S Autoscaler](./autoscaler.md)
 - [EBS & CSI Driver](./ebs.md)
+- [Altinity ClickHouse Operator](./operator.md)
 
 ## Prerequisites
 

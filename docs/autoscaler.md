@@ -1,4 +1,4 @@
-# K8S Autoscaler
+# Kubernetes Autoscaler
 
 This Terraform module sets up the Cluster Autoscaler for an AWS EKS cluster. The Cluster Autoscaler automatically adjusts the number of nodes in your Kubernetes cluster when pods fail to launch due to insufficient resources or when nodes are underutilized and their workloads can be moved elsewhere. Here's a breakdown of the key components:
 
