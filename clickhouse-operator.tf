@@ -43,6 +43,6 @@ resource "null_resource" "install_clickhouse_operator" {
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "bash ${path.module/install-clickhouse-operator.sh} '${local.kubeconfig}' '${local.manifest}' '${var.confirm_operator_manifest_changes}'"
+    command = "bash install-clickhouse-operator.sh '${local.kubeconfig}' '${local.manifest}' '${var.confirm_operator_manifest_changes}'"
   }
 }

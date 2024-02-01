@@ -188,4 +188,12 @@ resource "aws_eks_node_group" "this" {
       "k8s.io/cluster-autoscaler/${aws_eks_cluster.this.name}" = "owned"
     }
   )
+
+  lifecycle {
+    # Ignore changes to scaling_config.desired_size
+    # This avoids conflicts with the k8s autoscaler
+    ignore_changes = [
+      scaling_config["desired_size"],
+    ]
+  }
 }
