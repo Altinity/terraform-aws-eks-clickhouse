@@ -55,6 +55,7 @@ module "eks_clickhouse" {
 - [ ] Add contact info on `README.md`
 - [ ] Add module `examples` directory for TF registry
 - [ ] Analyze using static site for docs (vuepress?)
+- [ ] Annalize using dynamic subsents generation
 
 ## Legal
 
