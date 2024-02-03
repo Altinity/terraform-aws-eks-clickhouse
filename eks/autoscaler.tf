@@ -31,6 +31,8 @@ resource "aws_iam_policy" "cluster_autoscaler" {
   ]
 }
 EOF
+
+  tags = var.tags
 }
 
 resource "aws_iam_role" "cluster_autoscaler" {
@@ -54,6 +56,8 @@ resource "aws_iam_role" "cluster_autoscaler" {
   ]
 }
 EOF
+
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_autoscaler_attach" {

@@ -3159,8 +3159,8 @@ data:
         #   3. DROP DNS CACHE
         # User with these credentials can be specified in additional ClickHouse .xml config files,
         # located in 'clickhouse.configuration.file.path.user' folder
-        username: ""
-        password: ""
+        username: "clickhouse_operator"
+        password: "clickhouse_operator_password"
         rootCA: ""
 
         # Location of the k8s Secret with username and password to be used by the operator to connect to ClickHouse instances.

@@ -6,8 +6,6 @@ This Terraform module automates the deployment of a [ClickHouse](https://clickho
 
 This architecture is provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations its suitability for enterprise-level deployments using the following resources:
 
-- **IAM Roles and Policies**: There are several IAM roles and policies created for different purposes, such as the EKS cluster role, node role, and a specific role for the EBS CSI driver. These roles and policies ensure appropriate permissions for the cluster to interact with other AWS services.
-
 - **EKS Cluster**: The module sets up an AWS EKS cluster (`aws_eks_cluster.this`). It specifies the EKS version, role ARN, and VPC configuration, ensuring the cluster is isolated within a VPC.
 
 - **Node Groups**: Multiple EKS node groups (`aws_eks_node_group.this`) are created, each configured with specific instance types and subnet associations. This setup allows for a diversified and scalable node environment.
@@ -20,6 +18,8 @@ This architecture is provides a scalable, secure, and efficient environment for 
 
 - **Storage and Resource Access**: Kubernetes roles, role bindings, and service accounts are defined for different components, particularly for the EBS CSI driver, ensuring the right permissions for accessing and managing resources.
 
+- **IAM Roles and Policies**: There are several IAM roles and policies created for different purposes, such as the EKS cluster role, node role, and a specific role for the EBS CSI driver. These roles and policies ensure appropriate permissions for the cluster to interact with other AWS services.
+
 ## Architecture:
 
 > ADD DIAGRAM HERE
@@ -28,7 +28,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 - [EKS Cluster & Node Groups](./eks.md)
 - [K8S Autoscaler](./autoscaler.md)
 - [EBS & CSI Driver](./ebs.md)
-- [Altinity ClickHouse Operator](./operator.md)
+- [ClickHouse](./clickhouse.md)
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ provider "aws" {
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 }
 
-module "eks_clickhouse" {
+module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
   version = "0.1.1"
 

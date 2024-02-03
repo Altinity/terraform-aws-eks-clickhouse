@@ -12,6 +12,7 @@ resource "aws_subnet" "this" {
   availability_zone = var.subnets[count.index].az
   tags              = var.tags
 
+  # ⚠️ DO NOT USE THIS IN PRODUCTION ⚠️
   # Subnets are public, this means that eks control plane will be accesible over the internet
   # You can enable IP restrictions at eks cluser level setting the variable `public_access_cidrs`
   map_public_ip_on_launch = true

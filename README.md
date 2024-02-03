@@ -46,16 +46,21 @@ module "eks_clickhouse" {
 ## TODO
 
 - [ ] Complete docs and add diagram architecture
-- [ ] Operator installation alternatives:
-  - Use k8s provider `manifest` and split workflow in 2 terraform applies
-  - Install the operator using `null_resource` and `kubectl` (with in memory Kubeconfig)
-  - Install operator using `kubectl` provider
-  - Install the operator manually using `kubectl`
+- [x] Operator installation alternatives:
+  - ~~Use k8s provider `manifest` and split workflow in 2 terraform applies~~
+  - ~~Install the operator using `null_resource` and `kubectl` (with in memory Kubeconfig)~~
+  - [x] Install operator using `kubectl` provider 👌
+  - ~~Install the operator manually using `kubectl`~~
 - [ ] Add examples to spin up clickhouse cluster + zookeper
 - [ ] Add contact info on `README.md`
 - [ ] Add module `examples` directory for TF registry
-- [ ] Analyze using static site for docs (vuepress?)
 - [ ] Annalize using dynamic subsents generation
+- [ ] Add `outputs` for the module
+- [ ] Add `addons` for the module
+- [ ] Going production ready
+- [ ] Nat and private subnets
+- [ ] Add `terratest`
+- [ ] More modules? (ebs, autoscaler, vpc)
 
 ## Legal
 

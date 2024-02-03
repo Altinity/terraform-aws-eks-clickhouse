@@ -1,18 +1,5 @@
-locals {
-  account_id = data.aws_caller_identity.current.account_id
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_availability_zones" "available" {}
-
-data "aws_eks_cluster" "this" {
-  name       = var.cluster_name
-  depends_on = [aws_eks_cluster.this]
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name       = var.cluster_name
-  depends_on = [aws_eks_cluster.this]
+provider "aws" {
+  region = var.region
 }
 
 provider "kubernetes" {
@@ -21,6 +8,58 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
-provider "aws" {
-  region = var.region
+provider "kubectl" {
+  host                   = data.aws_eks_cluster.this.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.this.token
 }
+
+module "eks" {
+  source = "./eks"
+
+  providers = {
+    aws        = aws
+    kubernetes = kubernetes
+  }
+
+  cluster_name = "clickhouse-cluster"
+  region       = "us-east-1"
+  cidr         = "10.0.0.0/16"
+  subnets = [
+    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
+    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
+    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
+  ]
+
+  node_pools_config = {
+    scaling_config = {
+      desired_size = 2
+      max_size     = 10
+      min_size     = 0
+    }
+
+    disk_size      = 20
+    instance_types = ["m5.large"]
+  }
+}
+
+module "clickhouse" {
+  source = "./clickhouse"
+
+  providers = {
+    kubectl    = kubectl
+    kubernetes = kubernetes
+  }
+
+  depends_on = [module.eks]
+}
+
+
+data "aws_eks_cluster" "this" {
+  name = module.eks.cluster_name
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = module.eks.cluster_name
+}
+
