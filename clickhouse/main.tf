@@ -4,7 +4,7 @@ locals {
   # Split operator YAML file into individual manifests
   operator_manifests = split("\n---\n", replace(local.clickhouse_operator_yaml, "\n+", "\n"))
 
-  clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this.*.result) : var.clickhouse_cluster_password
+  clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 }
 
 # Create a random password for clickhouse if one is not provided`
