@@ -1,20 +1,24 @@
-# Altinity ClickHouse Operator & ClickHouse Cluster
+# Altinity ClickHouse Operator & ClickHouse Cluster Deployment with Zookeeper Integration on AWS EKS
 
-This Terraform module orchestrates the setup and deployment of the [Altinity ClickHouse Operator](https://github.com/Altinity/clickhouse-operator) on an AWS EKS cluster. The module is designed to ensure a streamlined and automated process for managing ClickHouse databases within a Kubernetes environment, specifically on AWS EKS.
+This Terraform module orchestrates the deployment of the [Altinity ClickHouse Operator](https://github.com/Altinity/clickhouse-operator) on an AWS EKS cluster and sets up a ClickHouse cluster with Zookeeper integration. It is designed to streamline the process of managing ClickHouse databases within a Kubernetes environment, emphasizing automation and ease of use on AWS EKS.
 
 ### Random Password Generation
-- `resource "random_password" "this"`: Creates a random password for ClickHouse clusters when a predefined password is not provided. The length is set to 22 characters without special characters. This resource includes a lifecycle policy to ignore changes, maintaining the password across apply operations.
+- `resource "random_password" "this"`: Generates a random password for the ClickHouse cluster if a predefined one is not supplied. The password has 22 characters, excluding special characters, and includes a lifecycle policy to disregard changes, preserving the password across Terraform apply operations.
 
-### Operator Deployment
-- `resource "kubectl_manifest" "clickhouse_operator"`: Applies each manifest required for the ClickHouse operator, including CRD, Service, ConfigMap, and Deployment. It iterates over the `local.operator_manifests`, applying each manifest separately.
+### Altinity ClickHouse Operator
+- **Operator Deployment**: Utilizes `resource "kubectl_manifest" "clickhouse_operator"` to apply the necessary manifests (CRD, Service, ConfigMap, Deployment) for the ClickHouse operator. It iterates over `local.clickhouse_operator_manifests`, applying each manifest individually.
+
+### Zookeeper Cluster Deployment
+- **Zookeeper Cluster**: The `resource "kubectl_manifest" "zookeeper_cluster"` deploys the Zookeeper cluster necessary for ClickHouse, iterating over `local.zookeeper_cluster_manifests` to apply each manifest. This setup is critical for enabling distributed ClickHouse configurations.
 
 ### Namespace Creation
-- `resource "kubernetes_namespace" "clickhouse"`: Establishes a dedicated Kubernetes namespace for the ClickHouse cluster. It depends on the successful application of the ClickHouse operator manifests.
+- **ClickHouse Namespace**: `resource "kubernetes_namespace" "clickhouse"` creates a Kubernetes namespace dedicated to the ClickHouse cluster, ensuring isolation and organization.
+- **Zookeeper Namespace**: Similarly, `resource "kubernetes_namespace" "zookeeper"` establishes a separate namespace for the Zookeeper cluster, maintaining a clear separation of concerns and operational clarity.
 
 ### ClickHouse Cluster Creation
-- `resource "kubectl_manifest" "clickhouse_cluster"`: Deploys a ClickHouse cluster by creating a new ClickHouseInstallation custom resource. This resource depends on the ClickHouse namespace and injects variables like cluster name, namespace, user, and the generated or provided password.
+- `resource "kubectl_manifest" "clickhouse_cluster"`: Deploys the ClickHouse cluster by provisioning a new ClickHouseInstallation custom resource, incorporating variables such as cluster name, namespace, user, and either a generated or provided password. This resource incorporates the Zookeeper namespace for proper cluster coordination.
 
 ### Service Data Retrieval
-- `data "kubernetes_service" "clickhouse_load_balancer"`: Retrieves details about the ClickHouse service, particularly the load balancer configuration. It depends on the successful deployment of the ClickHouse cluster.
+- `data "kubernetes_service" "clickhouse_load_balancer"`: Fetches details about the ClickHouse service, focusing on the load balancer setup, to facilitate external access. This data source is contingent on the successful rollout of the ClickHouse cluster.
 
-> 💡 **TL;DR**: The Terraform module for the Altinity ClickHouse Operator simplifies and automates the deployment on AWS EKS. It manages dependencies, automates password generation, applies necessary Kubernetes manifests, and establishes the necessary resources for a robust ClickHouse deployment. The module is designed for ease of use, maintainability, and security in a cloud-native environment.
+> 💡 **TL;DR**: This Terraform module automates the deployment of the Altinity ClickHouse Operator and a ClickHouse cluster with Zookeeper on K8S. It meticulously manages dependencies, streamlines password generation, and applies necessary Kubernetes manifests, culminating in a robust, maintainable, and secure setup for cloud-native database management. The configuration leverages local values for parsing YAML manifests of both the ClickHouse operator and the Zookeeper cluster, ensuring a modular and dynamic deployment process. By integrating Zookeeper, the module supports high-availability and distributed ClickHouse configurations, enhancing the resilience and scalability of the database infrastructure.
