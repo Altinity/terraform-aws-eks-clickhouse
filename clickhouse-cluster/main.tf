@@ -33,8 +33,21 @@ resource "kubectl_manifest" "clickhouse_cluster" {
   })
 }
 
-data "kubernetes_service" "clickhouse_load_balancer" {
+resource "null_resource" "wait_for_clickhouse" {
   depends_on = [kubectl_manifest.clickhouse_cluster]
+
+  provisioner "local-exec" {
+    command = <<EOF
+    until kubectl get svc/${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name} -n ${var.clickhouse_cluster_namespace} 2>&1 | grep -m 1 "LoadBalancer"; do
+      echo "Waiting for ClickHouse service to be available..."
+      sleep 10
+    done
+    EOF
+  }
+}
+
+data "kubernetes_service" "clickhouse_load_balancer" {
+  depends_on = [null_resource.wait_for_clickhouse]
 
   metadata {
     name      = "${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name}"
