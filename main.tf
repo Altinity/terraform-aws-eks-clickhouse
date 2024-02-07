@@ -45,6 +45,7 @@ module "clickhouse_operator" {
 
   clickhouse_operator_manifest_path = var.clickhouse_operator_manifest_path
   zookeeper_cluster_manifest_path   = var.zookeeper_cluster_manifest_path
+  clickhouse_operator_namespace     = var.clickhouse_operator_namespace
   zookeeper_namespace               = var.zookeeper_namespace
 
   depends_on = [module.eks]
