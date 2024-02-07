@@ -1,4 +1,6 @@
-### EKS ###
+################################################################################
+# EKS
+################################################################################
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -43,7 +45,6 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-// Should this be retrieved automatically based on region and CIDR?
 variable "subnets" {
   description = "List of subnets"
   type        = list(map(string))
@@ -86,7 +87,9 @@ variable "public_access_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
-### ClickHouse Operator ###
+################################################################################
+# ClickHouse Operator
+################################################################################
 variable "clickhouse_operator_manifest_path" {
   description = "Path to the operator YAML file (use it to install a different or custom operator version)"
   default     = "./manifests/clickhouse-operator.yaml"
@@ -111,7 +114,9 @@ variable "zookeeper_namespace" {
   type        = string
 }
 
-### ClickHouse Cluster ###
+################################################################################
+# ClickHouse Cluster
+################################################################################
 variable "clickhouse_cluster_manifest_path" {
   description = "Path to the cluster YAML file (use it to install a different or custom cluster version)"
   default     = "./manifests/clickhouse-cluster.yaml.tpl"

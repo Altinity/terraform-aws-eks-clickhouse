@@ -1200,6 +1200,8 @@ resource "kubernetes_csi_driver_v1" "ebs_csi_aws_com" {
   }
 }
 
+# Create a new storage class for gp3 encrypted volumes
+# This class will be used to create the ClickHouse cluster volumes
 resource "kubernetes_storage_class" "gp3-encrypted" {
   metadata {
     name = "gp3-encrypted"

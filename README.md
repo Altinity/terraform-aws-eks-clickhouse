@@ -51,14 +51,14 @@ module "eks_clickhouse" {
   - ~~Install the operator using `null_resource` and `kubectl` (with in memory Kubeconfig)~~
   - [x] Install operator using `kubectl` provider 👌
   - ~~Install the operator manually using `kubectl`~~
-- [ ] Add examples to spin up clickhouse cluster + zookeper
+- [x] Add examples to spin up clickhouse cluster + zookeper
 - [ ] Add contact info on `README.md`
 - [ ] Add module `examples` directory for TF registry
 - [ ] Annalize using dynamic subsents generation
-- [ ] Add `outputs` for the module
-- [ ] Add `addons` for the module
+- [x] Add `outputs` for the module
+- [ ] ~~Add `addons` for the module~~
 - [ ] Going production ready
-- [ ] Nat and private subnets
+- [ ] ~~Nat and private subnets~~
 - [ ] Add `terratest`
 - [ ] More modules? (ebs, autoscaler, vpc)
 

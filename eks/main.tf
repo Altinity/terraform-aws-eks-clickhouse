@@ -38,11 +38,15 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+# Optional policy
+# https://docs.aws.amazon.com/eks/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEKSServicePolicy
 resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
 
+# Optional policy
+# https://docs.aws.amazon.com/eks/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEKSServicePolicy
 resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
@@ -85,29 +89,29 @@ resource "aws_iam_policy" "eks_admin_policy" {
   tags = var.tags
 }
 
-resource "aws_iam_role" "eks_admin_role" {
-  name = "${var.cluster_name}-eks-admin-role"
+# resource "aws_iam_role" "eks_admin_role" {
+#   name = "${var.cluster_name}-eks-admin-role"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          AWS = "arn:aws:iam::${local.account_id}:root"
-        },
-        Action = "sts:AssumeRole"
-      },
-    ]
-  })
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement = [
+#       {
+#         Effect = "Allow",
+#         Principal = {
+#           AWS = "arn:aws:iam::${local.account_id}:root"
+#         },
+#         Action = "sts:AssumeRole"
+#       },
+#     ]
+#   })
 
-  tags = var.tags
-}
+#   tags = var.tags
+# }
 
-resource "aws_iam_role_policy_attachment" "eks_admin_attach" {
-  role       = aws_iam_role.eks_admin_role.name
-  policy_arn = aws_iam_policy.eks_admin_policy.arn
-}
+# resource "aws_iam_role_policy_attachment" "eks_admin_attach" {
+#   role       = aws_iam_role.eks_admin_role.name
+#   policy_arn = aws_iam_policy.eks_admin_policy.arn
+# }
 
 resource "aws_iam_role" "eks_node_role" {
   name = "${var.cluster_name}-eks-node-role"
@@ -142,6 +146,10 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+# This enables IAM roles for service accounts (IRSA) in Amazon EKS
+# Using IRSA, Kubernetes pods can assume IAM roles to access AWS resources,
+# which reduces the need to manage AWS credentials inside your applications or containers.
+# This enhances the security posture by leveraging AWS's native identity and access management features.
 resource "aws_iam_openid_connect_provider" "this" {
   url            = aws_eks_cluster.this.identity[0].oidc[0].issuer
   client_id_list = ["sts.amazonaws.com"]
@@ -210,5 +218,5 @@ resource "aws_eks_node_group" "this" {
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
+  name = aws_eks_cluster.this.name
 }

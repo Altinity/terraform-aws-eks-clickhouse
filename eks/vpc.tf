@@ -1,3 +1,9 @@
+#---------------------------------------------------------------
+# VPC and Subnets
+#---------------------------------------------------------------
+# WARNING: This VPC module includes the creation of an Internet Gateway and public subnets, which simplifies cluster deployment and testing.
+# IMPORTANT: For preprod and prod use cases, it is crucial to consult with your security team and AWS architects to design a private infrastructure solution that aligns with your security requirements
+
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr
   enable_dns_support   = true
@@ -12,8 +18,7 @@ resource "aws_subnet" "this" {
   availability_zone = var.subnets[count.index].az
   tags              = var.tags
 
-  # ⚠️ DO NOT USE THIS IN PRODUCTION ⚠️
-  # Subnets are public, this means that eks control plane will be accesible over the internet
+  # ⚠️ Subnets are public, this means that eks control plane will be accesible over the internet
   # You can enable IP restrictions at eks cluser level setting the variable `public_access_cidrs`
   map_public_ip_on_launch = true
 }
@@ -40,6 +45,7 @@ resource "aws_route_table_association" "this" {
   route_table_id = aws_route_table.this.id
 }
 
+# This endpoint enables private connections between the VPC and S3
 resource "aws_vpc_endpoint" "this" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${var.region}.s3"
