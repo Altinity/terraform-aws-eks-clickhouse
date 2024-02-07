@@ -120,9 +120,3 @@ variable "clickhouse_cluster_password" {
   type        = string
   default     = null
 }
-
-variable "create_clickhouse_resources" {
-  description = "Disable this flag to skip clickhouse operator and cluster creation. Useful when you want to install the operator and cluster manually or setup the Altinity BYOK service."
-  type        = bool
-  default     = true
-}

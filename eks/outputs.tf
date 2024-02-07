@@ -8,6 +8,11 @@ output "cluster_name" {
   description = "The name of the cluster"
 }
 
+output "cluster_certificate_authority" {
+  value       = aws_eks_cluster.this.certificate_authority.0.data
+  description = "The certificate authority of the cluster"
+}
+
 output "cluster_endpoint" {
   value       = aws_eks_cluster.this.endpoint
   description = "The endpoint for your Kubernetes API server"

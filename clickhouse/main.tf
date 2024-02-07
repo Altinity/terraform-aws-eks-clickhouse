@@ -52,3 +52,14 @@ data "kubernetes_service" "clickhouse_load_balancer" {
     namespace = var.clickhouse_cluster_namespace
   }
 }
+
+resource "kubectl_manifest" "clickhouse_cluster_zoo" {
+  depends_on = [kubernetes_namespace.clickhouse]
+
+  yaml_body = templatefile("${path.module}/manifests/clickhouse-cluster-zookeeper.yaml.tpl", {
+    name      = var.clickhouse_cluster_name
+    namespace = var.clickhouse_cluster_namespace
+    user      = var.clickhouse_cluster_user
+    password  = local.clickhouse_password
+  })
+}
