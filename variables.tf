@@ -1,3 +1,4 @@
+### EKS ###
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -85,13 +86,33 @@ variable "public_access_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "clickhouse_operator_path" {
+### ClickHouse Operator ###
+variable "clickhouse_operator_manifest_path" {
   description = "Path to the operator YAML file (use it to install a different or custom operator version)"
   default     = "./manifests/clickhouse-operator.yaml"
   type        = string
 }
 
-variable "clickhouse_cluster_path" {
+variable "zookeeper_cluster_manifest_path" {
+  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
+  default     = "./manifests/zookeeper-cluster.yaml"
+  type        = string
+}
+
+variable "clickhouse_operator_namespace" {
+  description = "Namespace for the clickhouse operator"
+  default     = "kube-system"
+  type        = string
+}
+
+variable "zookeeper_namespace" {
+  description = "Namespace for the zookeeper cluster"
+  default     = "zoo1ns"
+  type        = string
+}
+
+### ClickHouse Cluster ###
+variable "clickhouse_cluster_manifest_path" {
   description = "Path to the cluster YAML file (use it to install a different or custom cluster version)"
   default     = "./manifests/clickhouse-cluster.yaml.tpl"
   type        = string
@@ -99,7 +120,7 @@ variable "clickhouse_cluster_path" {
 
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
-  default     = "cluster-1"
+  default     = "chi"
   type        = string
 }
 

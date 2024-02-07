@@ -1,10 +1,4 @@
-variable "clickhouse_operator_path" {
-  description = "Path to the operator YAML file (use it to install a different or custom operator version)"
-  default     = "./manifests/clickhouse-operator.yaml"
-  type        = string
-}
-
-variable "clickhouse_cluster_path" {
+variable "clickhouse_cluster_manifest_path" {
   description = "Path to the cluster YAML file (use it to install a different or custom cluster version)"
   default     = "./manifests/clickhouse-cluster.yaml.tpl"
   type        = string
@@ -12,7 +6,7 @@ variable "clickhouse_cluster_path" {
 
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
-  default     = "cluster-1"
+  default     = "chi"
   type        = string
 }
 
@@ -32,4 +26,10 @@ variable "clickhouse_cluster_password" {
   description = "ClickHouse password"
   type        = string
   default     = null
+}
+
+variable "zookeeper_namespace" {
+  description = "Namespace for the zookeeper cluster"
+  default     = "zoo1ns"
+  type        = string
 }

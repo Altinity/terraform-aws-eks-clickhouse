@@ -35,22 +35,36 @@ module "eks" {
   node_pools_config = var.node_pools_config
 }
 
-module "clickhouse" {
-  source = "./clickhouse"
+module "clickhouse_operator" {
+  source = "./clickhouse-operator"
 
   providers = {
     kubectl    = kubectl
     kubernetes = kubernetes
   }
 
-  clickhouse_cluster_name      = var.clickhouse_cluster_name
-  clickhouse_cluster_namespace = var.clickhouse_cluster_namespace
-  clickhouse_cluster_password  = var.clickhouse_cluster_password
-  clickhouse_cluster_user      = var.clickhouse_cluster_user
-  clickhouse_operator_path     = var.clickhouse_operator_path
-  clickhouse_cluster_path      = var.clickhouse_cluster_path
+  clickhouse_operator_manifest_path = var.clickhouse_operator_manifest_path
+  zookeeper_cluster_manifest_path   = var.zookeeper_cluster_manifest_path
+  zookeeper_namespace               = var.zookeeper_namespace
 
   depends_on = [module.eks]
+}
+
+module "clickhouse_cluster" {
+  source = "./clickhouse-cluster"
+
+  providers = {
+    kubectl    = kubectl
+    kubernetes = kubernetes
+  }
+
+  clickhouse_cluster_name          = var.clickhouse_cluster_name
+  clickhouse_cluster_namespace     = var.clickhouse_cluster_namespace
+  clickhouse_cluster_password      = var.clickhouse_cluster_password
+  clickhouse_cluster_user          = var.clickhouse_cluster_user
+  clickhouse_cluster_manifest_path = var.clickhouse_cluster_manifest_path
+
+  depends_on = [module.clickhouse_operator]
 }
 
 data "aws_eks_cluster_auth" "this" {

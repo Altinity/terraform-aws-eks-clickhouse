@@ -14,12 +14,12 @@ output "configure_kubectl" {
 }
 
 output "clickhouse_cluster_password" {
-  value       = module.clickhouse.clickhouse_cluster_password
+  value       = module.clickhouse_cluster.clickhouse_cluster_password
   description = "The generated password for the ClickHouse cluster"
   sensitive   = true
 }
 
 output "clickhouse_cluter_url" {
-  value       = module.clickhouse.clickhouse_cluter_url
+  value       = module.clickhouse_cluster.clickhouse_cluter_url
   description = "The public URL for the ClickHouse cluster"
 }

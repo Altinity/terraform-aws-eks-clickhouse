@@ -11,13 +11,13 @@ spec:
       ${user}/networks/ip: 0.0.0.0/0
     zookeeper:
         nodes:
-        - host: zookeeper.zoo1ns
+        - host: zookeeper.${zookeeper_namespace}
           port: 2181
     clusters:
       - name: "${name}"
         layout:
-          shardsCount: 2
-          replicasCount: 2
+          shardsCount: 1
+          replicasCount: 1
         templates:
           podTemplate: clickhouse-stable
           volumeClaimTemplate: data-volume-template
@@ -36,4 +36,4 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 1Gi
+              storage: 100Gi
