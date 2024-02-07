@@ -22,25 +22,17 @@ module "eks" {
     kubernetes = kubernetes
   }
 
-  cluster_name = "clickhouse-cluster"
-  region       = "us-east-1"
-  cidr         = "10.0.0.0/16"
-  subnets = [
-    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
-  ]
+  replicas            = var.replicas
+  image_tag           = var.image_tag
+  cluster_name        = var.cluster_name
+  region              = var.region
+  cidr                = var.cidr
+  subnets             = var.subnets
+  cluster_version     = var.cluster_version
+  public_access_cidrs = var.public_access_cidrs
+  tags                = var.tags
 
-  node_pools_config = {
-    scaling_config = {
-      desired_size = 2
-      max_size     = 10
-      min_size     = 0
-    }
-
-    disk_size      = 20
-    instance_types = ["m5.large"]
-  }
+  node_pools_config = var.node_pools_config
 }
 
 module "clickhouse" {
@@ -50,6 +42,13 @@ module "clickhouse" {
     kubectl    = kubectl
     kubernetes = kubernetes
   }
+
+  clickhouse_cluster_name      = var.clickhouse_cluster_name
+  clickhouse_cluster_namespace = var.clickhouse_cluster_namespace
+  clickhouse_cluster_password  = var.clickhouse_cluster_password
+  clickhouse_cluster_user      = var.clickhouse_cluster_user
+  clickhouse_operator_path     = var.clickhouse_operator_path
+  clickhouse_cluster_path      = var.clickhouse_cluster_path
 
   depends_on = [module.eks]
 }

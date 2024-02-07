@@ -36,6 +36,7 @@ resource "kubernetes_service" "zookeeper" {
 
 resource "kubernetes_service" "zookeepers" {
   depends_on = [kubernetes_namespace.zookeeper]
+
   metadata {
     name      = "zookeepers"
     namespace = kubernetes_namespace.zookeeper.metadata[0].name
