@@ -16,6 +16,8 @@ data "aws_iam_policy_document" "ebs_csi_driver_assume_role_policy" {
   }
 }
 
+# IAM role that the EBS CSI driver pods will assume when interacting with
+# AWS to manage EBS volumes.
 resource "aws_iam_role" "ebs_csi_driver_role" {
   name               = "${var.cluster_name}-eks-ebs-csi-driver"
   assume_role_policy = data.aws_iam_policy_document.ebs_csi_driver_assume_role_policy.json
@@ -27,6 +29,8 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_driver_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
+# Ensures that a minimum number of EBS CSI controller pods are always available
+# during voluntary disruptions, which helps maintain the storage driver's availability.
 resource "kubernetes_pod_disruption_budget_v1" "ebs_csi_controller" {
   metadata {
     name      = "ebs-csi-controller"
@@ -481,6 +485,8 @@ resource "kubernetes_role_binding" "ebs_csi_leases_rolebinding" {
   }
 }
 
+# Deploys the EBS CSI node components as a DaemonSet, ensuring it runs on all eligible nodes.
+# This component handles volume mounting and unmounting on the nodes.
 resource "kubernetes_daemonset" "ebs_csi_node" {
   metadata {
     name      = "ebs-csi-node"
@@ -781,6 +787,8 @@ resource "kubernetes_daemonset" "ebs_csi_node" {
   }
 }
 
+# Deploys the EBS CSI controller components as a Deployment,
+# managing the lifecycle of EBS volumes.
 resource "kubernetes_deployment" "ebs_csi_controller" {
   metadata {
     name      = "ebs-csi-controller"
@@ -1177,6 +1185,8 @@ resource "kubernetes_deployment" "ebs_csi_controller" {
   }
 }
 
+# Registers the `ebs.csi.aws.com` CSI driver in the Kubernetes cluster,
+# enabling Kubernetes to use this driver for provisioning and managing EBS volumes.
 resource "kubernetes_csi_driver_v1" "ebs_csi_aws_com" {
   metadata {
     name = "ebs.csi.aws.com"
@@ -1200,8 +1210,8 @@ resource "kubernetes_csi_driver_v1" "ebs_csi_aws_com" {
   }
 }
 
-# Create a new storage class for gp3 encrypted volumes
-# This class will be used to create the ClickHouse cluster volumes
+# Creates a new Kubernetes StorageClass for provisioning gp3 encrypted EBS volumes.
+# This StorageClass can be used by Kubernetes PersistentVolumeClaims (PVCs) to dynamically provision gp3 volumes that are encrypted.
 resource "kubernetes_storage_class" "gp3-encrypted" {
   metadata {
     name = "gp3-encrypted"

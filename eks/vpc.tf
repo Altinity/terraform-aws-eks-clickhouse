@@ -1,9 +1,8 @@
-#---------------------------------------------------------------
-# VPC and Subnets
-#---------------------------------------------------------------
-# WARNING: This VPC module includes the creation of an Internet Gateway and public subnets, which simplifies cluster deployment and testing.
-# IMPORTANT: For preprod and prod use cases, it is crucial to consult with your security team and AWS architects to design a private infrastructure solution that aligns with your security requirements
+# 🚨 This VPC module includes the creation of an Internet Gateway and public subnets, which simplifies cluster deployment and testing.
+# IMPORTANT: For preprod and prod use cases, it is crucial to consult with your security team and AWS architects to design a private infrastructure solution that aligns with your security requirements.
 
+# The VPC is configured with DNS support and hostnames,
+# which are essential for EKS and other AWS services to operate correctly.
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr
   enable_dns_support   = true
@@ -11,6 +10,8 @@ resource "aws_vpc" "this" {
   tags                 = var.tags
 }
 
+# Creates a series of public subnets within the VPC based on the var.subnets input variable,
+# which contains details like CIDR blocks and availability zones.
 resource "aws_subnet" "this" {
   count             = length(var.subnets)
   vpc_id            = aws_vpc.this.id
@@ -23,11 +24,17 @@ resource "aws_subnet" "this" {
   map_public_ip_on_launch = true
 }
 
+# Attaches an Internet Gateway (IGW) to the VPC,
+# enabling communication between resources in the VPC and the internet.
+# This is crucial for public subnets to allow inbound and outbound traffic to the internet.
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
   tags   = var.tags
 }
 
+# Defines a route table for the VPC that routes all outbound traffic (0.0.0.0/0) to the internet via the IGW.
+# Each subnet in the VPC is associated with this route table
+# (resources within these subnets can initiate outbound connections to the internet.)
 resource "aws_route_table" "this" {
   vpc_id = aws_vpc.this.id
 
@@ -45,7 +52,9 @@ resource "aws_route_table_association" "this" {
   route_table_id = aws_route_table.this.id
 }
 
-# This endpoint enables private connections between the VPC and S3
+# Creates a VPC endpoint for Amazon S3, enabling private connections
+# between the VPC and S3 without requiring traffic to traverse the public internet.
+# Enhances security and performance for AWS services that require S3 access.
 resource "aws_vpc_endpoint" "this" {
   vpc_id            = aws_vpc.this.id
   service_name      = "com.amazonaws.${var.region}.s3"

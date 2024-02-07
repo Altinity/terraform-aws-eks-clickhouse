@@ -2,25 +2,29 @@ locals {
   clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 }
 
-# Create a random password for clickhouse if one is not provided`
+# Generates a random password without special characters if no password is provided
 resource "random_password" "this" {
   count   = var.clickhouse_cluster_password == null ? 1 : 0
   length  = 22
   special = false
 
   lifecycle {
+    # ensures the password isn't regenerated on subsequent applies,
+    # preserving the initial password.
     ignore_changes = all
   }
 }
 
-# Create a namespace for allocating the clickhouse cluster
+# Namespace for all ClickHouse-related Kubernetes resources,
+#  providing logical isolation within the cluster.
 resource "kubernetes_namespace" "clickhouse" {
   metadata {
     name = var.clickhouse_cluster_namespace
   }
 }
 
-# Create a clickhouse cluster, this will spin up a new ClickHouseInstallation custom resource.
+# Deploys the ClickHouse cluster using a custom resource definition (CRD),
+#  defined by the ClickHouse operator.
 resource "kubectl_manifest" "clickhouse_cluster" {
   depends_on = [kubernetes_namespace.clickhouse]
 

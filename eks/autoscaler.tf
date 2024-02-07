@@ -238,6 +238,10 @@ resource "kubernetes_role_binding" "cluster_autoscaler" {
   }
 }
 
+# Deploys the Cluster Autoscaler application into the kube-system namespace.
+# This deployment is configured with the necessary command-line arguments to interact with AWS and perform its scaling duties.
+# It includes settings like the cloud provider (aws), the autoscaler version, and the tags used to discover ASGs to manage.
+# The deployment is also set up with volumes and security contexts to meet the application's requirements and Kubernetes' security best practices.
 resource "kubernetes_deployment" "cluster_autoscaler" {
   metadata {
     name      = "cluster-autoscaler"

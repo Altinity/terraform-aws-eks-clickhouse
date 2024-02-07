@@ -15,12 +15,14 @@ resource "kubectl_manifest" "clickhouse_operator" {
   override_namespace = var.clickhouse_operator_namespace
 }
 
+# Creates a k8s namespace specifically for Zookeeper,
 resource "kubernetes_namespace" "zookeeper" {
   metadata {
     name = var.zookeeper_namespace
   }
 }
 
+# Setups a single node Zookeeper cluster
 resource "kubectl_manifest" "zookeeper_cluster" {
   for_each  = { for doc in local.zookeeper_cluster_manifests : sha1(doc) => doc }
   yaml_body = each.value

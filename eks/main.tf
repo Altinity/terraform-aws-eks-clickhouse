@@ -14,6 +14,27 @@ locals {
 
 data "aws_caller_identity" "current" {}
 
+# Admin role for administrative operations on the EKS cluster
+resource "aws_iam_role" "eks_admin_role" {
+  name = "${var.cluster_name}-eks-admin-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${local.account_id}:root"
+        },
+        Action = "sts:AssumeRole"
+      },
+    ]
+  })
+
+  tags = var.tags
+}
+
+# Cluster role for EKS service to manage resources on behalf of the user.
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-eks-cluster-role"
 
@@ -33,23 +54,24 @@ resource "aws_iam_role" "eks_cluster_role" {
   tags = var.tags
 }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-}
+# Node role for EKS worker nodes to interact with AWS services.
+resource "aws_iam_role" "eks_node_role" {
+  name = "${var.cluster_name}-eks-node-role"
 
-# Optional policy
-# https://docs.aws.amazon.com/eks/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEKSServicePolicy
-resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-}
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
 
-# Optional policy
-# https://docs.aws.amazon.com/eks/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonEKSServicePolicy
-resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  tags = var.tags
 }
 
 resource "aws_iam_policy" "eks_admin_policy" {
@@ -89,47 +111,24 @@ resource "aws_iam_policy" "eks_admin_policy" {
   tags = var.tags
 }
 
-# resource "aws_iam_role" "eks_admin_role" {
-#   name = "${var.cluster_name}-eks-admin-role"
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
 
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = {
-#           AWS = "arn:aws:iam::${local.account_id}:root"
-#         },
-#         Action = "sts:AssumeRole"
-#       },
-#     ]
-#   })
+resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+}
 
-#   tags = var.tags
-# }
+resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+}
 
-# resource "aws_iam_role_policy_attachment" "eks_admin_attach" {
-#   role       = aws_iam_role.eks_admin_role.name
-#   policy_arn = aws_iam_policy.eks_admin_policy.arn
-# }
-
-resource "aws_iam_role" "eks_node_role" {
-  name = "${var.cluster_name}-eks-node-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-
-  tags = var.tags
+resource "aws_iam_role_policy_attachment" "eks_admin_attach" {
+  role       = aws_iam_role.eks_admin_role.name
+  policy_arn = aws_iam_policy.eks_admin_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
@@ -146,10 +145,10 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-# This enables IAM roles for service accounts (IRSA) in Amazon EKS
-# Using IRSA, Kubernetes pods can assume IAM roles to access AWS resources,
-# which reduces the need to manage AWS credentials inside your applications or containers.
-# This enhances the security posture by leveraging AWS's native identity and access management features.
+# Establishes an IAM OIDC provider for the EKS cluster,
+# enabling IAM roles for k8s service accounts.
+# This allows k8s pods to assume IAM roles to access AWS resources securely,
+# reducing the need to manage AWS credentials within the applications.
 resource "aws_iam_openid_connect_provider" "this" {
   url            = aws_eks_cluster.this.identity[0].oidc[0].issuer
   client_id_list = ["sts.amazonaws.com"]
@@ -165,6 +164,9 @@ resource "aws_iam_openid_connect_provider" "this" {
   )
 }
 
+# Creates an EKS cluster with specified version and name,
+# configured for both private and public endpoint access,
+# with the ability to restrict public access to specific CIDRs.
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   version  = var.cluster_version
@@ -180,8 +182,10 @@ resource "aws_eks_cluster" "this" {
   tags = var.tags
 }
 
+# For each combination of subnet and instance, a corresponding EKS node group is created.
+# This enables the cluster to scale across different instance types and availability zones,
+# improving resilience and resource allocation efficiency.
 resource "aws_eks_node_group" "this" {
-  # Creates a node group for each combination of subnet and instance type
   for_each = { for idx, np in local.node_pool_combinations : tostring(idx) => np }
 
   cluster_name    = aws_eks_cluster.this.name
@@ -209,8 +213,9 @@ resource "aws_eks_node_group" "this" {
   )
 
   lifecycle {
-    # Ignore changes to scaling_config.desired_size
-    # This avoids conflicts with the k8s autoscaler
+    # Ensures that manual scaling actions performed by Kubernetes autoscaler
+    # are not reverted by Terraform during subsequent applies, allowing for
+    # dynamic scaling based on actual workload demands.
     ignore_changes = [
       scaling_config["desired_size"],
     ]
