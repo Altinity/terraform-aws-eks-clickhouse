@@ -208,3 +208,7 @@ resource "aws_eks_node_group" "this" {
     ]
   }
 }
+
+data "aws_eks_cluster_auth" "this" {
+  name = module.eks.cluster_name
+}

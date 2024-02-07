@@ -17,3 +17,9 @@ output "cluster_endpoint" {
   value       = aws_eks_cluster.this.endpoint
   description = "The endpoint for your Kubernetes API server"
 }
+
+output "cluster_token" {
+  value= data.aws_eks_cluster_auth.this.token
+  description = "The token for the cluster"
+  sensitive = true
+}
