@@ -2,23 +2,31 @@
 
 This Terraform module automates the deployment of a [ClickHouse](https://clickhouse.com) database cluster on [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service). It is designed to create and configure the necessary resources for a robust and scalable ClickHouse deployment.
 
-## Key Features
+The code is separated in different modules: one for the EKS cluster, one for ClickHouse operator (and Zookeeper Cluster), and one for ClickHouse cluster deployment. Variables are used to customize the deployment, including AWS region, cluster name, node configurations, and networking settings.
+
+## Components
 
 This architecture is provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations its suitability for enterprise-level deployments using the following resources:
 
-- **EKS Cluster**: The module sets up an AWS EKS cluster (`aws_eks_cluster.this`). It specifies the EKS version, role ARN, and VPC configuration, ensuring the cluster is isolated within a VPC.
+- **EKS Cluster**: Utilizes AWS Elastic Kubernetes Service to manage Kubernetes clusters. Configuration specifies version, node groups, and IAM roles for cluster operations.
 
-- **Node Groups**: Multiple EKS node groups (`aws_eks_node_group.this`) are created, each configured with specific instance types and subnet associations. This setup allows for a diversified and scalable node environment.
+- **VPC and Networking**: Sets up a VPC with subnets, internet gateway, and route tables for network isolation and internet access. Public subnets and an S3 VPC endpoint are created for external and internal communications, respectively.
 
-- **Kubernetes Autoscaler**: A Kubernetes deployment is configured for the cluster autoscaler. This deployment ensures the cluster can scale its nodes based on the workload demands automatically.
+- **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
-- **EBS CSI Driver**: The module includes setup for the EBS CSI driver, which is crucial for managing storage volumes in AWS. This includes roles, policy attachments, and Kubernetes configurations (like `kubernetes_csi_driver_v1`) for the CSI driver to function correctly.
+- **ClickHouse Deployment**:
+  - **Operator and Cluster**: Deploys ClickHouse using a custom Kubernetes operator, with configurations for namespace, user, and password.
+  - **Zookeeper Integration**: Configures a Zookeeper cluster for ClickHouse coordination, deployed in its namespace.
 
-- **Networking**: It also includes configurations for VPCs, public subnets, route tables, and internet gateways, which are essential for the network infrastructure of the EKS cluster.
+- **Storage**:
+  - **EBS CSI Driver**: Implements the Container Storage Interface (CSI) for EBS, enabling dynamic provisioning of block storage for stateful applications.
+  - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.-
 
-- **Storage and Resource Access**: Kubernetes roles, role bindings, and service accounts are defined for different components, particularly for the EBS CSI driver, ensuring the right permissions for accessing and managing resources.
+- **Cluster Autoscaler**: Implements autoscaling for EKS node groups based on workload demands, ensuring efficient resource utilization.
 
-- **IAM Roles and Policies**: There are several IAM roles and policies created for different purposes, such as the EKS cluster role, node role, and a specific role for the EBS CSI driver. These roles and policies ensure appropriate permissions for the cluster to interact with other AWS services.
+- **Security**:
+  - **IAM OIDC Provider**: Establishes an IAM OIDC provider for the EKS cluster, allowing Kubernetes service accounts to assume IAM roles.
+  - **Pod Identity**: Configures service accounts with IAM roles for fine-grained access control to AWS services.
 
 ## Architecture:
 
@@ -72,3 +80,9 @@ module "aws_eks_clickhouse" {
 > ⚠️ The module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
 👉 Check [terraform registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest) for a complete terraform specification for this module.
+
+## AWS Labs Blueprint
+
+This module is the consequence of a collaboration between [Altinity](https://altinity.com) and [AWS Labs](https://awslabs.github.io/data-on-eks/). It is part of a series of tutorials to aim people do fancy stuff with data on AWS EKS (using different technologies)
+
+You can find the complete blueprint [here](#), which use most of the code provided in this repo as a terraform module.
