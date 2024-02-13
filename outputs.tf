@@ -1,9 +1,9 @@
-output "cluster_arn" {
+output "eks_cluster_arn" {
   description = "The Amazon Resource Name (ARN) of the cluster"
   value       = module.eks.cluster_arn
 }
 
-output "cluster_endpoint" {
+output "eks_cluster_endpoint" {
   description = "The endpoint for your Kubernetes API server"
   value       = module.eks.cluster_endpoint
 }
@@ -19,7 +19,7 @@ output "clickhouse_cluster_password" {
   sensitive   = true
 }
 
-output "clickhouse_cluter_url" {
-  value       = module.clickhouse_cluster.clickhouse_cluter_url
+output "clickhouse_cluster_url" {
+  value       = module.clickhouse_cluster.clickhouse_cluster_url
   description = "The public URL for the ClickHouse cluster"
 }
