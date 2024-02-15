@@ -1,3 +1,13 @@
+provider "kubernetes" {
+  host                   = aws_eks_cluster.this.endpoint
+  cluster_ca_certificate = base64decode(aws_eks_cluster.this.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+provider "aws" {
+  region = var.region
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
@@ -135,6 +145,7 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
+
 resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
