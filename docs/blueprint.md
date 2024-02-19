@@ -10,11 +10,11 @@ The deployment experience is simple but flexible. You can customize several sett
 
 We recommend keeping the defaults if you are new to EKS and ClickHouse. However, if you are familiar with EKS and ClickHouse, feel free to use this template as a starting point and customize it to your needs.
 
-> ⚠️ There are some configurations/resorces that could not be consider "production-ready". Use this examples with preacaution and as a starting point for your learning and development process.
+> ⚠️ There are some configurations/resources that could not be considered "production-ready". Use these examples with caution and as a starting point for your learning and development process.
 
 ## Components
 
-This architecture is provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations its suitability for enterprise-level deployments using the following resources:
+This architecture provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations ensures its suitability for enterprise-level deployments using the following resources:
 
 - **EKS Cluster**: Utilizes AWS Elastic Kubernetes Service to manage Kubernetes clusters. Configuration specifies version, node groups, and IAM roles for cluster operations.
 
@@ -28,13 +28,11 @@ This architecture is provides a scalable, secure, and efficient environment for 
 
 - **Storage**:
   - **EBS CSI Driver**: Implements the Container Storage Interface (CSI) for EBS, enabling dynamic provisioning of block storage for stateful applications.
-  - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.-
+  - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.
 
 - **Cluster Autoscaler**: Implements autoscaling for EKS node groups based on workload demands, ensuring efficient resource utilization.
 
 ## Deploying the Solution
-
-We are going to use terraform to deploy the solution. The terraform code is separated in different modules: one for the EKS cluster, one for ClickHouse operator (and Zookeeper Cluster), and one for ClickHouse cluster deployment. Variables are used to customize the deployment, including AWS region, cluster name, node configurations, and networking settings.
 
 ### Pre-requisites
 
@@ -45,7 +43,7 @@ We are going to use terraform to deploy the solution. The terraform code is sepa
 
 ### Steps
 
-1. Clone the repository
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/awslabs/data-on-eks.git
@@ -54,7 +52,7 @@ git clone https://github.com/awslabs/data-on-eks.git
 2. Navigate into the example directory and run `install.sh` to initialize terrafrom and apply the changes.
 
 ```bash
-cd data-on-eks/analysis/terraform/clickhouse-eks
+cd data-on-eks/analytics/terraform/clickhouse-eks
 chmod +x install.sh
 ./install.sh
 ```
@@ -84,6 +82,8 @@ kubectl get pods -n zoo1ns
 Clickhouse uses a SQL-like language to interact with the database. You can use the `clickhouse-client` to connect to the database and create your first table.
 
 ### Connect to the ClickHouse cluster
+Retrieve the ClickHouse cluster credentials and connect using the clickhouse-client.
+
 ```bash
 password=$(terraform  output clickhouse_cluster_password | tr -d '"')
 host=$(terraform  output clickhouse_cluster_url | tr -d '"')
@@ -92,13 +92,16 @@ clickhouse client --host=$host --user=test --password=$password
 ```
 
 ### Create a database
+> I stole these sql examples from clickhoue docs. I will replace them with something more meaningful. Maybe using an s3 bucket as a source?
+
+Create a new database named `helloworld` if it doesn't already exist.
 
 ```sql
 CREATE DATABASE IF NOT EXISTS helloworld
 ```
 
 ### Create a table
-
+Define a new table `my_first_table` in the `helloworld` database, specifying its schema.
 ```sql
 CREATE TABLE helloworld.my_first_table
 (
@@ -112,6 +115,7 @@ PRIMARY KEY (user_id, timestamp)
 ```
 
 ### Add some data
+Insert sample data into `my_first_table` demonstrating basic usage.
 
 ```sql
 INSERT INTO helloworld.my_first_table (user_id, message, timestamp, metric) VALUES
@@ -122,6 +126,8 @@ INSERT INTO helloworld.my_first_table (user_id, message, timestamp, metric) VALU
 ```
 
 ### Query the data
+Retrieve and display all records from `my_first_table`, ordered by `timestamp`.
+
 
 ```sql
 SELECT *
@@ -130,13 +136,26 @@ ORDER BY timestamp
 ```
 
 ## Next Steps
+> Is this ok? Should we add more detail here or consider other topics?
 
-### Multi Node Clusters?
-
-### Monitoring & Observability
-
-### What else?
+- Explore options for deploying Multi Node Clusters for higher availability and scalability.
+- Implement Monitoring & Observability solutions for in-depth performance and health insights.
+- Consider additional security measures, backup strategies, and disaster recovery plans.
+- Investigate advanced networking configurations, focusing on the use of private subnets and NAT gateways to enhance security and control traffic flow within your EKS environment.
 
 ## Cleanup
 
+When you are done with the ClickHouse cluster, you can remove it by running the `uninstall.sh` script. This will delete the EKS cluster and all the resources created by the Terraform script.
+
+```bash
+cd data-on-eks/analytics/terraform/clickhouse-eks && terraform destroy
+```
+
 ## Altinity
+
+> Add a section about Altinity and how they can help with ClickHouse deployments.
+
+[Altinity](https://altinity.cloud) offers enterprise-grade support for ClickHouse, including optimized builds and consultancy services.
+
+>
+
