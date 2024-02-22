@@ -1,5 +1,7 @@
 # EBS & CSI Driver
 
+> 💡 TL;DR This configuration sets up the necessary IAM roles and policies, Kubernetes roles, service accounts, and deployments to enable the AWS EBS CSI driver in an EKS cluster. This setup allows the Kubernetes cluster to dynamically provision EBS volumes as persistent storage for pods, leveraging the capabilities of AWS EBS.
+
 This Terraform module is configuring the AWS Elastic Block Store (EBS) Container Storage Interface (CSI) driver in a Kubernetes cluster managed by AWS EKS. The EBS CSI driver allows Kubernetes to provision, mount, and manage EBS volumes. Here are the key resources and their roles in this setup:
 
 ### IAM Policy and Role for EBS CSI Driver
@@ -22,4 +24,3 @@ This Terraform module is configuring the AWS Elastic Block Store (EBS) Container
 - `kubernetes_csi_driver_v1.ebs_csi_aws_com`: Registers the `ebs.csi.aws.com` CSI driver in the Kubernetes cluster.
 - `kubernetes_storage_class.gp3-encrypted`: Defines a storage class for provisioning EBS volumes. This particular storage class is set to use the `gp3` volume type and encrypt the volumes. (which is what we recommended for ClickHouse)
 
-> 💡 TL;DR This configuration sets up the necessary IAM roles and policies, Kubernetes roles, service accounts, and deployments to enable the AWS EBS CSI driver in an EKS cluster. This setup allows the Kubernetes cluster to dynamically provision EBS volumes as persistent storage for pods, leveraging the capabilities of AWS EBS.

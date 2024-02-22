@@ -36,10 +36,10 @@ This architecture provides a scalable, secure, and efficient environment for run
 
 ### Pre-requisites
 
-- kubectl
-- aws cli
-- terraform
-- clickhouse client
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+- [clickhouse client](https://clickhouse.com/docs/en/integrations/sql-clients/clickhouse-client-local)
 
 ### Steps
 
@@ -49,7 +49,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 git clone https://github.com/awslabs/data-on-eks.git
 ```
 
-2. Navigate into the example directory and run `install.sh` to initialize terrafrom and apply the changes.
+2. Navigate into the example directory and run `install.sh` to initialize terraform and apply the changes.
 
 ```bash
 cd data-on-eks/analytics/terraform/clickhouse-eks
@@ -57,7 +57,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> This will take a few minutes to complete. Once it's done, you will see the output of the terraform apply command, including the kubeconfig file for the EKS cluster.
+> This will take a few minutes to complete. Once it's done, you will see the output of the `terraform apply` command, including the `kubeconfig` file for the EKS cluster.
 
 ### Verify
 
@@ -82,7 +82,7 @@ kubectl get pods -n zoo1ns
 Clickhouse uses a SQL-like language to interact with the database. You can use the `clickhouse-client` to connect to the database and create your first table.
 
 ### Connect to the ClickHouse cluster
-Retrieve the ClickHouse cluster credentials and connect using the clickhouse-client.
+Retrieve the ClickHouse cluster credentials and connect using the `clickhouse-client`.
 
 ```bash
 password=$(terraform  output clickhouse_cluster_password | tr -d '"')
