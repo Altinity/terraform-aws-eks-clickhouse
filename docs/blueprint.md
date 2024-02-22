@@ -49,7 +49,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 git clone https://github.com/awslabs/data-on-eks.git
 ```
 
-2. Navigate into the example directory and run `install.sh` to initialize terraform and apply the changes.
+2. Navigate into the example directory and run `install.sh` to initialize Terraform and apply the changes.
 
 ```bash
 cd data-on-eks/analytics/terraform/clickhouse-eks
