@@ -20,7 +20,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 
 - **Storage**:
   - **EBS CSI Driver**: Implements the Container Storage Interface (CSI) for EBS, enabling dynamic provisioning of block storage for stateful applications.
-  - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.-
+  - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.
 
 - **Cluster Autoscaler**: Implements autoscaling for EKS node groups based on workload demands, ensuring efficient resource utilization.
 
@@ -79,7 +79,7 @@ module "aws_eks_clickhouse" {
 
 > ⚠️ The module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
-👉 Check [terraform registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest) for a complete terraform specification for this module.
+👉 Check the [Terraform registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest) for a complete Terraform specification for this module.
 
 ## AWS Labs Blueprint
 

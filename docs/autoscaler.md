@@ -1,5 +1,7 @@
 # Kubernetes Autoscaler
 
+> 💡 TLDR; This setup ensures that the Cluster Autoscaler in Kubernetes has the necessary permissions and configuration to manage node scaling within an AWS EKS cluster. The autoscaler will monitor the load and resource requirements of the pods and adjust the number of nodes in the cluster accordingly.
+> 
 This Terraform module sets up the Cluster Autoscaler for an AWS EKS cluster. The Cluster Autoscaler automatically adjusts the number of nodes in your Kubernetes cluster when pods fail to launch due to insufficient resources or when nodes are underutilized and their workloads can be moved elsewhere. Here's a breakdown of the key components:
 
 ### IAM Policy for Cluster Autoscaler
@@ -24,5 +26,3 @@ This Terraform module sets up the Cluster Autoscaler for an AWS EKS cluster. The
 ### Kubernetes Deployment
 - `kubernetes_deployment.cluster_autoscaler`: deploys the Cluster Autoscaler application in the Kubernetes cluster. It includes the container image for the Cluster Autoscaler, resource requests and limits, and specific configurations like command-line arguments to control its behavior.
 - This also includes affinity settings to ensure that the autoscaler pods do not co-locate on the same host, which is a best practice for high availability.
-
-> 💡 TLDR; This setup ensures that the Cluster Autoscaler in Kubernetes has the necessary permissions and configuration to manage node scaling within an AWS EKS cluster. The autoscaler will monitor the load and resource requirements of the pods and adjust the number of nodes in the cluster accordingly.
