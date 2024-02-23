@@ -1,13 +1,3 @@
-provider "kubernetes" {
-  host                   = aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "aws" {
-  region = var.region
-}
-
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
