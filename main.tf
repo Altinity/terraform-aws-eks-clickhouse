@@ -2,18 +2,27 @@ provider "aws" {
   region = var.region
 }
 
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
-  token                  = module.eks.cluster_token
+data "aws_eks_cluster_auth" "this" {
+  name = var.cluster_name
 }
+
+data "aws_eks_cluster" "this" {
+  name = var.cluster_name
+}
+
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.this.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
 
 provider "kubectl" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
-  token                  = module.eks.cluster_token
+  host                   = data.aws_eks_cluster.this.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.this.token
 }
-
 module "eks" {
   source = "./eks"
 
@@ -64,6 +73,10 @@ module "clickhouse_cluster" {
   clickhouse_cluster_password      = var.clickhouse_cluster_password
   clickhouse_cluster_user          = var.clickhouse_cluster_user
   clickhouse_cluster_manifest_path = var.clickhouse_cluster_manifest_path
+
+  cluster_token                 = module.eks.cluster_token
+  cluster_endpoint              = module.eks.cluster_endpoint
+  cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
 
   depends_on = [module.clickhouse_operator]
 }

@@ -19,7 +19,7 @@ output "cluster_endpoint" {
 }
 
 output "cluster_token" {
-  value= data.aws_eks_cluster_auth.this.token
+  value       = data.aws_eks_cluster_auth.this.token
   description = "The token for the cluster"
-  sensitive = true
+  sensitive   = true
 }

@@ -34,9 +34,7 @@ variable "replicas" {
 variable "tags" {
   description = "A map of tags"
   type        = map(string)
-  default = {
-    CreatedBy = "nacho"
-  }
+  default     = {}
 }
 
 variable "cidr" {

@@ -33,3 +33,19 @@ variable "zookeeper_namespace" {
   default     = "zoo1ns"
   type        = string
 }
+
+
+variable "cluster_endpoint" {
+  type = string
+  default = ""
+}
+
+variable "cluster_certificate_authority" {
+  type = string
+  default = ""
+}
+
+variable "cluster_token" {
+  type = string
+  default = ""
+}

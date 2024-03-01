@@ -33,6 +33,10 @@ module "eks_clickhouse" {
     disk_size      = 20
     instance_types = ["m5.large"]
   }
+
+  tags = {
+    CreatedBy = "mr-robot"
+  }
 }
 ```
 
@@ -45,22 +49,11 @@ module "eks_clickhouse" {
 
 ## TODO
 
-- [ ] Complete docs and add diagram architecture
-- [x] Operator installation alternatives:
-  - ~~Use k8s provider `manifest` and split workflow in 2 terraform applies~~
-  - ~~Install the operator using `null_resource` and `kubectl` (with in memory Kubeconfig)~~
-  - [x] Install operator using `kubectl` provider 👌
-  - ~~Install the operator manually using `kubectl`~~
-- [x] Add examples to spin up clickhouse cluster + zookeper
+- [ ] Finish docs and add diagram architecture
 - [ ] Add contact info on `README.md`
 - [ ] Add module `examples` directory for TF registry
-- [ ] Annalize using dynamic subsents generation
-- [x] Add `outputs` for the module
 - [ ] ~~Add `addons` for the module~~
-- [ ] Going production ready
 - [ ] ~~Nat and private subnets~~
-- [ ] Add `terratest`
-- [ ] More modules? (ebs, autoscaler, vpc)
 
 ## Legal
 
