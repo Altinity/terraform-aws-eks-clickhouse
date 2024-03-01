@@ -96,3 +96,28 @@ data "kubernetes_service" "clickhouse_load_balancer" {
     namespace = var.clickhouse_cluster_namespace
   }
 }
+
+resource "null_resource" "pre_destroy" {
+  depends_on = [kubectl_manifest.clickhouse_cluster]
+
+  triggers = {
+    kubeconfig = "${local.kubeconfig}"
+    namespace  = var.clickhouse_cluster_namespace
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = <<-EOT
+      KUBECONFIG_PATH=$(mktemp)
+      echo '${self.triggers.kubeconfig}' > $KUBECONFIG_PATH
+      NAMESPACE="${self.triggers.namespace}"
+
+      while kubectl --kubeconfig $KUBECONFIG_PATH get service --namespace $NAMESPACE; do
+        echo "Waiting for ClickHouse LoadBalancer deletion..."
+        sleep 10
+      done
+
+      rm $KUBECONFIG_PATH
+    EOT
+  }
+}
