@@ -31,7 +31,7 @@ output "clickhouse_cluster_password" {
   sensitive   = true
 }
 
-output "clickhouse_cluster_url" {
-  description = "The public URL for the ClickHouse cluster"
-  value       = module.clickhouse_cluster.clickhouse_cluster_url
-}
+# output "clickhouse_cluster_url" {
+#   description = "The public URL for the ClickHouse cluster"
+#   value       = module.clickhouse_cluster.clickhouse_cluster_url
+# }

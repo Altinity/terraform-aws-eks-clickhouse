@@ -58,44 +58,44 @@ resource "kubectl_manifest" "clickhouse_cluster" {
 }
 
 # This is a "hack" wich waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
-resource "null_resource" "wait_for_clickhouse" {
-  depends_on = [kubectl_manifest.clickhouse_cluster]
+# resource "null_resource" "wait_for_clickhouse" {
+#   depends_on = [kubectl_manifest.clickhouse_cluster]
 
-  provisioner "local-exec" {
-    command = <<-EOT
-      KUBECONFIG_PATH=$(mktemp)
-      echo '${local.kubeconfig}' > $KUBECONFIG_PATH
-      NAMESPACE=${var.clickhouse_cluster_namespace}
-      SLEEP_TIME=10
-      TIMEOUT=600
+#   provisioner "local-exec" {
+#     command = <<-EOT
+#       KUBECONFIG_PATH=$(mktemp)
+#       echo '${local.kubeconfig}' > $KUBECONFIG_PATH
+#       NAMESPACE=${var.clickhouse_cluster_namespace}
+#       SLEEP_TIME=10
+#       TIMEOUT=600
 
-      end=$((SECONDS+TIMEOUT))
-      echo "Waiting for cluster in the namespace $NAMESPACE to receive a hostname..."
+#       end=$((SECONDS+TIMEOUT))
+#       echo "Waiting for cluster in the namespace $NAMESPACE to receive a hostname..."
 
-      while [ $SECONDS -lt $end ]; do
-          HOSTNAME=$(kubectl --kubeconfig $KUBECONFIG_PATH get svc --namespace=$NAMESPACE -o jsonpath='{.items[?(@.spec.type=="LoadBalancer")].status.loadBalancer.ingress[0].hostname}' | awk '{print $1}')
-          if [ -n "$HOSTNAME" ]; then
-              echo "Cluster has received a hostname: $HOSTNAME"
-              exit 0
-          fi
-          echo "Cluster does not have a hostname yet. Rechecking in $SLEEP_TIME seconds..."
-          sleep $SLEEP_TIME
-      done
+#       while [ $SECONDS -lt $end ]; do
+#           HOSTNAME=$(kubectl --kubeconfig $KUBECONFIG_PATH get service --namespace=$NAMESPACE -o jsonpath='{.items[?(@.spec.type=="LoadBalancer")].status.loadBalancer.ingress[0].hostname}' | awk '{print $1}')
+#           if [ -n "$HOSTNAME" ]; then
+#               echo "Cluster has received a hostname: $HOSTNAME"
+#               exit 0
+#           fi
+#           echo "Cluster does not have a hostname yet. Rechecking in $SLEEP_TIME seconds..."
+#           sleep $SLEEP_TIME
+#       done
 
-      echo "Timed out waiting for cluster to receive a hostname in namespace $NAMESPACE."
-      exit 1
-    EOT
-  }
-}
+#       echo "Timed out waiting for cluster to receive a hostname in namespace $NAMESPACE."
+#       exit 1
+#     EOT
+#   }
+# }
 
-data "kubernetes_service" "clickhouse_load_balancer" {
-  depends_on = [null_resource.wait_for_clickhouse]
+# data "kubernetes_service" "clickhouse_load_balancer" {
+#   depends_on = [null_resource.wait_for_clickhouse]
 
-  metadata {
-    name      = "${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name}"
-    namespace = var.clickhouse_cluster_namespace
-  }
-}
+#   metadata {
+#     name      = "${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name}"
+#     namespace = var.clickhouse_cluster_namespace
+#   }
+# }
 
 resource "null_resource" "pre_destroy" {
   depends_on = [kubectl_manifest.clickhouse_cluster]
