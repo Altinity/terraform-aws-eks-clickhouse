@@ -47,13 +47,12 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Usage
 
 ```hcl
-
 module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
   version = "0.1.1"
 
   cluster_name = "clickhouse-cluster"
-  region       = "us-east-1"
+  region       = var.region
   cidr         = "10.0.0.0/16"
   subnets      = [
     { cidr_block = "10.0.1.0/24", az = "${var.region}a" },

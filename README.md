@@ -24,12 +24,11 @@ Install:
 Paste the following Terraform sample module into file clickhouse-eks.tf in a new directory. Adjust properties as desired. The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
 ```hcl
-
 module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
 
   cluster_name = "clickhouse-cluster"
-  region       = "us-east-1"
+  region       = var.region
   cidr         = "10.0.0.0/16"
   subnets      = [
     { cidr_block = "10.0.1.0/24", az = "${var.region}a" },
@@ -56,7 +55,7 @@ module "aws_eks_clickhouse" {
 ### Run Terraform to create the cluster
 
 Execute commands to initialize and apply the Terraform module. It will create an EKS cluster and install a ClickHouse sample database.
-```
+```sh
 export AWS_ACCESS_KEY_ID=<key-id>
 export AWS_SECRET_ACCESS_KEY=<super-secret-key>
 export AWS_SESSION_TOKEN="<session-token>"
@@ -64,29 +63,35 @@ export AWS_SESSION_TOKEN="<session-token>"
 terraform init
 terraform apply
 ```
+
+By default it deploys to the `us-east-1` region, to set different region, use:
+```sh
+terraform apply --var=region=eu-central-1
+```
+
 Setting up the EKS cluster and sample database takes from 10 to 20 minutes depending on the load in your cluster and availability of resources. 
 
 ### Access your ClickHouse database
 
 Get credentials for the EKS Kubernetes cluster. 
-```
+```sh
 aws eks update-kubeconfig --region us-east-1 --name clickhouse-cluster
 ```
 
 Connect to your ClickHouse server using `kubectl exec`. 
-```
+```sh
 kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
 ```
 
 ### Run Terraform to remove the cluster
 
 After use you can destroy the EKS cluster.  First, delete any ClickHouse clusters you have created. 
-```
+```sh
 kubectl delete chi --all --all-namespaces
 ```
 
 Second, run `terraform destroy` to remove the EKS cluster and any cloud resources. 
-```
+```sh
 terraform destroy
 ```
 
