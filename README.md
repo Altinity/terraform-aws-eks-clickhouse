@@ -14,27 +14,27 @@ Terraform module for creating EKS clusters optimized for ClickHouse with EBS and
 
 ### Prerequisites
 
-Install [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
+Install:
+  - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (recommended `<= v1.5`)
+  - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
+  - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ### Create Terraform file
 
 Paste the following Terraform sample module into file clickhouse-eks.tf in a new directory. Adjust properties as desired. The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
 ```hcl
-provider "aws" {
-  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
-}
 
-module "eks_clickhouse" {
-  source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
+module "aws_eks_clickhouse" {
+  source  = "Altinity/eks-clickhouse/aws"
 
   cluster_name = "clickhouse-cluster"
   region       = "us-east-1"
   cidr         = "10.0.0.0/16"
   subnets      = [
-    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
+    { cidr_block = "10.0.1.0/24", az = "${var.region}a" },
+    { cidr_block = "10.0.2.0/24", az = "${var.region}b" },
+    { cidr_block = "10.0.3.0/24", az = "${var.region}c" }
   ]
 
   node_pools_config = {
@@ -57,6 +57,10 @@ module "eks_clickhouse" {
 
 Execute commands to initialize and apply the Terraform module. It will create an EKS cluster and install a ClickHouse sample database.
 ```
+export AWS_ACCESS_KEY_ID=<key-id>
+export AWS_SECRET_ACCESS_KEY=<super-secret-key>
+export AWS_SESSION_TOKEN="<session-token>"
+
 terraform init
 terraform apply
 ```
