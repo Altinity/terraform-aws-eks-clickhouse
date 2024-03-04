@@ -47,9 +47,9 @@ variable "subnets" {
   description = "List of subnets"
   type        = list(map(string))
   default = [
-    { cidr_block = "10.0.1.0/24", az = "${var.region}a" },
-    { cidr_block = "10.0.2.0/24", az = "${var.region}b" },
-    { cidr_block = "10.0.3.0/24", az = "${var.region}c" }
+    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
+    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
+    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
   ]
 }
 
