@@ -47,6 +47,10 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Usage
 
 ```hcl
+variable "region" {
+  default     = "us-east-1"
+}
+
 module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
   version = "0.1.1"
