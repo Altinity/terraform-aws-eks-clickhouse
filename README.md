@@ -66,6 +66,7 @@ terraform apply
 
 By default it deploys to the `us-east-1` region, to set different region, use:
 ```sh
+export AWS_REGION="eu-central-1"
 terraform apply --var=region=eu-central-1
 ```
 
