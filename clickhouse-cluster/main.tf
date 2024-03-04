@@ -97,27 +97,25 @@ resource "kubectl_manifest" "clickhouse_cluster" {
 #   }
 # }
 
-resource "null_resource" "pre_destroy" {
-  depends_on = [kubectl_manifest.clickhouse_cluster]
+# resource "null_resource" "pre_destroy" {
+#   triggers = {
+#     kubeconfig = "${local.kubeconfig}"
+#     namespace  = var.clickhouse_cluster_namespace
+#   }
 
-  triggers = {
-    kubeconfig = "${local.kubeconfig}"
-    namespace  = var.clickhouse_cluster_namespace
-  }
+#   provisioner "local-exec" {
+#     when = destroy
+#     command = <<-EOT
+#       KUBECONFIG_PATH=$(mktemp)
+#       echo '${self.triggers.kubeconfig}' > $KUBECONFIG_PATH
+#       NAMESPACE="${self.triggers.namespace}"
 
-  provisioner "local-exec" {
-    when = destroy
-    command = <<-EOT
-      KUBECONFIG_PATH=$(mktemp)
-      echo '${self.triggers.kubeconfig}' > $KUBECONFIG_PATH
-      NAMESPACE="${self.triggers.namespace}"
+#       while kubectl --kubeconfig $KUBECONFIG_PATH get service --namespace $NAMESPACE; do
+#         echo "Waiting for ClickHouse LoadBalancer deletion..."
+#         sleep 10
+#       done
 
-      while kubectl --kubeconfig $KUBECONFIG_PATH get service --namespace $NAMESPACE; do
-        echo "Waiting for ClickHouse LoadBalancer deletion..."
-        sleep 10
-      done
-
-      rm $KUBECONFIG_PATH
-    EOT
-  }
-}
+#       rm $KUBECONFIG_PATH
+#     EOT
+#   }
+# }
