@@ -24,6 +24,13 @@ Install:
 Paste the following Terraform sample module into file clickhouse-eks.tf in a new directory. Adjust properties as desired. The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
 ```hcl
+provider "aws" {
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  # region     = "us-east-1"
+  # access_key = "my-access-key"
+  # secret_key = "my-secret-key"
+}
+
 variable "region" {
   default     = "us-east-1"
 }

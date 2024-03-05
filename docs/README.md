@@ -47,6 +47,13 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Usage
 
 ```hcl
+provider "aws" {
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  # region     = "us-east-1"
+  # access_key = "my-access-key"
+  # secret_key = "my-secret-key"
+}
+
 variable "region" {
   default     = "us-east-1"
 }
