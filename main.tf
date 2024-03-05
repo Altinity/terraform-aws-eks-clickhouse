@@ -8,7 +8,7 @@ provider "kubernetes" {
 
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name, "--region", var.region]
     command     = "aws"
   }
 }
@@ -20,7 +20,7 @@ provider "kubectl" {
 
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name, "--region", var.region]
     command     = "aws"
   }
 }
@@ -52,6 +52,10 @@ module "clickhouse_operator" {
   depends_on = [module.eks]
 }
 
+locals {
+  kubeconfig_user_exec = replace(replace(var.kubeconfig_user_exec, "$CLUSTER_NAME", var.cluster_name), "$REGION", var.region)
+}
+
 module "clickhouse_cluster" {
   source = "./clickhouse-cluster"
 
@@ -60,8 +64,9 @@ module "clickhouse_cluster" {
   clickhouse_cluster_password      = var.clickhouse_cluster_password
   clickhouse_cluster_user          = var.clickhouse_cluster_user
   clickhouse_cluster_manifest_path = var.clickhouse_cluster_manifest_path
+  wait_for_clickhouse_loadbalancer = var.wait_for_clickhouse_loadbalancer
+  kubeconfig_user_exec             = local.kubeconfig_user_exec
 
-  cluster_token                 = module.eks.cluster_token
   cluster_endpoint              = module.eks.cluster_endpoint
   cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
 
