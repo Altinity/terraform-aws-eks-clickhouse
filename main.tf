@@ -42,7 +42,7 @@ module "eks" {
 }
 
 module "clickhouse_operator" {
-  # count = var.install_clikchouse_operator ? 1 : 0
+  count = var.install_clikchouse_operator ? 1 : 0
   source = "./clickhouse-operator"
 
   clickhouse_operator_manifest_path = var.clickhouse_operator_manifest_path
@@ -56,7 +56,7 @@ locals {
 }
 
 module "clickhouse_cluster" {
-  # count = var.install_clikchouse_cluster ? 1 : 0
+  count = var.install_clikchouse_cluster ? 1 : 0
   source = "./clickhouse-cluster"
 
   clickhouse_cluster_name          = var.clickhouse_cluster_name

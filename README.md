@@ -28,6 +28,9 @@ provider "aws" {
 module "eks_clickhouse" {
   source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
+  install_clikchouse_operator = true
+  install_clikchouse_cluster  = true
+
   cluster_name = "clickhouse-cluster"
   region       = "us-east-1"
   cidr         = "10.0.0.0/16"

@@ -31,11 +31,11 @@ output "get_load_balancer" {
 
 output "clickhouse_cluster_password" {
   description = "The generated password for the ClickHouse cluster"
-  value       = module.clickhouse_cluster.clickhouse_cluster_password
+  value       = length(module.clickhouse_cluster) > 0 ? module.clickhouse_cluster[0].clickhouse_cluster_password : ""
   sensitive   = true
 }
 
 output "clickhouse_cluster_url" {
   description = "The public URL for the ClickHouse cluster"
-  value       = module.clickhouse_cluster.clickhouse_cluster_url
+  value       = length(module.clickhouse_cluster) > 0 ? module.clickhouse_cluster[0].clickhouse_cluster_url : ""
 }
