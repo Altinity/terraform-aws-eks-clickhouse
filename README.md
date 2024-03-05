@@ -15,7 +15,7 @@ Terraform module for creating EKS clusters optimized for ClickHouse with EBS and
 ### Prerequisites
 
 Install:
-  - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (recommended `<= v1.5`)
+  - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (recommended `>= v1.5`)
   - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
   - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
