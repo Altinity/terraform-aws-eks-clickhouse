@@ -41,7 +41,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Prerequisites
 
 - AWS Account with appropriate permissions
-- Terraform installed (recommended `<= v1.5`)
+- Terraform installed (recommended `>= v1.5`)
 - Basic knowledge of Kubernetes and AWS services
 
 ## Usage
@@ -60,7 +60,6 @@ variable "region" {
 
 module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
-  version = "0.1.1"
 
   cluster_name = "clickhouse-cluster"
   region       = var.region
