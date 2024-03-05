@@ -52,6 +52,15 @@ module "eks_clickhouse" {
     CreatedBy = "mr-robot"
   }
 }
+
+output "get_load_balancer" {
+  value = module.eks_clickhouse.get_load_balancer
+}
+
+output "clickhouse_cluster_password" {
+  value     = module.eks_clickhouse.clickhouse_cluster_password
+  sensitive = true
+}
 ```
 ### Run Terraform to create the cluster
 
@@ -60,34 +69,34 @@ Execute commands to initialize and apply the Terraform module. It will create an
 terraform init
 terraform apply
 ```
-Setting up the EKS cluster and sample database takes from 10 to 20 minutes depending on the load in your cluster and availability of resources. 
+Setting up the EKS cluster and sample database takes from 10 to 20 minutes depending on the load in your cluster and availability of resources.
 
 ### Access your ClickHouse database
 
-Get credentials for the EKS Kubernetes cluster. 
+Get credentials for the EKS Kubernetes cluster.
 ```
 aws eks update-kubeconfig --region us-east-1 --name clickhouse-cluster
 ```
 
-Connect to your ClickHouse server using `kubectl exec`. 
+Connect to your ClickHouse server using `kubectl exec`.
 ```
 kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
 ```
 
 ### Run Terraform to remove the cluster
 
-After use you can destroy the EKS cluster.  First, delete any ClickHouse clusters you have created. 
+After use you can destroy the EKS cluster.  First, delete any ClickHouse clusters you have created.
 ```
 kubectl delete chi --all --all-namespaces
 ```
 
-Second, run `terraform destroy` to remove the EKS cluster and any cloud resources. 
+Second, run `terraform destroy` to remove the EKS cluster and any cloud resources.
 ```
 terraform destroy
 ```
 
 ### Problems?
-If a terraform operation does not complete, try running it again. If the problem persists, please [file an issue](https://github.com/Altinity/terraform-aws-eks-clickhouse/issues). 
+If a terraform operation does not complete, try running it again. If the problem persists, please [file an issue](https://github.com/Altinity/terraform-aws-eks-clickhouse/issues).
 
 ## Docs
 
@@ -104,8 +113,8 @@ If a terraform operation does not complete, try running it again. If the problem
 
 ## More Information and Commercial Support
 
-Altinity is the maintainer of this project. Altinity offers a range of 
-services related to ClickHouse and analytic applications on Kubernetes. 
+Altinity is the maintainer of this project. Altinity offers a range of
+services related to ClickHouse and analytic applications on Kubernetes.
 
 - [Official website](https://altinity.com/) - Get a high level overview of Altinity and our offerings.
 - [Altinity.Cloud](https://altinity.com/cloud-database/) - Run ClickHouse in our cloud or yours.
