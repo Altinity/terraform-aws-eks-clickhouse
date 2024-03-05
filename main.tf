@@ -42,12 +42,11 @@ module "eks" {
 }
 
 module "clickhouse_operator" {
+  # count = var.install_clikchouse_operator ? 1 : 0
   source = "./clickhouse-operator"
 
   clickhouse_operator_manifest_path = var.clickhouse_operator_manifest_path
-  zookeeper_cluster_manifest_path   = var.zookeeper_cluster_manifest_path
   clickhouse_operator_namespace     = var.clickhouse_operator_namespace
-  zookeeper_namespace               = var.zookeeper_namespace
 
   depends_on = [module.eks]
 }
@@ -57,6 +56,7 @@ locals {
 }
 
 module "clickhouse_cluster" {
+  # count = var.install_clikchouse_cluster ? 1 : 0
   source = "./clickhouse-cluster"
 
   clickhouse_cluster_name          = var.clickhouse_cluster_name
@@ -65,6 +65,7 @@ module "clickhouse_cluster" {
   clickhouse_cluster_user          = var.clickhouse_cluster_user
   clickhouse_cluster_manifest_path = var.clickhouse_cluster_manifest_path
   wait_for_clickhouse_loadbalancer = var.wait_for_clickhouse_loadbalancer
+  zookeeper_cluster_manifest_path  = var.zookeeper_cluster_manifest_path
   kubeconfig_user_exec             = local.kubeconfig_user_exec
 
   cluster_endpoint              = module.eks.cluster_endpoint

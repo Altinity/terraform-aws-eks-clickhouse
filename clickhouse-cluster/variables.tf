@@ -4,6 +4,12 @@ variable "clickhouse_cluster_manifest_path" {
   type        = string
 }
 
+variable "zookeeper_cluster_manifest_path" {
+  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
+  default     = "./manifests/zookeeper-cluster.yaml"
+  type        = string
+}
+
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
   default     = "chi"

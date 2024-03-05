@@ -1,6 +1,10 @@
 locals {
   clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 
+  zookeeper_cluster_yaml   = file("${path.module}/${var.zookeeper_cluster_manifest_path}")
+  # Split operator YAML file into individual manifests
+  zookeeper_cluster_manifests   = split("\n---\n", replace(local.zookeeper_cluster_yaml, "\n+", "\n"))
+
   kubeconfig = <<EOT
     apiVersion: v1
     kind: Config
@@ -43,17 +47,23 @@ resource "kubernetes_namespace" "clickhouse" {
   }
 }
 
+# Setups a single node Zookeeper cluster
+resource "kubectl_manifest" "zookeeper_cluster" {
+  for_each  = { for doc in local.zookeeper_cluster_manifests : sha1(doc) => doc }
+  yaml_body = each.value
+
+  override_namespace = kubernetes_namespace.clickhouse.metadata[0].name
+}
+
 # Deploys the ClickHouse cluster using a custom resource definition (CRD),
 #  defined by the ClickHouse operator.
 resource "kubectl_manifest" "clickhouse_cluster" {
-  depends_on = [kubernetes_namespace.clickhouse]
-
   yaml_body = templatefile("${path.module}/${var.clickhouse_cluster_manifest_path}", {
     name                = var.clickhouse_cluster_name
-    namespace           = var.clickhouse_cluster_namespace
+    namespace           = kubernetes_namespace.clickhouse.metadata[0].name
     user                = var.clickhouse_cluster_user
     password            = local.clickhouse_password
-    zookeeper_namespace = var.zookeeper_namespace
+    zookeeper_namespace = kubernetes_namespace.clickhouse.metadata[0].name
   })
 }
 

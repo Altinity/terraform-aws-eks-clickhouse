@@ -151,6 +151,18 @@ variable "wait_for_clickhouse_loadbalancer" {
   default     = false
 }
 
+variable "install_clikchouse_cluster" {
+  description = "Enable the installation of the ClickHouse cluster"
+  type        = bool
+  default     = true
+}
+
+variable "install_clikchouse_operator" {
+  description = "Enable the installation of the ClickHouse operator"
+  type        = bool
+  default     = true
+}
+
 variable "kubeconfig_user_exec" {
   description = "The exec block configuration for kubeconfig user authentication"
   type        = string

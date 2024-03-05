@@ -9,6 +9,7 @@ spec:
       ${user}/password: ${password}
       # to allow access outside from kubernetes
       ${user}/networks/ip: 0.0.0.0/0
+      ${user}/access_management: 1
     zookeeper:
         nodes:
         - host: zookeeper.${zookeeper_namespace}
