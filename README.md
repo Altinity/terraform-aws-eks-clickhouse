@@ -107,6 +107,11 @@ Second, run `terraform destroy` to remove the EKS cluster and any cloud resource
 terraform destroy
 ```
 
+Specify the region if custom one was used: 
+```sh
+terraform destroy --var=region=eu-central-1
+```
+
 ### Problems?
 If a terraform operation does not complete, try running it again. If the problem persists, please [file an issue](https://github.com/Altinity/terraform-aws-eks-clickhouse/issues). 
 
