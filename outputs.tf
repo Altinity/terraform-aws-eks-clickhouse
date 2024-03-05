@@ -8,16 +8,21 @@ output "eks_cluster_endpoint" {
   value       = module.eks.cluster_endpoint
 }
 
+output "eks_cluster_name" {
+  description = "The name for your Kubernetes API server"
+  value       = module.eks.cluster_name
+}
+
 output "eks_cluster_ca_certificate" {
   description = "The base64 encoded certificate data required to communicate with your cluster"
-  value = module.eks.cluster_certificate_authority
-  sensitive = true
+  value       = module.eks.cluster_certificate_authority
+  sensitive   = true
 }
 
 output "eks_cluster_token" {
   description = "The token required to communicate with your cluster"
-  value = module.eks.cluster_token
-  sensitive = true
+  value       = module.eks.cluster_token
+  sensitive   = true
 }
 
 output "configure_kubectl" {

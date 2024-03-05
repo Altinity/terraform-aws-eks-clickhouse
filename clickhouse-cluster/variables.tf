@@ -36,16 +36,16 @@ variable "zookeeper_namespace" {
 
 
 variable "cluster_endpoint" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "cluster_certificate_authority" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "cluster_token" {
-  type = string
+  type    = string
   default = ""
 }

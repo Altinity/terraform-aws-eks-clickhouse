@@ -5,22 +5,28 @@ provider "aws" {
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
-  token                  = data.aws_eks_cluster_auth.this.token
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    command     = "aws"
+  }
 }
 
 provider "kubectl" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
-  token                  = data.aws_eks_cluster_auth.this.token
+  load_config_file       = false
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    command     = "aws"
+  }
 }
 
 module "eks" {
   source = "./eks"
-
-  providers = {
-    aws        = aws
-    kubernetes = kubernetes
-  }
 
   replicas            = var.replicas
   image_tag           = var.image_tag
@@ -38,11 +44,6 @@ module "eks" {
 module "clickhouse_operator" {
   source = "./clickhouse-operator"
 
-  providers = {
-    kubectl    = kubectl
-    kubernetes = kubernetes
-  }
-
   clickhouse_operator_manifest_path = var.clickhouse_operator_manifest_path
   zookeeper_cluster_manifest_path   = var.zookeeper_cluster_manifest_path
   clickhouse_operator_namespace     = var.clickhouse_operator_namespace
@@ -53,11 +54,6 @@ module "clickhouse_operator" {
 
 module "clickhouse_cluster" {
   source = "./clickhouse-cluster"
-
-  providers = {
-    kubectl    = kubectl
-    kubernetes = kubernetes
-  }
 
   clickhouse_cluster_name          = var.clickhouse_cluster_name
   clickhouse_cluster_namespace     = var.clickhouse_cluster_namespace
@@ -70,8 +66,4 @@ module "clickhouse_cluster" {
   cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
 
   depends_on = [module.eks, module.clickhouse_operator]
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
 }
