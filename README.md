@@ -106,14 +106,6 @@ If a terraform operation does not complete, try running it again. If the problem
 - [Terraform Registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest)
 - [Architecture](https://github.com/Altinity/terraform-aws-eks-clickhouse/tree/master/docs)
 
-## TODO
-
-- [ ] Finish docs and add diagram architecture
-- [ ] Add contact info on `README.md`
-- [ ] Add module `examples` directory for TF registry
-- [ ] ~~Add `addons` for the module~~
-- [ ] ~~Nat and private subnets~~
-
 ## More Information and Commercial Support
 
 Altinity is the maintainer of this project. Altinity offers a range of
