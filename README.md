@@ -32,11 +32,11 @@ provider "aws" {
 }
 
 variable "region" {
-  default     = "us-east-1"
+  default = "us-east-1"
 }
 
-module "aws_eks_clickhouse" {
-  source  = "Altinity/eks-clickhouse/aws"
+module "eks_clickhouse" {
+  source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
   cluster_name = "clickhouse-cluster"
   region       = var.region
