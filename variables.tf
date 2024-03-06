@@ -144,3 +144,38 @@ variable "clickhouse_cluster_password" {
   type        = string
   default     = null
 }
+
+variable "wait_for_clickhouse_loadbalancer" {
+  description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
+  type        = bool
+  default     = false
+}
+
+variable "install_clikchouse_cluster" {
+  description = "Enable the installation of the ClickHouse cluster"
+  type        = bool
+  default     = true
+}
+
+variable "install_clikchouse_operator" {
+  description = "Enable the installation of the ClickHouse operator"
+  type        = bool
+  default     = true
+}
+
+variable "kubeconfig_user_exec" {
+  description = "The exec block configuration for kubeconfig user authentication"
+  type        = string
+  default     = <<EOT
+exec:
+  apiVersion: client.authentication.k8s.io/v1beta1
+  command: aws
+  args:
+    - "eks"
+    - "get-token"
+    - "--cluster-name"
+    - "$CLUSTER_NAME"
+    - "--region"
+    - "$REGION"
+EOT
+}

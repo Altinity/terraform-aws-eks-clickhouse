@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "cluster_autoscaler" {
-  name   = "eks-cluster-autoscaler"
+  name   = "${var.cluster_name}-eks-cluster-autoscaler"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -36,7 +36,7 @@ EOF
 }
 
 resource "aws_iam_role" "cluster_autoscaler" {
-  name               = "eks-cluster-autoscaler"
+  name               = "${var.cluster_name}-eks-cluster-autoscaler"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

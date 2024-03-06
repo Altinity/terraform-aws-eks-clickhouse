@@ -4,6 +4,12 @@ variable "clickhouse_cluster_manifest_path" {
   type        = string
 }
 
+variable "zookeeper_cluster_manifest_path" {
+  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
+  default     = "./manifests/zookeeper-cluster.yaml"
+  type        = string
+}
+
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
   default     = "chi"
@@ -34,18 +40,24 @@ variable "zookeeper_namespace" {
   type        = string
 }
 
-
 variable "cluster_endpoint" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "cluster_certificate_authority" {
-  type = string
+  type    = string
   default = ""
 }
 
-variable "cluster_token" {
-  type = string
-  default = ""
+variable "kubeconfig_user_exec" {
+  description = "The exec block configuration for kubeconfig user authentication"
+  type        = string
+  default     = ""
+}
+
+variable "wait_for_clickhouse_loadbalancer" {
+  description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
+  type        = bool
+  default     = false
 }
