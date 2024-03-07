@@ -39,6 +39,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 - [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [clickhouse client](https://clickhouse.com/docs/en/integrations/sql-clients/clickhouse-client-local)
 
 ### Steps
@@ -54,6 +55,11 @@ git clone https://github.com/awslabs/data-on-eks.git
 ```bash
 cd data-on-eks/analytics/terraform/clickhouse-eks
 chmod +x install.sh
+
+export AWS_ACCESS_KEY_ID="<key-id>"
+export AWS_SECRET_ACCESS_KEY="<super-secret-key>"
+export AWS_SESSION_TOKEN="<session-token>"
+
 ./install.sh
 ```
 

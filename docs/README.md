@@ -41,7 +41,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Prerequisites
 
 - AWS Account with appropriate permissions
-- Terraform installed (recommended `>= v1.5` )
+- Terraform installed (recommended `>= v1.5`)
 - Basic knowledge of Kubernetes and AWS services
 
 ## Usage
@@ -49,19 +49,25 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ```hcl
 provider "aws" {
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  # region     = "us-east-1"
+  # access_key = "my-access-key"
+  # secret_key = "my-secret-key"
+}
+
+variable "region" {
+  default     = "us-east-1"
 }
 
 module "aws_eks_clickhouse" {
   source  = "Altinity/eks-clickhouse/aws"
-  version = "0.1.1"
 
   cluster_name = "clickhouse-cluster"
-  region       = "us-east-1"
+  region       = var.region
   cidr         = "10.0.0.0/16"
   subnets      = [
-    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
+    { cidr_block = "10.0.1.0/24", az = "${var.region}a" },
+    { cidr_block = "10.0.2.0/24", az = "${var.region}b" },
+    { cidr_block = "10.0.3.0/24", az = "${var.region}c" }
   ]
 
   node_pools_config = {
@@ -73,6 +79,10 @@ module "aws_eks_clickhouse" {
 
     disk_size      = 20
     instance_types = ["m5.large"]
+  }
+
+  tags = {
+    CreatedBy = "mr-robot"
   }
 }
 ```

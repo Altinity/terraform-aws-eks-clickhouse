@@ -14,7 +14,10 @@ Terraform module for creating EKS clusters optimized for ClickHouse with EBS and
 
 ### Prerequisites
 
-Install [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) and [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
+Install:
+  - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (recommended `>= v1.5`)
+  - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
+  - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ### Create Terraform file
 
@@ -23,6 +26,13 @@ Paste the following Terraform sample module into file clickhouse-eks.tf in a new
 ```hcl
 provider "aws" {
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  # region     = "us-east-1"
+  # access_key = "my-access-key"
+  # secret_key = "my-secret-key"
+}
+
+variable "region" {
+  default = "us-east-1"
 }
 
 module "eks_clickhouse" {
@@ -32,12 +42,12 @@ module "eks_clickhouse" {
   install_clikchouse_cluster  = true
 
   cluster_name = "clickhouse-cluster"
-  region       = "us-east-1"
+  region       = var.region
   cidr         = "10.0.0.0/16"
   subnets      = [
-    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
+    { cidr_block = "10.0.1.0/24", az = "${var.region}a" },
+    { cidr_block = "10.0.2.0/24", az = "${var.region}b" },
+    { cidr_block = "10.0.3.0/24", az = "${var.region}c" }
   ]
 
   node_pools_config = {
@@ -68,10 +78,21 @@ output "clickhouse_cluster_password" {
 ### Run Terraform to create the cluster
 
 Execute commands to initialize and apply the Terraform module. It will create an EKS cluster and install a ClickHouse sample database.
-```
+```sh
+export AWS_ACCESS_KEY_ID=<key-id>
+export AWS_SECRET_ACCESS_KEY=<super-secret-key>
+export AWS_SESSION_TOKEN="<session-token>"
+
 terraform init
 terraform apply
 ```
+
+By default it deploys to the `us-east-1` region, to set different region, use:
+```sh
+export AWS_REGION="eu-central-1"
+terraform apply --var=region=eu-central-1
+```
+
 Setting up the EKS cluster and sample database takes from 10 to 20 minutes depending on the load in your cluster and availability of resources.
 
 ### Access your ClickHouse database
@@ -82,20 +103,25 @@ aws eks update-kubeconfig --region us-east-1 --name clickhouse-cluster
 ```
 
 Connect to your ClickHouse server using `kubectl exec`.
-```
+```sh
 kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
 ```
 
 ### Run Terraform to remove the cluster
 
 After use you can destroy the EKS cluster.  First, delete any ClickHouse clusters you have created.
-```
+```sh
 kubectl delete chi --all --all-namespaces
 ```
 
 Second, run `terraform destroy` to remove the EKS cluster and any cloud resources.
-```
+```sh
 terraform destroy
+```
+
+Specify the region if custom one was used: 
+```sh
+terraform destroy --var=region=eu-central-1
 ```
 
 ### Problems?
