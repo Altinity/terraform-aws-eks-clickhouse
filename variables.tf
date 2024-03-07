@@ -173,3 +173,15 @@ exec:
     - "$REGION"
 EOT
 }
+
+variable "replicas_count" {
+  description = "The number of replicas for the ClickHouse cluster"
+  type        = number
+  default     = 1
+}
+
+variable "shards_count" {
+  description = "The number of shards for the ClickHouse cluster"
+  type        = number
+  default     = 1
+}

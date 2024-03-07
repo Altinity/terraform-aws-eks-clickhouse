@@ -35,16 +35,32 @@ variable "clickhouse_cluster_password" {
 }
 
 variable "cluster_endpoint" {
-  type = string
+  description = "The endpoint for the EKS cluster"
+  type        = string
+  default     = ""
 }
 
 variable "cluster_certificate_authority" {
-  type = string
+  description = "The certificate authority data for the EKS cluster"
+  type        = string
+  default     = ""
 }
 
-variable "instance_types" {
-  description = "List of instance types for node selection"
-  type        = list(string)
+variable "instance_type" {
+  description = "Instance type for node selection"
+  type        = string
+}
+
+variable "replicas_count" {
+  description = "The number of replicas for the ClickHouse cluster"
+  type        = number
+  default     = 1
+}
+
+variable "shards_count" {
+  description = "The number of shards for the ClickHouse cluster"
+  type        = number
+  default     = 1
 }
 
 variable "kubeconfig_user_exec" {

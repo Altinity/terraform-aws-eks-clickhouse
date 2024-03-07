@@ -17,8 +17,8 @@ spec:
     clusters:
       - name: "${name}"
         layout:
-          shardsCount: 1
-          replicasCount: 1
+          shardsCount: ${shards_count}
+          replicasCount: ${replicas_count}
         templates:
           podTemplate: clickhouse-stable
           volumeClaimTemplate: data-volume-template
@@ -39,16 +39,13 @@ spec:
       - name: clickhouse-stable
         spec:
           containers:
-          - name: clickhouse
-            image: altinity/clickhouse-server:23.8.8.21.altinitystable
-          affinity:
-            nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                - matchExpressions:
-                  - key: node.kubernetes.io/instance-type
-                    operator: In
-                    values:  ${instance_types}
+            - name: clickhouse
+              image: altinity/clickhouse-server:23.8.8.21.altinitystable
+          nodeSelector:
+            node.kubernetes.io/instance-type: ${instance_type}
+        podDistribution:
+          - scope: ClickHouseInstallation
+            type: ClickHouseAntiAffinity
     volumeClaimTemplates:
       - name: data-volume-template
         spec:

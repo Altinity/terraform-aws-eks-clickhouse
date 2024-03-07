@@ -63,7 +63,9 @@ resource "kubectl_manifest" "clickhouse_cluster" {
     namespace      = kubernetes_namespace.clickhouse.metadata[0].name
     user           = var.clickhouse_cluster_user
     password       = local.clickhouse_password
-    instance_types = jsonencode(var.instance_types)
+    instance_type  = var.instance_type
+    replicas_count = var.replicas_count
+    shards_count   = var.shards_count
   })
 }
 

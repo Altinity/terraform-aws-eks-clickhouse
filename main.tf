@@ -67,7 +67,9 @@ module "clickhouse_cluster" {
   wait_for_clickhouse_loadbalancer = var.wait_for_clickhouse_loadbalancer
   zookeeper_cluster_manifest_path  = var.zookeeper_cluster_manifest_path
   kubeconfig_user_exec             = local.kubeconfig_user_exec
-  instance_types                   = var.node_pools_config.instance_types
+  instance_type                    = var.node_pools_config.instance_types[0]
+  shards_count                     = var.shards_count
+  replicas_count                   = var.replicas_count
 
   cluster_endpoint              = module.eks.cluster_endpoint
   cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
