@@ -1,9 +1,9 @@
 locals {
   clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 
-  zookeeper_cluster_yaml   = file("${path.module}/${var.zookeeper_cluster_manifest_path}")
+  zookeeper_cluster_yaml = file("${path.module}/${var.zookeeper_cluster_manifest_path}")
   # Split operator YAML file into individual manifests
-  zookeeper_cluster_manifests   = split("\n---\n", replace(local.zookeeper_cluster_yaml, "\n+", "\n"))
+  zookeeper_cluster_manifests = split("\n---\n", replace(local.zookeeper_cluster_yaml, "\n+", "\n"))
 
   kubeconfig = <<EOT
     apiVersion: v1
@@ -59,11 +59,11 @@ resource "kubectl_manifest" "zookeeper_cluster" {
 #  defined by the ClickHouse operator.
 resource "kubectl_manifest" "clickhouse_cluster" {
   yaml_body = templatefile("${path.module}/${var.clickhouse_cluster_manifest_path}", {
-    name                = var.clickhouse_cluster_name
-    namespace           = kubernetes_namespace.clickhouse.metadata[0].name
-    user                = var.clickhouse_cluster_user
-    password            = local.clickhouse_password
-    zookeeper_namespace = kubernetes_namespace.clickhouse.metadata[0].name
+    name           = var.clickhouse_cluster_name
+    namespace      = kubernetes_namespace.clickhouse.metadata[0].name
+    user           = var.clickhouse_cluster_user
+    password       = local.clickhouse_password
+    instance_types = jsonencode(var.instance_types)
   })
 }
 

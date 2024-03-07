@@ -34,20 +34,17 @@ variable "clickhouse_cluster_password" {
   default     = null
 }
 
-variable "zookeeper_namespace" {
-  description = "Namespace for the zookeeper cluster"
-  default     = "zoo1ns"
-  type        = string
-}
-
 variable "cluster_endpoint" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "cluster_certificate_authority" {
-  type    = string
-  default = ""
+  type = string
+}
+
+variable "instance_types" {
+  description = "List of instance types for node selection"
+  type        = list(string)
 }
 
 variable "kubeconfig_user_exec" {

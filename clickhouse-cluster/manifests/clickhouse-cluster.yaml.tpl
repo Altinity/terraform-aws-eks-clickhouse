@@ -12,7 +12,7 @@ spec:
       ${user}/access_management: 1
     zookeeper:
         nodes:
-        - host: zookeeper.${zookeeper_namespace}
+        - host: zookeeper.${namespace}
           port: 2181
     clusters:
       - name: "${name}"
@@ -41,6 +41,14 @@ spec:
           containers:
           - name: clickhouse
             image: altinity/clickhouse-server:23.8.8.21.altinitystable
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: node.kubernetes.io/instance-type
+                    operator: In
+                    values:  ${instance_types}
     volumeClaimTemplates:
       - name: data-volume-template
         spec:

@@ -106,12 +106,6 @@ variable "clickhouse_operator_namespace" {
   type        = string
 }
 
-variable "zookeeper_namespace" {
-  description = "Namespace for the zookeeper cluster"
-  default     = "zoo1ns"
-  type        = string
-}
-
 ################################################################################
 # ClickHouse Cluster
 ################################################################################
