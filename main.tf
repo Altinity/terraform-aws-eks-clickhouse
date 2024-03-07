@@ -51,28 +51,26 @@ module "clickhouse_operator" {
   depends_on = [module.eks]
 }
 
-locals {
-  kubeconfig_user_exec = replace(replace(var.kubeconfig_user_exec, "$CLUSTER_NAME", var.cluster_name), "$REGION", var.region)
-}
-
 module "clickhouse_cluster" {
   count  = var.install_clikchouse_cluster ? 1 : 0
   source = "./clickhouse-cluster"
 
-  clickhouse_cluster_name          = var.clickhouse_cluster_name
-  clickhouse_cluster_namespace     = var.clickhouse_cluster_namespace
-  clickhouse_cluster_password      = var.clickhouse_cluster_password
-  clickhouse_cluster_user          = var.clickhouse_cluster_user
-  clickhouse_cluster_manifest_path = var.clickhouse_cluster_manifest_path
-  wait_for_clickhouse_loadbalancer = var.wait_for_clickhouse_loadbalancer
-  zookeeper_cluster_manifest_path  = var.zookeeper_cluster_manifest_path
-  kubeconfig_user_exec             = local.kubeconfig_user_exec
-  instance_type                    = var.node_pools_config.instance_types[0]
-  shards_count                     = var.shards_count
-  replicas_count                   = var.replicas_count
+  clickhouse_cluster_name                  = var.clickhouse_cluster_name
+  clickhouse_cluster_namespace             = var.clickhouse_cluster_namespace
+  clickhouse_cluster_password              = var.clickhouse_cluster_password
+  clickhouse_cluster_user                  = var.clickhouse_cluster_user
+  clickhouse_cluster_manifest_path         = var.clickhouse_cluster_manifest_path
+  clickhouse_cluster_instance_type         = var.node_pools_config.instance_types[0]
+  clickhouse_cluster_shards_count          = var.clickhouse_cluster_shards_count
+  clickhouse_cluster_replicas_count        = var.clickhouse_cluster_replicas_count
+  clickhouse_cluster_wait_for_loadbalancer = var.clickhouse_cluster_wait_for_loadbalancer
 
-  cluster_endpoint              = module.eks.cluster_endpoint
-  cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
+  k8s_cluster_region                = var.region
+  k8s_cluster_name                  = var.cluster_name
+  k8s_cluster_endpoint              = module.eks.cluster_endpoint
+  k8s_cluster_certificate_authority = base64decode(module.eks.cluster_certificate_authority)
+
+  zookeeper_cluster_manifest_path = var.zookeeper_cluster_manifest_path
 
   depends_on = [module.eks, module.clickhouse_operator]
 }

@@ -1,7 +1,7 @@
 locals {
-  clickhouse_password = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
-
+  clickhouse_password    = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
   zookeeper_cluster_yaml = file("${path.module}/${var.zookeeper_cluster_manifest_path}")
+
   # Split operator YAML file into individual manifests
   zookeeper_cluster_manifests = split("\n---\n", replace(local.zookeeper_cluster_yaml, "\n+", "\n"))
 
@@ -10,8 +10,8 @@ locals {
     kind: Config
     clusters:
     - cluster:
-        certificate-authority-data: ${base64encode(var.cluster_certificate_authority)}
-        server: ${var.cluster_endpoint}
+        certificate-authority-data: ${base64encode(var.k8s_cluster_certificate_authority)}
+        server: ${var.k8s_cluster_endpoint}
       name: eks-cluster
     contexts:
     - context:
@@ -22,7 +22,16 @@ locals {
     users:
     - name: eks-user
       user:
-        ${var.kubeconfig_user_exec}
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: aws
+          args:
+            - "eks"
+            - "get-token"
+            - "--cluster-name"
+            - "${var.k8s_cluster_name}"
+            - "--region"
+            - "${var.k8s_cluster_region}"
     EOT
 }
 
@@ -63,16 +72,16 @@ resource "kubectl_manifest" "clickhouse_cluster" {
     namespace      = kubernetes_namespace.clickhouse.metadata[0].name
     user           = var.clickhouse_cluster_user
     password       = local.clickhouse_password
-    instance_type  = var.instance_type
-    replicas_count = var.replicas_count
-    shards_count   = var.shards_count
+    instance_type  = var.clickhouse_cluster_instance_type
+    replicas_count = var.clickhouse_cluster_replicas_count
+    shards_count   = var.clickhouse_cluster_shards_count
   })
 }
 
 # This is a "hack" wich waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
 resource "null_resource" "wait_for_clickhouse" {
   depends_on = [kubectl_manifest.clickhouse_cluster]
-  count      = var.wait_for_clickhouse_loadbalancer ? 1 : 0
+  count      = var.clickhouse_cluster_wait_for_loadbalancer ? 1 : 0
 
   provisioner "local-exec" {
     command = <<-EOT
@@ -103,35 +112,10 @@ resource "null_resource" "wait_for_clickhouse" {
 
 data "kubernetes_service" "clickhouse_load_balancer" {
   depends_on = [null_resource.wait_for_clickhouse]
-  count      = var.wait_for_clickhouse_loadbalancer ? 1 : 0
+  count      = var.clickhouse_cluster_wait_for_loadbalancer ? 1 : 0
 
   metadata {
     name      = "${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name}"
     namespace = var.clickhouse_cluster_namespace
-  }
-}
-
-resource "null_resource" "pre_destroy" {
-  count = var.wait_for_clickhouse_loadbalancer ? 1 : 0
-
-  triggers = {
-    kubeconfig = "${local.kubeconfig}"
-    namespace  = var.clickhouse_cluster_namespace
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<-EOT
-      KUBECONFIG_PATH=$(mktemp)
-      echo '${self.triggers.kubeconfig}' > $KUBECONFIG_PATH
-      NAMESPACE="${self.triggers.namespace}"
-
-      while kubectl --kubeconfig $KUBECONFIG_PATH get service --namespace $NAMESPACE; do
-        echo "Waiting for ClickHouse LoadBalancer deletion..."
-        sleep 10
-      done
-
-      rm $KUBECONFIG_PATH
-    EOT
   }
 }

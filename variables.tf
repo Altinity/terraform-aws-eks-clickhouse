@@ -1,6 +1,19 @@
 ################################################################################
 # EKS
 ################################################################################
+variable "install_clikchouse_cluster" {
+  description = "Enable the installation of the ClickHouse cluster"
+  type        = bool
+  default     = true
+}
+
+variable "install_clikchouse_operator" {
+  description = "Enable the installation of the ClickHouse operator"
+  type        = bool
+  default     = true
+}
+
+
 variable "region" {
   description = "The AWS region"
   type        = string
@@ -94,12 +107,6 @@ variable "clickhouse_operator_manifest_path" {
   type        = string
 }
 
-variable "zookeeper_cluster_manifest_path" {
-  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
-  default     = "./manifests/zookeeper-cluster.yaml"
-  type        = string
-}
-
 variable "clickhouse_operator_namespace" {
   description = "Namespace for the clickhouse operator"
   default     = "kube-system"
@@ -139,49 +146,26 @@ variable "clickhouse_cluster_password" {
   default     = null
 }
 
-variable "wait_for_clickhouse_loadbalancer" {
+variable "clickhouse_cluster_wait_for_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
   default     = false
 }
 
-variable "install_clikchouse_cluster" {
-  description = "Enable the installation of the ClickHouse cluster"
-  type        = bool
-  default     = true
-}
-
-variable "install_clikchouse_operator" {
-  description = "Enable the installation of the ClickHouse operator"
-  type        = bool
-  default     = true
-}
-
-variable "kubeconfig_user_exec" {
-  description = "The exec block configuration for kubeconfig user authentication"
-  type        = string
-  default     = <<EOT
-exec:
-  apiVersion: client.authentication.k8s.io/v1beta1
-  command: aws
-  args:
-    - "eks"
-    - "get-token"
-    - "--cluster-name"
-    - "$CLUSTER_NAME"
-    - "--region"
-    - "$REGION"
-EOT
-}
-
-variable "replicas_count" {
+variable "clickhouse_cluster_replicas_count" {
   description = "The number of replicas for the ClickHouse cluster"
   type        = number
   default     = 1
 }
 
-variable "shards_count" {
+variable "clickhouse_cluster_shards_count" {
   description = "The number of shards for the ClickHouse cluster"
   type        = number
   default     = 1
+}
+
+variable "zookeeper_cluster_manifest_path" {
+  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
+  default     = "./manifests/zookeeper-cluster.yaml"
+  type        = string
 }

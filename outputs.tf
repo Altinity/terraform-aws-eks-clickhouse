@@ -19,12 +19,12 @@ output "eks_cluster_ca_certificate" {
   sensitive   = true
 }
 
-output "configure_kubectl" {
+output "eks_configure_kubectl" {
   description = "Configure kubectl: make sure you're logged in with the correct AWS profile and run the following command to update your kubeconfig"
   value       = "aws eks --region ${var.region} update-kubeconfig --name ${module.eks.cluster_name}"
 }
 
-output "get_load_balancer" {
+output "clickhouse_cluster_get_load_balancer" {
   description = "Configure kubectl: make sure you're logged in with the correct AWS profile and run the following command to update your kubeconfig"
   value       = "kubectl get services -n ${var.clickhouse_cluster_namespace} | grep -m 1 'LoadBalancer' | awk '{print $4}'"
 }
