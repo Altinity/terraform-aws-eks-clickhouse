@@ -20,17 +20,24 @@ This architecture provides a scalable, secure, and efficient environment for run
 
 - **VPC and Networking**: Sets up a VPC with subnets, internet gateway, and route tables for network isolation and internet access. Public subnets and an S3 VPC endpoint are created for external and internal communications, respectively.
 
+  > We know that this VPC configuration we've chosen may not be the most advisable for a real and productive environment. However, we believe it strikes a good balance between simplicity and user-friendliness for getting started with ClickHouse, while still preserving fundamental security aspects. The main idea behind this setup is to generate a ClickHouse cluster with a public URL to which you can easily connect once the provisioning is complete.
+
 - **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
-- **ClickHouse Deployment**:
-  - **Operator and Cluster**: Deploys ClickHouse using a custom Kubernetes operator, with configurations for namespace, user, and password.
-  - **Zookeeper Integration**: Configures a Zookeeper cluster for ClickHouse coordination, deployed in its namespace.
+- **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with Zookeeper for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class.
+  - **Operator**: The operator facilitates the lifecycle of ClickHouse clusters, including scaling, backup, and recovery.
+  - **Cluster**: Creates a ClickHouse cluster using a Altinity ClickHouse Operator, with configurations for namespace, user, and password.
+  - **Zookeeper**: Setup a Zookeeper cluster for ClickHouse coordination, deployed in its namespace. Zookeeper enhances ClickHouse clusters by managing configuration and ensuring consistency.
 
-- **Storage**:
+
+- **Storage**:  We opted for Amazon EBS (Elastic Block Store) for our cluster's storage due to its cost-effectiveness compared to other AWS storage options. EBS provides high performance, durability, and the flexibility to scale, making it ideal for database workloads like ClickHouse. It offers a cost-efficient solution for maintaining data integrity and availability.
+
   - **EBS CSI Driver**: Implements the Container Storage Interface (CSI) for EBS, enabling dynamic provisioning of block storage for stateful applications.
   - **Storage Classes**: Defines storage classes for gp3 encrypted EBS volumes, supporting dynamic volume provisioning.
 
 - **Cluster Autoscaler**: Implements autoscaling for EKS node groups based on workload demands, ensuring efficient resource utilization.
+
+  > Autoscaling is a critical feature for managing the resources of your EKS cluster. It automatically adjusts the number of nodes in a node group based on the resource requests and limits of the pods running on the nodes. This ensures that the cluster is right-sized for the current workload, optimizing costs and performance.
 
 ## Deploying the Solution
 
@@ -63,7 +70,7 @@ export AWS_SESSION_TOKEN="<session-token>"
 ./install.sh
 ```
 
-> This will take a few minutes to complete. Once it's done, you will see the output of the `terraform apply` command, including the `kubeconfig` file for the EKS cluster.
+> This will take a few minutes to complete. Once it's done, you will see the output of the `terraform apply` command, including the `kubeconfig` setup for the EKS cluster.
 
 ### Verify
 
@@ -80,7 +87,6 @@ aws eks update-kubeconfig --name clickhouse-cluster --region us-east-1
 
 kubectl get pods -n kube-system
 kubectl get pods -n clickhouse
-kubectl get pods -n zoo1ns
 ```
 
 ## Create your first ClickHouse table
@@ -98,8 +104,6 @@ clickhouse client --host=$host --user=test --password=$password
 ```
 
 ### Create a database
-> I stole these sql examples from clickhoue docs. I will replace them with something more meaningful. Maybe using an s3 bucket as a source?
-
 Create a new database named `helloworld` if it doesn't already exist.
 
 ```sql
@@ -142,8 +146,6 @@ ORDER BY timestamp
 ```
 
 ## Next Steps
-> Is this ok? Should we add more detail here or consider other topics?
-
 - Explore options for deploying Multi Node Clusters for higher availability and scalability.
 - Implement Monitoring & Observability solutions for in-depth performance and health insights.
 - Consider additional security measures, backup strategies, and disaster recovery plans.
@@ -151,7 +153,7 @@ ORDER BY timestamp
 
 ## Cleanup
 
-When you are done with the ClickHouse cluster, you can remove it by running the `uninstall.sh` script. This will delete the EKS cluster and all the resources created by the Terraform script.
+When you are done with the ClickHouse cluster, you can remove it by running the `destroy` command. This will delete the EKS cluster and all the resources created by the Terraform script.
 
 ```bash
 cd data-on-eks/analytics/terraform/clickhouse-eks && terraform destroy
@@ -162,6 +164,4 @@ cd data-on-eks/analytics/terraform/clickhouse-eks && terraform destroy
 > Add a section about Altinity and how they can help with ClickHouse deployments.
 
 [Altinity](https://altinity.cloud) offers enterprise-grade support for ClickHouse, including optimized builds and consultancy services.
-
->
 
