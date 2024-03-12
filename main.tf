@@ -25,6 +25,10 @@ provider "kubectl" {
   }
 }
 
+locals {
+  availability_zones = [for subnet in var.subnets : subnet.az]
+}
+
 module "eks" {
   source = "./eks"
 
@@ -64,6 +68,7 @@ module "clickhouse_cluster" {
   clickhouse_cluster_shards_count          = var.clickhouse_cluster_shards_count
   clickhouse_cluster_replicas_count        = var.clickhouse_cluster_replicas_count
   clickhouse_cluster_wait_for_loadbalancer = var.clickhouse_cluster_wait_for_loadbalancer
+  k8s_availability_zones                   = local.availability_zones
 
   k8s_cluster_region                = var.region
   k8s_cluster_name                  = var.cluster_name

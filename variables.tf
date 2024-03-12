@@ -13,7 +13,6 @@ variable "install_clikchouse_operator" {
   default     = true
 }
 
-
 variable "region" {
   description = "The AWS region"
   type        = string

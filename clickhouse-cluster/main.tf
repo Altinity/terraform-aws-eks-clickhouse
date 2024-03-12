@@ -68,13 +68,13 @@ resource "kubectl_manifest" "zookeeper_cluster" {
 #  defined by the ClickHouse operator.
 resource "kubectl_manifest" "clickhouse_cluster" {
   yaml_body = templatefile("${path.module}/${var.clickhouse_cluster_manifest_path}", {
-    name           = var.clickhouse_cluster_name
-    namespace      = kubernetes_namespace.clickhouse.metadata[0].name
-    user           = var.clickhouse_cluster_user
-    password       = local.clickhouse_password
-    instance_type  = var.clickhouse_cluster_instance_type
-    replicas_count = var.clickhouse_cluster_replicas_count
-    shards_count   = var.clickhouse_cluster_shards_count
+    name              = var.clickhouse_cluster_name
+    namespace         = kubernetes_namespace.clickhouse.metadata[0].name
+    user              = var.clickhouse_cluster_user
+    password          = local.clickhouse_password
+    zones             = var.k8s_availability_zones
+    instance_type     = var.clickhouse_cluster_instance_type
+    application_group = "clickhouse-cluster"
   })
 }
 

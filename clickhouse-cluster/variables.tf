@@ -51,6 +51,11 @@ variable "clickhouse_cluster_wait_for_loadbalancer" {
   default     = false
 }
 
+variable "k8s_availability_zones" {
+  description = "The availability zones to deploy the ClickHouse cluster"
+  type        = list(string)
+}
+
 variable "k8s_cluster_endpoint" {
   description = "The endpoint for the Kubernetes cluster"
   type        = string
