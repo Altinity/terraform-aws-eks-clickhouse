@@ -105,6 +105,7 @@ Retrieve the ClickHouse cluster credentials and connect using the `clickhouse-cl
 password=$(terraform  output clickhouse_cluster_password | tr -d '"')
 host=$(terraform  output clickhouse_cluster_url | tr -d '"')
 
+# Connect to the ClickHouse cluster using clickhouse-client
 clickhouse client --host=$host --user=test --password=$password
 ```
 
@@ -150,7 +151,6 @@ ORDER BY timestamp
 ```
 
 ## Next Steps
-- Explore options for deploying Multi Node Clusters for higher availability and scalability.
 - Implement Monitoring & Observability solutions for in-depth performance and health insights.
 - Consider additional security measures, backup strategies, and disaster recovery plans.
 - Investigate advanced networking configurations, focusing on the use of private subnets and NAT gateways to enhance security and control traffic flow within your EKS environment.
@@ -165,7 +165,9 @@ cd data-on-eks/analytics/terraform/clickhouse-eks && terraform destroy
 
 ## Altinity
 
-> Add a section about Altinity and how they can help with ClickHouse deployments.
+If you are looking for a managed ClickHouse service, [Altinity](https://altinity.cloud) offers enterprise-grade support for ClickHouse, including optimized builds and consultancy services.
 
-[Altinity](https://altinity.cloud) offers enterprise-grade support for ClickHouse, including optimized builds and consultancy services.
-
+- [Altinity.Cloud](https://altinity.com/cloud-database/) - Run ClickHouse in our cloud or yours.
+- [Altinity Support](https://altinity.com/support/) - Get Enterprise-class support for ClickHouse.
+- [Slack](https://altinitydbworkspace.slack.com/join/shared_invite/zt-w6mpotc1-fTz9oYp0VM719DNye9UvrQ) - Talk directly with ClickHouse users and Altinity devs.
+- [Contact us](https://hubs.la/Q020sH3Z0) - Contact Altinity with your questions or issues.
