@@ -49,7 +49,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [clickhouse client](https://clickhouse.com/docs/en/integrations/sql-clients/clickhouse-client-local)
 
-### Steps
+### Setup
 
 1. **Clone the repository**
 
@@ -63,6 +63,7 @@ git clone https://github.com/awslabs/data-on-eks.git
 cd data-on-eks/analytics/terraform/clickhouse-eks
 chmod +x install.sh
 
+# If you already have an AWS profile setup, you can skip this step
 export AWS_ACCESS_KEY_ID="<key-id>"
 export AWS_SECRET_ACCESS_KEY="<super-secret-key>"
 export AWS_SESSION_TOKEN="<session-token>"
@@ -75,7 +76,6 @@ export AWS_SESSION_TOKEN="<session-token>"
 ### Verify
 
 Let's verify that the EKS cluster and ClickHouse deployment are running as expected.
-
 ```bash
 aws eks describe-cluster --name clickhouse-cluster --region us-east-1
 ```
@@ -83,9 +83,13 @@ aws eks describe-cluster --name clickhouse-cluster --region us-east-1
 Verify that the EKS cluster is active and the nodes are ready.
 
 ```bash
+# Use this command to setup the `kubeconfig` for the EKS cluster.
 aws eks update-kubeconfig --name clickhouse-cluster --region us-east-1
 
+# Get aws, autoscaler, ebs-csi, clickhouse operator and other k8s pods
 kubectl get pods -n kube-system
+
+# Get clickhouse and zookeeper  pods
 kubectl get pods -n clickhouse
 ```
 
@@ -97,6 +101,7 @@ Clickhouse uses a SQL-like language to interact with the database. You can use t
 Retrieve the ClickHouse cluster credentials and connect using the `clickhouse-client`.
 
 ```bash
+# Get password and host from the terraform output
 password=$(terraform  output clickhouse_cluster_password | tr -d '"')
 host=$(terraform  output clickhouse_cluster_url | tr -d '"')
 
@@ -137,7 +142,6 @@ INSERT INTO helloworld.my_first_table (user_id, message, timestamp, metric) VALU
 
 ### Query the data
 Retrieve and display all records from `my_first_table`, ordered by `timestamp`.
-
 
 ```sql
 SELECT *
