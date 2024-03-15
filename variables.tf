@@ -148,7 +148,7 @@ variable "clickhouse_cluster_password" {
 variable "clickhouse_cluster_wait_for_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "clickhouse_cluster_replicas_count" {
