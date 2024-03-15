@@ -54,8 +54,9 @@ module "eks_clickhouse" {
   }
 }
 
-output "get_load_balancer" {
-  value = module.eks_clickhouse.get_load_balancer
+
+output "clickhouse_cluster_url" {
+  value = module.eks_clickhouse.clickhouse_cluster_url
 }
 
 output "clickhouse_cluster_password" {
@@ -75,17 +76,6 @@ aws eks update-kubeconfig --region us-east-1 --name clickhouse-cluster
 Connect to your ClickHouse server using `kubectl exec`.
 ```sh
 kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
-```
-
-### Run Terraform to remove the cluster
-After use you can destroy the EKS cluster. First, delete any ClickHouse clusters you have created.
-```sh
-kubectl delete chi --all --all-namespaces
-```
-
-Second, run `terraform destroy` to remove the EKS cluster and any cloud resources.
-```sh
-terraform destroy
 ```
 
 ## Docs
