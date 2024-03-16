@@ -1,13 +1,13 @@
 ################################################################################
 # EKS
 ################################################################################
-variable "install_clikchouse_cluster" {
+variable "install_clickhouse_cluster" {
   description = "Enable the installation of the ClickHouse cluster"
   type        = bool
   default     = true
 }
 
-variable "install_clikchouse_operator" {
+variable "install_clickhouse_operator" {
   description = "Enable the installation of the ClickHouse operator"
   type        = bool
   default     = true

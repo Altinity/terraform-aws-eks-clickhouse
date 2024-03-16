@@ -26,8 +26,8 @@ locals {
 module "eks_clickhouse" {
   source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
-  install_clikchouse_operator = true
-  install_clikchouse_cluster  = true
+  install_clickhouse_operator = true
+  install_clickhouse_cluster  = true
 
   cluster_name = "clickhouse-cluster"
   region       = local.region
