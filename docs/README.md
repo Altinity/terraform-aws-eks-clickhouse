@@ -30,7 +30,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 
 ## Architecture:
 
-> ADD DIAGRAM HERE
+![](./architecture.png)
 
 - [VPC & Subnets](./vpc.md)
 - [EKS Cluster & Node Groups](./eks.md)

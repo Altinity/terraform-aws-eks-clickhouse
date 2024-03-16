@@ -27,7 +27,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 - **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with Zookeeper for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class.
   - **Operator**: The operator facilitates the lifecycle of ClickHouse clusters, including scaling, backup, and recovery.
   - **Cluster**: Creates a ClickHouse cluster using a Altinity ClickHouse Operator, with configurations for namespace, user, and password.
-  - **Zookeeper**: Setup a Zookeeper cluster for ClickHouse coordination, deployed in its namespace. Zookeeper enhances ClickHouse clusters by managing configuration and ensuring consistency.
+  - **Zookeeper**: Set up a Zookeeper cluster for ClickHouse coordination to enhance ClickHouse clusters by managing configuration and ensuring consistency.
 
 
 - **Storage**:  We opted for Amazon EBS (Elastic Block Store) for our cluster's storage due to its cost-effectiveness compared to other AWS storage options. EBS provides high performance, durability, and the flexibility to scale, making it ideal for database workloads like ClickHouse. It offers a cost-efficient solution for maintaining data integrity and availability.
@@ -57,18 +57,18 @@ This architecture provides a scalable, secure, and efficient environment for run
 git clone https://github.com/awslabs/data-on-eks.git
 ```
 
-2. Navigate into the example directory and run `install.sh` to initialize Terraform and apply the changes.
+2. Navigate into the example directory and use `terraform` command to initialize Terraform and apply the changes.
 
 ```bash
 cd data-on-eks/analytics/terraform/clickhouse-eks
-chmod +x install.sh
 
 # If you already have an AWS profile setup, you can skip this step
 export AWS_ACCESS_KEY_ID="<key-id>"
 export AWS_SECRET_ACCESS_KEY="<super-secret-key>"
 export AWS_SESSION_TOKEN="<session-token>"
 
-./install.sh
+terraform init
+terraform apply
 ```
 
 > This will take a few minutes to complete. Once it's done, you will see the output of the `terraform apply` command, including the `kubeconfig` setup for the EKS cluster.
