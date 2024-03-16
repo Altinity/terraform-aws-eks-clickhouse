@@ -54,7 +54,6 @@ module "eks_clickhouse" {
   }
 }
 
-
 output "clickhouse_cluster_url" {
   value = module.eks_clickhouse.clickhouse_cluster_url
 }
