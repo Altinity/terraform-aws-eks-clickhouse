@@ -65,8 +65,6 @@ module "clickhouse_cluster" {
   clickhouse_cluster_user                = var.clickhouse_cluster_user
   clickhouse_cluster_manifest_path       = var.clickhouse_cluster_manifest_path
   clickhouse_cluster_instance_type       = var.node_pools_config.instance_types[0]
-  clickhouse_cluster_shards_count        = var.clickhouse_cluster_shards_count
-  clickhouse_cluster_replicas_count      = var.clickhouse_cluster_replicas_count
   clickhouse_cluster_enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
   k8s_availability_zones                 = local.availability_zones
 

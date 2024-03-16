@@ -32,12 +32,3 @@ module "eks_clickhouse" {
     CreatedBy = "mr-robot"
   }
 }
-
-output "clickhouse_cluster_url" {
-  value = module.eks_clickhouse.clickhouse_cluster_url
-}
-
-output "clickhouse_cluster_password" {
-  value     = module.eks_clickhouse.clickhouse_cluster_password
-  sensitive = true
-}

@@ -145,26 +145,14 @@ variable "clickhouse_cluster_password" {
   default     = null
 }
 
-variable "clickhouse_cluster_enable_loadbalancer" {
-  description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
-  type        = bool
-  default     = false
-}
-
-variable "clickhouse_cluster_replicas_count" {
-  description = "The number of replicas for the ClickHouse cluster"
-  type        = number
-  default     = 1
-}
-
-variable "clickhouse_cluster_shards_count" {
-  description = "The number of shards for the ClickHouse cluster"
-  type        = number
-  default     = 1
-}
-
 variable "zookeeper_cluster_manifest_path" {
   description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
   default     = "./manifests/zookeeper-cluster.yaml"
   type        = string
+}
+
+variable "clickhouse_cluster_enable_loadbalancer" {
+  description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
+  type        = bool
+  default     = false
 }

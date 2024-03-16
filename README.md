@@ -53,15 +53,6 @@ module "eks_clickhouse" {
     CreatedBy = "mr-robot"
   }
 }
-
-output "clickhouse_cluster_url" {
-  value = module.eks_clickhouse.clickhouse_cluster_url
-}
-
-output "clickhouse_cluster_password" {
-  value     = module.eks_clickhouse.clickhouse_cluster_password
-  sensitive = true
-}
 ```
 
 > Setting up the EKS cluster and sample database takes from 10 to 30 minutes depending on the load in your cluster and availability of resources.

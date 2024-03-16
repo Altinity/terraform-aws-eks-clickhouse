@@ -33,18 +33,6 @@ variable "clickhouse_cluster_instance_type" {
   type        = string
 }
 
-variable "clickhouse_cluster_replicas_count" {
-  description = "The number of replicas for the ClickHouse cluster"
-  type        = number
-  default     = 1
-}
-
-variable "clickhouse_cluster_shards_count" {
-  description = "The number of shards for the ClickHouse cluster"
-  type        = number
-  default     = 1
-}
-
 variable "clickhouse_cluster_enable_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
