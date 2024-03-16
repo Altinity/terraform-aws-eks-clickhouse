@@ -56,6 +56,18 @@ resource "kubernetes_namespace" "clickhouse" {
   }
 }
 
+resource "kubernetes_secret" "clickhouse_credentials" {
+  metadata {
+    name      = "clickhouse-credentials"
+    namespace = kubernetes_namespace.clickhouse.metadata[0].name
+  }
+
+  data = {
+    username = base64encode(var.clickhouse_cluster_user)
+    password = base64encode(local.clickhouse_password)
+  }
+}
+
 # Setups a single node Zookeeper cluster
 resource "kubectl_manifest" "zookeeper_cluster" {
   for_each  = { for doc in local.zookeeper_cluster_manifests : sha1(doc) => doc }
@@ -68,20 +80,21 @@ resource "kubectl_manifest" "zookeeper_cluster" {
 #  defined by the ClickHouse operator.
 resource "kubectl_manifest" "clickhouse_cluster" {
   yaml_body = templatefile("${path.module}/${var.clickhouse_cluster_manifest_path}", {
-    name              = var.clickhouse_cluster_name
-    namespace         = kubernetes_namespace.clickhouse.metadata[0].name
-    user              = var.clickhouse_cluster_user
-    password          = local.clickhouse_password
-    zones             = var.k8s_availability_zones
-    instance_type     = var.clickhouse_cluster_instance_type
-    application_group = "clickhouse-cluster"
+    name                = var.clickhouse_cluster_name
+    namespace           = kubernetes_namespace.clickhouse.metadata[0].name
+    user                = var.clickhouse_cluster_user
+    password            = local.clickhouse_password
+    zones               = var.k8s_availability_zones
+    instance_type       = var.clickhouse_cluster_instance_type
+    enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
+    application_group   = "clickhouse-cluster"
   })
 }
 
 # This is a "hack" wich waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
 resource "null_resource" "wait_for_clickhouse" {
   depends_on = [kubectl_manifest.clickhouse_cluster]
-  count      = var.clickhouse_cluster_wait_for_loadbalancer ? 1 : 0
+  count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
 
   provisioner "local-exec" {
     command = <<-EOT
@@ -112,7 +125,7 @@ resource "null_resource" "wait_for_clickhouse" {
 
 data "kubernetes_service" "clickhouse_load_balancer" {
   depends_on = [null_resource.wait_for_clickhouse]
-  count      = var.clickhouse_cluster_wait_for_loadbalancer ? 1 : 0
+  count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
 
   metadata {
     name      = "${var.clickhouse_cluster_namespace}-${var.clickhouse_cluster_name}"

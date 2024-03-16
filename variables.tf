@@ -145,10 +145,10 @@ variable "clickhouse_cluster_password" {
   default     = null
 }
 
-variable "clickhouse_cluster_wait_for_loadbalancer" {
+variable "clickhouse_cluster_enable_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "clickhouse_cluster_replicas_count" {

@@ -45,7 +45,7 @@ variable "clickhouse_cluster_shards_count" {
   default     = 1
 }
 
-variable "clickhouse_cluster_wait_for_loadbalancer" {
+variable "clickhouse_cluster_enable_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
   default     = false

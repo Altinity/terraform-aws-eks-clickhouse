@@ -59,16 +59,16 @@ module "clickhouse_cluster" {
   count  = var.install_clickhouse_cluster ? 1 : 0
   source = "./clickhouse-cluster"
 
-  clickhouse_cluster_name                  = var.clickhouse_cluster_name
-  clickhouse_cluster_namespace             = var.clickhouse_cluster_namespace
-  clickhouse_cluster_password              = var.clickhouse_cluster_password
-  clickhouse_cluster_user                  = var.clickhouse_cluster_user
-  clickhouse_cluster_manifest_path         = var.clickhouse_cluster_manifest_path
-  clickhouse_cluster_instance_type         = var.node_pools_config.instance_types[0]
-  clickhouse_cluster_shards_count          = var.clickhouse_cluster_shards_count
-  clickhouse_cluster_replicas_count        = var.clickhouse_cluster_replicas_count
-  clickhouse_cluster_wait_for_loadbalancer = var.clickhouse_cluster_wait_for_loadbalancer
-  k8s_availability_zones                   = local.availability_zones
+  clickhouse_cluster_name                = var.clickhouse_cluster_name
+  clickhouse_cluster_namespace           = var.clickhouse_cluster_namespace
+  clickhouse_cluster_password            = var.clickhouse_cluster_password
+  clickhouse_cluster_user                = var.clickhouse_cluster_user
+  clickhouse_cluster_manifest_path       = var.clickhouse_cluster_manifest_path
+  clickhouse_cluster_instance_type       = var.node_pools_config.instance_types[0]
+  clickhouse_cluster_shards_count        = var.clickhouse_cluster_shards_count
+  clickhouse_cluster_replicas_count      = var.clickhouse_cluster_replicas_count
+  clickhouse_cluster_enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
+  k8s_availability_zones                 = local.availability_zones
 
   k8s_cluster_region                = var.region
   k8s_cluster_name                  = var.cluster_name

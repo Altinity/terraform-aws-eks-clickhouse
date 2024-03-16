@@ -6,6 +6,11 @@ metadata:
   labels:
     application_group: "${application_group }"
 spec:
+%{ if !enable_loadbalancer }
+  defaults:
+    templates:
+      serviceTemplate: service-template
+%{ endif }
   configuration:
     users:
       ${user}/password: ${password}
@@ -28,19 +33,21 @@ spec:
         templates:
           podTemplate: replica
           volumeClaimTemplate: data-volume-template
-          serviceTemplate: internal-service-template
   templates:
     serviceTemplates:
-      - name: internal-service-template
+      - name: service-template
+        generateName: "clickhouse-{chi}"
+        metadata:
+          labels:
+            application_group: "${application_group}"
         spec:
           type: ClusterIP
+          clusterIP: None
           ports:
             - name: http
               port: 8123
-              targetPort: 8123
             - name: tcp
               port: 9000
-              targetPort: 9000
     podTemplates:
 %{ for zone in zones ~}
       - name: replica-in-zone-${zone}
