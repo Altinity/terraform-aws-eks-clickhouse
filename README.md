@@ -77,6 +77,17 @@ Connect to your ClickHouse server using `kubectl exec`.
 kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
 ```
 
+### Run Terraform to remove the cluster
+After use you can destroy the EKS cluster. First, delete any ClickHouse clusters you have created.
+```sh
+kubectl delete chi --all --all-namespaces
+```
+
+Then, run `terraform destroy` to remove the EKS cluster and any cloud resources.
+```sh
+terraform destroy
+```
+
 ## Docs
 - [Terraform Registry](https://registry.terraform.io/modules/Altinity/eks-clickhouse/aws/latest)
 - [Architecture](https://github.com/Altinity/terraform-aws-eks-clickhouse/tree/master/docs)
