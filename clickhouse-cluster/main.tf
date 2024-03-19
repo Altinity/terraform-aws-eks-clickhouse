@@ -101,6 +101,7 @@ resource "null_resource" "wait_for_clickhouse" {
       KUBECONFIG_PATH=$(mktemp)
       echo '${local.kubeconfig}' > $KUBECONFIG_PATH
       NAMESPACE=${var.clickhouse_cluster_namespace}
+      SECONDS=0
       SLEEP_TIME=10
       TIMEOUT=600
 
