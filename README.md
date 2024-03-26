@@ -18,6 +18,10 @@ It includes the ClickHouse Operator and a fully working ClickHouse cluster.
 
 ## Usage
 ### Create an EKS Cluster with ClickHouse Operator and ClickHouse Cluster
+
+Paste the following Terraform sample module into a tf file (`main.tf`) in a new directory. Adjust properties as desired.
+The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
+
 ```hcl
 locals {
   region = "us-east-1"
@@ -56,6 +60,15 @@ module "eks_clickhouse" {
     CreatedBy = "mr-robot"
   }
 }
+```
+
+### Run Terraform to create the cluster
+
+Execute commands to initialize and apply the Terraform module. It will create an EKS cluster and install a ClickHouse sample database.
+
+```sh
+terraform init
+terraform apply
 ```
 
 > Setting up the EKS cluster and sample database takes from 10 to 30 minutes depending on the load in your cluster and availability of resources.
