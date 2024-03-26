@@ -3,9 +3,9 @@ locals {
 
   # Generate all node pools possible combinations of subnets and instance types
   node_pool_combinations = [for idx, np in flatten([
-    for subnet in aws_subnet.this : [
+    for subnet in local.public_subnets : [
       for itype in var.node_pools_config.instance_types : {
-        subnet_id     = subnet.id
+        subnet_id     = subnet
         instance_type = itype
       }
     ]
@@ -174,7 +174,7 @@ resource "aws_eks_cluster" "this" {
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids              = [for s in aws_subnet.this : s.id]
+    subnet_ids              = local.public_subnets
     endpoint_private_access = true
     endpoint_public_access  = true
     public_access_cidrs     = var.public_access_cidrs
