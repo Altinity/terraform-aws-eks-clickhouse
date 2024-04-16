@@ -29,20 +29,3 @@ module "vpc" {
 
   tags = var.tags
 }
-
-# # Creates a VPC endpoint for Amazon S3, enabling private connections
-# # between the VPC and S3 without requiring traffic to traverse the public internet.
-# # Enhances security and performance for AWS services that require S3 access.
-# resource "aws_vpc_endpoint" "this" {
-#   vpc_id            = aws_vpc.this.id
-#   service_name      = "com.amazonaws.${var.region}.s3"
-#   vpc_endpoint_type = "Gateway"
-#   route_table_ids   = [aws_route_table.this.id]
-
-#   tags = merge(
-#     var.tags,
-#     {
-#       Name = "${var.cluster_name}-s3-endpoint"
-#     }
-#   )
-# }

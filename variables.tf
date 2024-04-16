@@ -100,27 +100,22 @@ variable "public_access_cidrs" {
 ################################################################################
 # ClickHouse Operator
 ################################################################################
-variable "clickhouse_operator_manifest_path" {
-  description = "Path to the operator YAML file (use it to install a different or custom operator version)"
-  default     = "./manifests/clickhouse-operator.yaml"
-  type        = string
-}
-
 variable "clickhouse_operator_namespace" {
-  description = "Namespace for the clickhouse operator"
+  description = "Namespace to install the clickhouse operator"
   default     = "kube-system"
   type        = string
 }
 
-################################################################################
-# ClickHouse Cluster
-################################################################################
-variable "clickhouse_cluster_manifest_path" {
-  description = "Path to the cluster YAML file (use it to install a different or custom cluster version)"
-  default     = "./manifests/clickhouse-cluster.yaml.tpl"
+variable "clickhouse_operator_version" {
+  description = "Version of the clickhouse operator"
+  default     = "0.23.4"
   type        = string
 }
 
+
+################################################################################
+# ClickHouse Cluster
+################################################################################
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
   default     = "chi"
@@ -143,12 +138,6 @@ variable "clickhouse_cluster_password" {
   description = "ClickHouse password"
   type        = string
   default     = null
-}
-
-variable "zookeeper_cluster_manifest_path" {
-  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
-  default     = "./manifests/zookeeper-cluster.yaml"
-  type        = string
 }
 
 variable "clickhouse_cluster_enable_loadbalancer" {
