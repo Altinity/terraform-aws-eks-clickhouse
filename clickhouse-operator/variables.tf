@@ -1,11 +1,11 @@
-variable "clickhouse_operator_manifest_path" {
-  description = "Path to the operator YAML file (use it to install a different or custom operator version)"
-  default     = "./manifests/clickhouse-operator.yaml"
+variable "clickhouse_operator_namespace" {
+  description = "Namespace to install the clickhouse operator"
+  default     = "kube-system"
   type        = string
 }
 
-variable "clickhouse_operator_namespace" {
-  description = "Namespace for the clickhouse operator"
-  default     = "kube-system"
+variable "clickhouse_operator_version" {
+  description = "Version of the clickhouse operator"
+  default     = "0.23.4"
   type        = string
 }

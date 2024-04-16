@@ -1,12 +1,12 @@
-variable "clickhouse_cluster_manifest_path" {
-  description = "Path to the cluster YAML file (use it to install a different or custom cluster version)"
-  default     = "./manifests/clickhouse-cluster.yaml.tpl"
-  type        = string
-}
-
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
   default     = "chi"
+  type        = string
+}
+
+variable "clickhouse_cluster_version" {
+  description = "Name of the ClickHouse cluster helm chart version"
+  default     = "0.1.7"
   type        = string
 }
 
@@ -66,10 +66,4 @@ variable "k8s_cluster_certificate_authority" {
   description = "The certificate authority data for the Kubernetes cluster"
   type        = string
   default     = ""
-}
-
-variable "zookeeper_cluster_manifest_path" {
-  description = "Path to the zookeeper cluster YAML file (use it to install a different or custom cluster version)"
-  default     = "./manifests/zookeeper-cluster.yaml"
-  type        = string
 }

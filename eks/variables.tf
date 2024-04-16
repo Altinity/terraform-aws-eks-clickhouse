@@ -40,7 +40,6 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-// Should this be retrieved automatically based on region and CIDR?
 variable "subnets" {
   description = "List of subnets"
   type        = list(map(string))
