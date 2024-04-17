@@ -23,17 +23,6 @@ resource "kubernetes_namespace" "clickhouse" {
   }
 }
 
-resource "kubernetes_secret" "clickhouse_credentials" {
-  metadata {
-    name      = "clickhouse-credentials"
-    namespace = kubernetes_namespace.clickhouse.metadata[0].name
-  }
-
-  data = {
-    password = local.clickhouse_password
-  }
-}
-
 resource "helm_release" "clickhouse_cluster" {
   name       = "clickhouse-eks"
   chart      = "clickhouse-eks"
@@ -45,6 +34,8 @@ resource "helm_release" "clickhouse_cluster" {
     zones         = var.k8s_availability_zones
     instance_type = var.clickhouse_cluster_instance_type
     cluster_name  = var.clickhouse_cluster_name
-    service_type  = var.clickhouse_cluster_enable_loadbalancer ? "LoadBalancer" : "ClusterIP"
+    service_type  = var.clickhouse_cluster_enable_loadbalancer ? "loadbalancer-external" : "cluster-ip"
+    user          = var.clickhouse_cluster_user
+    password      = local.clickhouse_password
   })]
 }

@@ -69,7 +69,7 @@ data "kubernetes_service" "clickhouse_load_balancer" {
   count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
 
   metadata {
-    name      = "clickhouse-aws"
+    name      = "clickhouse-eks"
     namespace = var.clickhouse_cluster_namespace
   }
 }
