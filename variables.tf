@@ -118,7 +118,7 @@ variable "clickhouse_operator_version" {
 ################################################################################
 variable "clickhouse_cluster_name" {
   description = "Name of the ClickHouse cluster"
-  default     = "chi"
+  default     = "eks"
   type        = string
 }
 
