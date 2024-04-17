@@ -7,6 +7,12 @@ variable "install_clickhouse_cluster" {
   default     = true
 }
 
+variable "install_clickhouse_keeper" {
+  description = "Enable the installation of the ClickHouse Keeper cluster"
+  type        = bool
+  default     = true
+}
+
 variable "install_clickhouse_operator" {
   description = "Enable the installation of the ClickHouse operator"
   type        = bool
@@ -116,11 +122,11 @@ variable "clickhouse_operator_version" {
 ################################################################################
 # ClickHouse Cluster
 ################################################################################
-variable "clickhouse_cluster_name" {
-  description = "Name of the ClickHouse cluster"
-  default     = "eks"
-  type        = string
-}
+# variable "clickhouse_cluster_name" {
+#   description = "Name of the ClickHouse cluster"
+#   default     = "eks"
+#   type        = string
+# }
 
 variable "clickhouse_cluster_namespace" {
   description = "Namespace for the ClickHouse cluster"
