@@ -1,6 +1,7 @@
 ################################################################################
-# EKS
+# GLOBAL
 ################################################################################
+
 variable "install_clickhouse_cluster" {
   description = "Enable the installation of the ClickHouse cluster"
   type        = bool
@@ -19,6 +20,9 @@ variable "install_clickhouse_operator" {
   default     = true
 }
 
+################################################################################
+# EKS
+################################################################################
 variable "region" {
   description = "The AWS region"
   type        = string
