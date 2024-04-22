@@ -1,6 +1,8 @@
 locals {
-  helm_chart_repository = "https://altinity.github.io/kubernetes-blueprints-for-clickhouse"
-  clickhouse_password   = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
+  clickhouse_cluster_chart_name     = "clickhouse-eks"
+  clickhouse_keeper_chart_name      = "keeper-sts"
+  clickhouse_helm_charts_repository = "https://altinity.github.io/kubernetes-blueprints-for-clickhouse"
+  clickhouse_password               = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 }
 
 # Generates a random password without special characters if no password is provided
@@ -26,13 +28,13 @@ resource "kubernetes_namespace" "clickhouse" {
 
 
 resource "helm_release" "clickhouse_keeper" {
-  name       = "keeper-ss"
-  chart      = "keeper-ss"
+  name       = local.clickhouse_keeper_chart_name
+  chart      = local.clickhouse_keeper_chart_name
   namespace  = kubernetes_namespace.clickhouse.metadata[0].name
-  repository = local.helm_chart_repository
-  version    = var.clickhouse_keeper_version
+  repository = local.clickhouse_helm_charts_repository
+  version    = var.clickhouse_keeper_chart_version
 
-  values = [templatefile("${path.module}/helm/keeper-ss.yaml.tpl", {
+  values = [templatefile("${path.module}/helm/keeper-sts.yaml.tpl", {
     zones         = var.k8s_availability_zones
     instance_type = var.clickhouse_cluster_instance_type
     name          = var.clickhouse_name
@@ -41,11 +43,11 @@ resource "helm_release" "clickhouse_keeper" {
 
 
 resource "helm_release" "clickhouse_cluster" {
-  name       = "clickhouse-eks"
-  chart      = "clickhouse-eks"
+  name       = local.clickhouse_cluster_chart_name
+  chart      = local.clickhouse_cluster_chart_name
   namespace  = kubernetes_namespace.clickhouse.metadata[0].name
-  repository = local.helm_chart_repository
-  version    = var.clickhouse_cluster_version
+  repository = local.clickhouse_helm_charts_repository
+  version    = var.clickhouse_cluster_chart_version
 
   values = [templatefile("${path.module}/helm/clickhouse-cluster.yaml.tpl", {
     zones         = var.k8s_availability_zones
