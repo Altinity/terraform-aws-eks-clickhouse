@@ -1,8 +1,8 @@
 # EKS Cluster & Node Groups
 
-> 💡 TL;DR This configuration is a comprehensive setup for managing an EKS cluster with flexibility in node group scaling and distribution across multiple subnets and instance types. It ensures the EKS cluster and its worker nodes have the correct IAM roles and policies for secure and efficient operation. Additionally, the integration with Kubernetes Cluster Autoscaler allows for dynamic scaling of the node groups based on workload demands.
+> 💡 TL;DR: This Terraform configuration leverages the [`terraform-aws-modules/eks/aws`](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) module to establish a robust EKS cluster setup. It ensures flexible node group scaling and proper security practices with comprehensive IAM roles and policies. The integration of the Kubernetes Cluster Autoscaler enables dynamic node group scaling based on workload demands.
 
-This Terraform module sets up an AWS EKS (Elastic Kubernetes Service) cluster with an associated node group configuration. It also establishes the necessary IAM roles and policies for the EKS cluster, node groups, and administrative tasks. Let's break down the key components:
+This Terraform module orchestrates an AWS EKS (Elastic Kubernetes Service) deployment, handling everything from IAM roles to node group configurations using the [`terraform-aws-modules/eks/aws`](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) module. Below is an overview of the key components involved:
 
 ### Policy Attachments
 - `aws_iam_role.eks_cluster_role`: An IAM role for the EKS cluster with permissions to make AWS API calls on your behalf.
@@ -11,14 +11,11 @@ This Terraform module sets up an AWS EKS (Elastic Kubernetes Service) cluster wi
 - `aws_iam_role.eks_node_role`: An IAM role for EKS worker nodes to allow them to make AWS API calls.
 - `aws_iam_role_policy_attachment` resources for the node role: Attach necessary policies for EKS worker nodes, including EKS worker node policy, CNI plugin policy, and read-only access to ECR (Elastic Container Registry).
 
-### AWS IAM OpenID Connect Provider:
-- `aws_iam_openid_connect_provider.this`): sets up an [OIDC identity provider](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html) for the EKS cluster to enable IAM roles for service accounts.
-
 ### EKS Cluster
-- `aws_eks_cluster.this`: creates an EKS cluster with specified settings like version, role ARN, and VPC configuration.
+- `module.eks_aws.module.eks.aws_eks_cluster.this`: creates an EKS cluster with specified settings like version, role ARN, and subnets configuration.
 
 ### EKS Node Group
-- `aws_eks_node_group.this`: creates EKS node groups for each subnet and instance type combination from the `local.node_pool_combinations`. These node groups are where your Kubernetes pods will run.
+- `module.eks_aws.module.eks.module.eks_managed_node_group[1-N]`: creates EKS managed node groups for each subnet and instance type combination from the `local.node_pool_combinations`. These node groups are where your Kubernetes pods will run.
 - Includes scaling configurations, such as desired, minimum, and maximum size of each node group.
 - Tags node groups for integration with the Kubernetes Cluster Autoscaler.
 - Specifies disk size and instance types for the node groups, which are essential for defining the resources available to your Kubernetes pods.

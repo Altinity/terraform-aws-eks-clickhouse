@@ -24,3 +24,26 @@ This Terraform module is configuring the AWS Elastic Block Store (EBS) Container
 - `kubernetes_csi_driver_v1.ebs_csi_aws_com`: Registers the `ebs.csi.aws.com` CSI driver in the Kubernetes cluster.
 - `kubernetes_storage_class.gp3-encrypted`: Defines a storage class for provisioning EBS volumes. This particular storage class is set to use the `gp3` volume type and encrypt the volumes. (which is what we recommended for ClickHouse)
 
+
+
+# AWS EBS CSI Driver Setup
+
+> 💡 TLDR; This configuration sets up the AWS EBS CSI driver within an EKS cluster, enabling dynamic provisioning of EBS volumes for persistent storage. The setup includes the necessary IAM roles, Kubernetes roles, service accounts, and driver deployments to integrate AWS EBS efficiently with the Kubernetes environment.
+
+This Terraform module configures the AWS Elastic Block Store (EBS) Container Storage Interface (CSI) driver using the `[aws-ia/eks-blueprints-addons/aws](https://registry.terraform.io/modules/aws-ia/eks-blueprints-addon/aws/latest)` module for a Kubernetes cluster managed by AWS EKS. The AWS EBS CSI driver facilitates the provisioning, mounting, and management of AWS EBS volumes directly via Kubernetes. Below is a detailed breakdown of the components involved in this setup:
+
+### IAM Setup for EBS CSI Driver
+- **`module.eks_aws.aws_iam_role.ebs_csi_driver_role`**: Defines an IAM role that the EBS CSI driver will assume. This role grants the driver permissions to interact with AWS resources necessary for managing EBS volumes.
+- **`module.eks_aws.aws_iam_role_policy_attachment.ebs_csi_driver_policy_attachment`**: Attaches the necessary IAM policies to the IAM role, specifically the `AmazonEBSCSIDriverPolicy`, empowering the CSI driver to perform operations on EBS volumes.
+
+### EKS Addon Configuration
+- **`module.eks_aws.module.eks_blueprints_addons.aws_eks_addon.this["aws-ebs-csi-driver"]`**: Configures the AWS EBS CSI driver as an EKS addon, simplifying management and ensuring it is kept up-to-date with the latest releases and security patches.
+
+### Kubernetes Storage Class
+- **`kubernetes_storage_class.gp3-encrypted`**: Defines a storage class named `gp3-encrypted`, which is set as the default class for dynamic volume provisioning. It uses the `gp3` volume type with encryption enabled, suitable for applications requiring secure and performant storage solutions.
+  - **Parameters**: Specifies encryption, filesystem type (`ext4`), and the volume type (`gp3`).
+  - **Reclaim Policy**: Set to `Delete`, meaning volumes will be automatically deleted when the corresponding Kubernetes persistent volume is deleted.
+  - **Volume Binding Mode**: Set to `WaitForFirstConsumer`, which delays the binding and provisioning of a volume until a pod using it is scheduled.
+
+### Integration and Dependency Management
+- **Depends on**: Ensures that the EBS CSI driver setup only begins after the necessary EKS cluster components (such as the cluster itself and related IAM roles) are fully provisioned and operational.

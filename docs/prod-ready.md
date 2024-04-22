@@ -24,10 +24,6 @@ Utilizing public load balancers, especially for database clusters like ClickHous
 
 Switch to a private load balancer by setting `clickhouse_cluster_enable_loadbalancer` to `false`. This adjustment allows for dynamic creation or removal of the load balancer, aligning with security best practices.
 
-## Encrypt ClickHouse Connections
-
-> TBA
-
 
 ## Cluster Monitoring and Logging
 

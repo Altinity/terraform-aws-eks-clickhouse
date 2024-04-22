@@ -1,33 +1,21 @@
+################################################################################
+# Global
+################################################################################
 variable "region" {
   description = "The AWS region"
   type        = string
   default     = "us-east-1"
 }
 
-variable "cluster_name" {
-  description = "The name of the cluster"
-  type        = string
-  default     = "clickhouse-cluster"
-}
-
-variable "cluster_version" {
-  description = "Version of the cluster"
-  type        = string
-  default     = "1.26"
-}
-
-variable "autoscaler_version" {
-  description = "Autoscaler version"
-  type        = string
-  default     = "1.26.1"
-}
-
 variable "tags" {
-  description = "A map of tags"
+  description = "Map with AWS tags"
   type        = map(string)
   default     = {}
 }
 
+################################################################################
+# VPC
+################################################################################
 variable "cidr" {
   description = "CIDR block"
   type        = string
@@ -35,7 +23,7 @@ variable "cidr" {
 }
 
 variable "private_cidr" {
-  description = "List of private cidr"
+  description = "List of private CIDR blocks (one block per availability zones)"
   type        = list(string)
   default = [
     "10.0.1.0/24",
@@ -45,7 +33,7 @@ variable "private_cidr" {
 }
 
 variable "public_cidr" {
-  description = "List of public cidr"
+  description = "List of public CIDR blocks (one block per availability zones)"
   type        = list(string)
   default = [
     "10.0.101.0/24",
@@ -55,7 +43,7 @@ variable "public_cidr" {
 }
 
 variable "availability_zones" {
-  description = ""
+  description = "List of AWS availability zones"
   type        = list(string)
   default = [
     "us-east-1",
@@ -65,8 +53,30 @@ variable "availability_zones" {
 }
 
 variable "enable_nat_gateway" {
-  description = "TBA"
-  default     = false
+  description = "Enable NAT Gateway and private subnets (recommeded)"
+  type        = bool
+  default     = true
+}
+
+################################################################################
+# EKS
+################################################################################
+variable "cluster_name" {
+  description = "The name of the cluster"
+  type        = string
+  default     = "clickhouse-cluster"
+}
+
+variable "cluster_version" {
+  description = "Version of the cluster"
+  type        = string
+  default     = "1.28"
+}
+
+variable "autoscaler_version" {
+  description = "Autoscaler version"
+  type        = string
+  default     = "1.28.2"
 }
 
 variable "node_pools_config" {

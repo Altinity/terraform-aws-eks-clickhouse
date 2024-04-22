@@ -56,6 +56,7 @@ module "clickhouse_cluster" {
   count      = var.install_clickhouse_cluster ? 1 : 0
   source     = "./clickhouse-cluster"
 
+  clickhouse_cluster_name                = var.clickhouse_cluster_name
   clickhouse_cluster_namespace           = var.clickhouse_cluster_namespace
   clickhouse_cluster_password            = var.clickhouse_cluster_password
   clickhouse_cluster_user                = var.clickhouse_cluster_user

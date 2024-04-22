@@ -1,15 +1,8 @@
 ################################################################################
 # GLOBAL
 ################################################################################
-
 variable "install_clickhouse_cluster" {
   description = "Enable the installation of the ClickHouse cluster"
-  type        = bool
-  default     = true
-}
-
-variable "install_clickhouse_keeper" {
-  description = "Enable the installation of the ClickHouse Keeper cluster"
   type        = bool
   default     = true
 }
@@ -39,14 +32,14 @@ variable "clickhouse_operator_version" {
 ################################################################################
 # ClickHouse Cluster
 ################################################################################
-# variable "clickhouse_cluster_name" {
-#   description = "Name of the ClickHouse cluster"
-#   default     = "eks"
-#   type        = string
-# }
+variable "clickhouse_cluster_name" {
+  description = "Name of the ClickHouse cluster"
+  default     = "dev"
+  type        = string
+}
 
 variable "clickhouse_cluster_namespace" {
-  description = "Namespace for the ClickHouse cluster"
+  description = "Namespace of the ClickHouse cluster"
   default     = "clickhouse"
   type        = string
 }
@@ -87,17 +80,17 @@ variable "eks_cluster_name" {
 variable "eks_cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.26"
+  default     = "1.28"
 }
 
 variable "eks_autoscaler_version" {
   description = "Version of AWS Autoscaler"
   type        = string
-  default     = "1.26.1"
+  default     = "1.28.2"
 }
 
 variable "eks_tags" {
-  description = "A map of tags"
+  description = "A map of AWS tags"
   type        = map(string)
   default     = {}
 }
@@ -134,16 +127,8 @@ variable "eks_node_pools_config" {
   }
 }
 
-variable "eks_public_access_cidrs" {
-  description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
-
-
 variable "eks_enable_nat_gateway" {
-  description = "TBA"
+  description = "Enable NAT Gateway and private subnets (recommeded)"
   type        = bool
   default     = true
 }
@@ -176,4 +161,10 @@ variable "eks_availability_zones" {
     "us-east-1b",
     "us-east-1c"
   ]
+}
+
+variable "eks_public_access_cidrs" {
+  description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }
