@@ -1,5 +1,4 @@
 locals {
-  # Split operator YAML file into individual manifests
   kubeconfig = <<EOT
     apiVersion: v1
     kind: Config

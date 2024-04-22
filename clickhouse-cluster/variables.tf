@@ -10,15 +10,15 @@ variable "clickhouse_cluster_name" {
   type        = string
 }
 
-variable "clickhouse_cluster_version" {
+variable "clickhouse_cluster_chart_version" {
   description = "Version of the ClickHouse cluster helm chart version"
-  default     = "0.1.0"
+  default     = "0.1.2"
   type        = string
 }
 
-variable "clickhouse_keeper_version" {
-  description = "Name of the ClickHouse cluster helm chart version"
-  default     = "0.1.0"
+variable "clickhouse_keeper_chart_version" {
+  description = "Version of the ClickHouse Keeper cluster helm chart version"
+  default     = "0.1.1"
   type        = string
 }
 

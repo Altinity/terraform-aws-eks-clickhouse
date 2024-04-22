@@ -2,9 +2,8 @@
 # IMPORTANT: For preprod and prod use cases, it is crucial to consult with your security team and AWS architects to design a private infrastructure solution that aligns with your security requirements.
 
 locals {
-  cidr_blocks    = [for subnet in var.subnets : subnet.cidr_block]
-  azs            = [for subnet in var.subnets : subnet.az]
-  public_subnets = module.vpc.public_subnets
+  public_subnets  = module.vpc.public_subnets
+  private_subnets = module.vpc.private_subnets
 }
 
 # The VPC is configured with DNS support and hostnames,
@@ -17,15 +16,16 @@ module "vpc" {
 
   name = "${var.cluster_name}-vpc"
   cidr = var.cidr
-  azs  = local.azs
+  azs  = var.availability_zones
 
   # ⚠️ Subnets are public, this means that eks control plane will be accesible over the internet
   # You can enable IP restrictions at eks cluser level setting the variable `public_access_cidrs`
-  public_subnets          = local.cidr_blocks
-  map_public_ip_on_launch = true
+  public_subnets  = var.public_cidr
+  private_subnets = var.enable_nat_gateway ? var.private_cidr : []
 
-  # # This is crucial for public subnets to allow inbound and outbound traffic to the internet.
-  enable_vpn_gateway = true
+  map_public_ip_on_launch = var.enable_nat_gateway ? false : true
+  enable_nat_gateway      = var.enable_nat_gateway
+  single_nat_gateway      = true
 
   tags = var.tags
 }

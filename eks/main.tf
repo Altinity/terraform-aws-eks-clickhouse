@@ -3,7 +3,7 @@ locals {
 
   # Generate all node pools possible combinations of subnets and instance types
   node_pool_combinations = [for idx, np in flatten([
-    for subnet in local.public_subnets : [
+    for subnet in local.private_subnets : [
       for itype in var.node_pools_config.instance_types : {
         subnet_id     = subnet
         instance_type = itype
@@ -19,7 +19,7 @@ module "eks" {
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
   vpc_id          = module.vpc.vpc_id
-  subnet_ids      = local.public_subnets
+  subnet_ids      = local.private_subnets
 
   enable_cluster_creator_admin_permissions = true
   create_iam_role                          = false

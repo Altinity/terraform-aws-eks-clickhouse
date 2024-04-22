@@ -16,16 +16,10 @@ variable "cluster_version" {
   default     = "1.26"
 }
 
-variable "image_tag" {
-  description = "Image tag"
+variable "autoscaler_version" {
+  description = "Autoscaler version"
   type        = string
-  default     = "v1.26.1"
-}
-
-variable "replicas" {
-  description = "Number of replicas"
-  type        = number
-  default     = 2
+  default     = "1.26.1"
 }
 
 variable "tags" {
@@ -40,14 +34,39 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "subnets" {
-  description = "List of subnets"
-  type        = list(map(string))
+variable "private_cidr" {
+  description = "List of private cidr"
+  type        = list(string)
   default = [
-    { cidr_block = "10.0.1.0/24", az = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", az = "us-east-1b" },
-    { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
+    "10.0.1.0/24",
+    "10.0.2.0/24",
+    "10.0.3.0/24"
   ]
+}
+
+variable "public_cidr" {
+  description = "List of public cidr"
+  type        = list(string)
+  default = [
+    "10.0.101.0/24",
+    "10.0.102.0/24",
+    "10.0.103.0/24"
+  ]
+}
+
+variable "availability_zones" {
+  description = ""
+  type        = list(string)
+  default = [
+    "us-east-1",
+    "us-east-2",
+    "us-east-3"
+  ]
+}
+
+variable "enable_nat_gateway" {
+  description = "TBA"
+  default     = false
 }
 
 variable "node_pools_config" {

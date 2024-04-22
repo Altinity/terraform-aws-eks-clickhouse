@@ -20,7 +20,7 @@ module "eks_blueprints_addons" {
     values = [templatefile("${path.module}/helm/cluster-autoscaler.yaml.tpl", {
       aws_region         = var.region,
       eks_cluster_id     = var.cluster_name,
-      autoscaler_version = var.image_tag,
+      autoscaler_version = "v${var.autoscaler_version}",
       role_arn           = aws_iam_role.cluster_autoscaler.arn
     })]
   }

@@ -21,7 +21,7 @@ output "eks_cluster_ca_certificate" {
 
 output "eks_configure_kubectl" {
   description = "Configure kubectl: make sure you're logged in with the correct AWS profile and run the following command to update your kubeconfig"
-  value       = "aws eks --region ${var.region} update-kubeconfig --name ${module.eks_aws.cluster_name}"
+  value       = "aws eks --region ${var.eks_region} update-kubeconfig --name ${module.eks_aws.cluster_name}"
 }
 
 output "clickhouse_cluster_password" {
