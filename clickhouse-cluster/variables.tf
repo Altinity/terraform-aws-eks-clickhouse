@@ -1,3 +1,6 @@
+################################################################################
+# ClickHouse Cluster
+################################################################################
 variable "clickhouse_name" {
   description = "Name of the ClickHouse release"
   default     = "eks"
@@ -51,6 +54,9 @@ variable "clickhouse_cluster_enable_loadbalancer" {
   default     = false
 }
 
+################################################################################
+# K8S
+################################################################################
 variable "k8s_availability_zones" {
   description = "The availability zones to deploy the ClickHouse cluster"
   type        = list(string)

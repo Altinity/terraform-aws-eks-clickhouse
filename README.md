@@ -36,16 +36,26 @@ module "eks_clickhouse" {
   # Set to true if you want to use a public load balancer (and expose ports to the public Internet)
   clickhouse_cluster_enable_loadbalancer = false
 
-  cluster_name = "clickhouse-cluster"
-  region       = local.region
-  cidr         = "10.0.0.0/16"
-  subnets      = [
-    { cidr_block = "10.0.1.0/24", az = "${local.region}a" },
-    { cidr_block = "10.0.2.0/24", az = "${local.region}b" },
-    { cidr_block = "10.0.3.0/24", az = "${local.region}c" }
-  ]
+  eks_cluster_name = "clickhouse-cluster"
+  eks_region       = "local.region"
+  eks_cidr         = "10.0.0.0/16"
 
-  node_pools_config = {
+  eks_availability_zones = [
+    "{local.region}a",
+    "{local.region}b",
+    "{local.region}c"
+  ]
+  eks_private_cidr = [
+    "10.0.101.0/24",
+    "10.0.102.0/24",
+    "10.0.103.0/24"
+  ]
+  eks_public_cidr = [
+    "10.0.101.0/24",
+    "10.0.102.0/24",
+    "10.0.103.0/24"
+  ]
+  eks_node_pools_config = {
     scaling_config = {
       desired_size = 2
       max_size     = 10
@@ -81,7 +91,7 @@ aws eks update-kubeconfig --region us-east-1 --name clickhouse-cluster
 
 Connect to your ClickHouse server using `kubectl exec`.
 ```sh
-kubectl exec -it chi-chi-chi-0-0-0 -n clickhouse -- clickhouse-client
+kubectl exec -it chi-eks-dev-0-0-0 -n clickhouse -- clickhouse-client
 ```
 
 ### Run Terraform to remove the cluster

@@ -1,30 +1,35 @@
 # VPC & Subnets
 
-> 💡 TL;DR This setup is a common pattern for establishing a network infrastructure in AWS, where a VPC acts as an isolated network environment. Subnets provide further network segmentation, the internet gateway enables internet access, route tables define network routing rules, and VPC endpoints allow secure, private connections to AWS services.
+> 💡 TL;DR: This setup, utilizing the `terraform-aws-modules/vpc`, is a typical pattern for establishing a network infrastructure in AWS. It includes creating a VPC as an isolated network environment, segmenting it further with subnets, enabling internet access via an internet gateway, defining network routing rules through route tables, and establishing secure, private connections to AWS services with VPC endpoints.
 
-This Terraform module sets up foundational networking components within AWS, particularly within a VPC (Virtual Private Cloud). Let's break down each resource:
+This Terraform module configures essential networking components within AWS, specifically within a VPC (Virtual Private Cloud). It internally uses the [`terraform-aws-modules/vpc/aws`](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws) to set up all networking-related configurations.
 
 ### AWS VPC
-- `aws_vpc.this`: creates a new VPC with the specified CIDR block.
-- Enables DNS support and DNS hostnames within the VPC, which are important for resolving domain names within the VPC and for AWS resources to communicate effectively.
-- Applies tags from the `var.tags` variable for easy identification and management.
+- **`module.eks_aws.module.vpc.aws_vpc.this`**: Creates a new VPC with a specified CIDR block, enabling DNS support and DNS hostnames, which are crucial for domain name resolution within the VPC and effective communication across AWS services.
+- Tags are applied from the `var.tags` variable for easier identification and management.
 
-### Internet Gateway:
-- `aws_internet_gateway.this`: attaches an internet gateway to the created VPC. This gateway allows communication between the VPC and the internet, enabling resources within the VPC to access or be accessed from the internet.
+### Internet Gateway
+- **`module.eks_aws.module.vpc.aws_internet_gateway.this`**: Attaches an internet gateway to the VPC, facilitating communication between the VPC and the internet. This is essential for allowing internet access to and from resources within the VPC.
 
-### Subnets:
-- `aws_subnet.this`: creates a specified number of **public** subnets within the VPC across different availability zones for high availability.
-- Each subnet is assigned a CIDR block and an availability zone based on the `var.subnets` variable.
-- The `map_public_ip_on_launch` attribute is set to `true`, which means instances launched in these subnets will be assigned a public IP address. The K8s control plane will be accessible from the internet; you can enable IP access restriction using the `public_access_cidrs` variable.
+### NAT Gateway
+- **`module.eks_aws.module.vpc.aws_nat_gateway.this`**: Establishes a NAT gateway, utilizing an Elastic IP allocated with `module.eks_aws.module.vpc.aws_eip.nat`. This configuration allows instances in private subnets to access the internet while maintaining their security.
+- The `eks_enable_nat_gateway` variable, set to `true` by default, controls the creation of the NAT Gateway. Disabling it means private subnets and subsequently the NAT gateway will not be created, and EKS clusters will operate within public subnets.
 
-### Route Table:
-- `aws_route_table.this`: defines a route table in the VPC.
-- Includes a route that directs all traffic (`0.0.0.0/0`, representing all IPv4 addresses) to the internet gateway, enabling internet access for resources within the VPC.
+### Public & Private Subnets
+- **`module.eks_aws.module.vpc.aws_subnet.private[0-N]`** and **`module.eks_aws.module.vpc.aws_subnet.public[0-N]`**: Create multiple public and private subnets across different availability zones for high availability. Private subnets house the EKS cluster by default.
+- Each subnet is assigned a unique CIDR block and an availability zone based on the variables `var.eks_availability_zones`, `eks_private_cidr`, and `eks_public_cidr`.
+- The `map_public_ip_on_launch` attribute is set to `true` for public subnets, assigning public IP addresses to instances within these subnets. This occurs when the NAT Gateway is disabled.
 
-### Route Table Association:
-- `aws_route_table_association.this`: Associates each subnet with the route table. This step is crucial as it applies the routing rules defined in the route table to the subnets.
+### Route Tables
+- **`module.eks_aws.module.vpc.aws_route_table.public`** and **`module.eks_aws.module.vpc.aws_route_table.private`**: Define route tables in the VPC. The public route table directs traffic through the internet gateway, while the private route table routes traffic via the NAT gateway.
 
-### VPC Endpoint:
-- `aws_vpc_endpoint.this`: Creates a VPC endpoint for an AWS S3 service. This is a gateway-type endpoint, which allows resources in the VPC to privately connect to the S3 service without needing to go through the public internet, enhancing security and potentially reducing network costs.
-- The endpoint is associated with the route table, integrating it into the VPC's network routing.
+### Route Table Association
+- **`module.eks_aws.module.vpc.aws_route_table_association.public[0-N]`** and **`module.eks_aws.module.vpc.aws_route_table_association.private[0-N]`**: Associates each subnet with its respective route table, applying the defined routing rules to the subnets.
 
+### Routes
+- **`module.eks_aws.module.vpc.aws_route.public_internet_gateway`**: Establishes a route in the public route table directing all traffic to the internet gateway.
+- **`module.eks_aws.module.vpc.aws_route.private_nat_gateway`**: Adds a route in the private route table to direct traffic through the NAT gateway, enabling secure internet access for instances in private subnets.
+
+### Default Network ACL and Security Group
+- **`module.eks_aws.module.vpc.aws_default_network_acl.this`**: Sets a default network ACL, which provides a basic level of security by regulating traffic into and out of the associated subnets.
+- **`module.eks_aws.module.vpc.aws_default_security_group.this`**: Implements the default security group for the VPC, instantly providing fundamental security settings, such as traffic blocking protocols.
