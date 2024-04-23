@@ -86,7 +86,7 @@ variable "eks_cluster_version" {
 variable "eks_autoscaler_version" {
   description = "Version of AWS Autoscaler"
   type        = string
-  default     = "1.28.2"
+  default     = "1.28.4"
 }
 
 variable "eks_tags" {

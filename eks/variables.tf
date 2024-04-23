@@ -76,7 +76,7 @@ variable "cluster_version" {
 variable "autoscaler_version" {
   description = "Autoscaler version"
   type        = string
-  default     = "1.28.2"
+  default     = "1.28.4"
 }
 
 variable "node_pools_config" {
