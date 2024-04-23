@@ -92,7 +92,7 @@ module "eks_clickhouse" {
     instance_types = ["m5.large"]
   }
 
-  tags = {
+  eks_tags = {
     CreatedBy = "mr-robot"
   }
 }
