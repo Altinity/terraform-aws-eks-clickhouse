@@ -33,7 +33,7 @@ module "eks_clickhouse" {
   clickhouse_cluster_enable_loadbalancer = false
 
   eks_cluster_name = "clickhouse-cluster"
-  eks_region       = "local.region"
+  eks_region       = local.region
   eks_cidr         = "10.0.0.0/16"
 
   eks_availability_zones = [
