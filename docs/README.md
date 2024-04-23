@@ -56,8 +56,8 @@ locals {
 module "eks_clickhouse" {
   source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
-  install_clickhouse_operator            = true
-  install_clickhouse_cluster             = true
+  install_clickhouse_operator = true
+  install_clickhouse_cluster  = true
 
   # Set to true if you want to use a public load balancer (and expose ports to the public Internet)
   clickhouse_cluster_enable_loadbalancer = false
@@ -67,9 +67,9 @@ module "eks_clickhouse" {
   eks_cidr         = "10.0.0.0/16"
 
   eks_availability_zones = [
-    "{local.region}a",
-    "{local.region}b",
-    "{local.region}c"
+    "${local.region}a",
+    "${local.region}b",
+    "${local.region}c"
   ]
   eks_private_cidr = [
     "10.0.1.0/24",
