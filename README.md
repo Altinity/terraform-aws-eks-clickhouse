@@ -43,7 +43,7 @@ module "eks_clickhouse" {
   eks_availability_zones = [
     "${local.region}a",
     "${local.region}b",
-    "$local.region}c"
+    "${local.region}c"
   ]
   eks_private_cidr = [
     "10.0.1.0/24",
