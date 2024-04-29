@@ -111,6 +111,13 @@ variable "eks_node_pools_config" {
       min_size     = number
     })
 
+    labels = map(string)
+    taints = list(object({
+      key    = string
+      value  = string
+      effect = string
+    }))
+
     disk_size      = number
     instance_types = list(string)
   })
@@ -121,6 +128,9 @@ variable "eks_node_pools_config" {
       max_size     = 10
       min_size     = 0
     }
+
+    labels = {}
+    taints = []
 
     disk_size      = 20
     instance_types = ["m5.large"]
