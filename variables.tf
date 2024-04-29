@@ -111,12 +111,12 @@ variable "eks_node_pools_config" {
       min_size     = number
     })
 
-    labels = map(string)
-    taints = list(object({
+    labels = optional(map(string))
+    taints = optional(list(object({
       key    = string
       value  = string
       effect = string
-    }))
+    })), [])
 
     disk_size      = number
     instance_types = list(string)
