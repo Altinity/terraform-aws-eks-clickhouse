@@ -44,6 +44,9 @@ module "eks" {
     subnet_ids     = [np.subnet_id]
     disk_size      = var.node_pools_config.disk_size
 
+    labels = var.node_pools_config.labels
+    taints = var.node_pools_config.taints
+
     tags = merge(
       var.tags,
       {
