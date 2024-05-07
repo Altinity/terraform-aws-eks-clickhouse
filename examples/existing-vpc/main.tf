@@ -3,7 +3,7 @@ locals {
 }
 
 module "eks_clickhouse" {
-  source = "../../"
+  source = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
   install_clickhouse_operator = true
   install_clickhouse_cluster  = true
