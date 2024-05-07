@@ -32,25 +32,28 @@ module "eks_clickhouse" {
 
   install_clickhouse_operator = true
   install_clickhouse_cluster  = true
+  
+  # Set to true if you want to use new VPC. If set to false vpc_id and subnets should be provided 
+  create_vpc = true
 
   # Set to true if you want to use a public load balancer (and expose ports to the public Internet)
   clickhouse_cluster_enable_loadbalancer = false
 
   eks_cluster_name = "clickhouse-cluster"
   eks_region       = local.region
-  eks_cidr         = "10.0.0.0/16"
+  vpc_cidr         = "10.0.0.0/16"
 
-  eks_availability_zones = [
+  vpc_availability_zones = [
     "${local.region}a",
     "${local.region}b",
     "${local.region}c"
   ]
-  eks_private_cidr = [
+  vpc_private_cidr = [
     "10.0.1.0/24",
     "10.0.2.0/24",
     "10.0.3.0/24"
   ]
-  eks_public_cidr = [
+  vpc_public_cidr = [
     "10.0.101.0/24",
     "10.0.102.0/24",
     "10.0.103.0/24"

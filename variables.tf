@@ -13,6 +13,13 @@ variable "install_clickhouse_operator" {
   default     = true
 }
 
+
+variable "create_vpc" {
+  description = "Create dedicated VPC for the EKS cluster"
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # ClickHouse Operator
 ################################################################################
@@ -95,12 +102,6 @@ variable "eks_tags" {
   default     = {}
 }
 
-variable "eks_cidr" {
-  description = "CIDR block"
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
 variable "eks_node_pools_config" {
   description = "Node pools configuration. The module will create a node pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different node pools."
 
@@ -137,13 +138,31 @@ variable "eks_node_pools_config" {
   }
 }
 
-variable "eks_enable_nat_gateway" {
+
+
+variable "eks_public_access_cidrs" {
+  description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+
+################################################################################
+# VPC
+################################################################################
+variable "vpc_cidr" {
+  description = "CIDR block"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "vpc_enable_nat_gateway" {
   description = "Enable NAT Gateway and private subnets (recommeded)"
   type        = bool
   default     = true
 }
 
-variable "eks_private_cidr" {
+variable "vpc_private_cidr" {
   description = "List of private CIDR"
   type        = list(string)
   default = [
@@ -153,7 +172,7 @@ variable "eks_private_cidr" {
   ]
 }
 
-variable "eks_public_cidr" {
+variable "vpc_public_cidr" {
   description = "List of public CIDR"
   type        = list(string)
   default = [
@@ -163,7 +182,7 @@ variable "eks_public_cidr" {
   ]
 }
 
-variable "eks_availability_zones" {
+variable "vpc_availability_zones" {
   description = ""
   type        = list(string)
   default = [
@@ -173,8 +192,18 @@ variable "eks_availability_zones" {
   ]
 }
 
-variable "eks_public_access_cidrs" {
-  description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
+
+################################################################################
+# Existing VPC
+################################################################################
+variable "vpc_id" {
+  description = "Existing VPC ID"
+  type        = string
+  default     = ""
+}
+
+variable "eks_subnets" {
+  description = "Existing subnets to use ender specified VPC ID"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = [""]
 }

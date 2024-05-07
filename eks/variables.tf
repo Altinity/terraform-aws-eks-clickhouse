@@ -13,9 +13,27 @@ variable "tags" {
   default     = {}
 }
 
+variable "create_vpc" {
+  description = "Create dedicated VPC for the EKS cluster"
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # VPC
 ################################################################################
+variable "vpc_id" {
+  description = "Existing VPC ID"
+  type        = string
+  default     = ""
+}
+
+variable "subnets" {
+  description = "Existing subnets to use ender specified VPC ID"
+  type        = list(string)
+  default     = [""]
+}
+
 variable "cidr" {
   description = "CIDR block"
   type        = string
