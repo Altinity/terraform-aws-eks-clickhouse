@@ -1,12 +1,9 @@
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
-  subnets = var.create_vpc ? module.vpc.subnets : var.subnets
-  vpc_id = var.create_vpc ? module.vpc.vpc_id : var.vpc_id
-
   # Generate all node pools possible combinations of subnets and instance types
   node_pool_combinations = [for idx, np in flatten([
-    for subnet in local.subnets : [
+    for subnet in var.subnets : [
       for itype in var.node_pools_config.instance_types : {
         subnet_id     = subnet
         instance_type = itype
@@ -15,26 +12,14 @@ locals {
   ]) : np]
 }
 
-module "vpc" {
-  source = "./vpc"
-  count = var.create_vpc ? 1 : 0
-
-  vpc_name = "${var.cluster_name}-vpc"
-  cidr = var.cidr
-  public_cidr = var.public_cidr
-  private_cidr = var.private_cidr
-  enable_nat_gateway = var.enable_nat_gateway
-  availability_zones = var.availability_zones
-
-}
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.8.4"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
-  vpc_id          = local.vpc_id
-  subnet_ids      = local.subnets
+  vpc_id          = var.vpc_id
+  subnet_ids      = var.subnets
 
   enable_cluster_creator_admin_permissions = true
   create_iam_role                          = false
