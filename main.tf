@@ -43,8 +43,8 @@ module "eks_aws" {
   source     = "./eks"
 
   create_vpc = var.create_vpc
-  subnets    = var.create_vpc ? module.vpc.subnets : var.eks_subnets
-  vpc_id     = var.create_vpc ? module.vpc.vpc_id : var.vpc_id
+  subnets    = var.create_vpc ? module.vpc[0].subnets : var.eks_subnets
+  vpc_id     = var.create_vpc ? module.vpc[0].vpc_id : var.vpc_id
 
   region              = var.eks_region
   cluster_name        = var.eks_cluster_name
