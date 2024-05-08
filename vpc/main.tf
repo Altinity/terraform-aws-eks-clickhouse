@@ -9,7 +9,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "${var.cluster_name}-vpc"
+  name = var.vpc_name
   cidr = var.cidr
   azs  = var.availability_zones
 

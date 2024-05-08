@@ -1,11 +1,9 @@
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
-  subnets = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
-
   # Generate all node pools possible combinations of subnets and instance types
   node_pool_combinations = [for idx, np in flatten([
-    for subnet in local.subnets : [
+    for subnet in var.subnets : [
       for itype in var.node_pools_config.instance_types : {
         subnet_id     = subnet
         instance_type = itype
@@ -20,8 +18,8 @@ module "eks" {
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
-  vpc_id          = module.vpc.vpc_id
-  subnet_ids      = local.subnets
+  vpc_id          = var.vpc_id
+  subnet_ids      = var.subnets
 
   enable_cluster_creator_admin_permissions = true
   create_iam_role                          = false

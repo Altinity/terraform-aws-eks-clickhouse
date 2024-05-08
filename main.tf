@@ -25,21 +25,34 @@ provider "helm" {
   }
 }
 
+module "vpc" {
+  source = "./vpc"
+  count = var.create_vpc ? 1 : 0
+
+  vpc_name = "${var.eks_cluster_name}-vpc"
+  cidr = var.vpc_cidr
+  public_cidr = var.vpc_public_cidr
+  private_cidr = var.vpc_private_cidr
+  enable_nat_gateway = var.vpc_enable_nat_gateway
+  availability_zones = var.vpc_availability_zones
+}
+
+
 module "eks_aws" {
-  source = "./eks"
+  depends_on = [module.vpc]
+  source     = "./eks"
+
+  create_vpc = var.create_vpc
+  subnets    = var.create_vpc ? module.vpc[0].subnets : var.eks_subnets
+  vpc_id     = var.create_vpc ? module.vpc[0].vpc_id : var.vpc_id
 
   region              = var.eks_region
   cluster_name        = var.eks_cluster_name
-  cidr                = var.eks_cidr
-  public_cidr         = var.eks_public_cidr
   public_access_cidrs = var.eks_public_access_cidrs
-  private_cidr        = var.eks_private_cidr
-  availability_zones  = var.eks_availability_zones
   cluster_version     = var.eks_cluster_version
   autoscaler_version  = var.eks_autoscaler_version
   node_pools_config   = var.eks_node_pools_config
   tags                = var.eks_tags
-  enable_nat_gateway  = var.eks_enable_nat_gateway
 }
 
 module "clickhouse_operator" {
@@ -63,7 +76,7 @@ module "clickhouse_cluster" {
   clickhouse_cluster_instance_type       = var.eks_node_pools_config.instance_types[0]
   clickhouse_cluster_enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
 
-  k8s_availability_zones            = var.eks_availability_zones
+  k8s_availability_zones            = var.vpc_availability_zones
   k8s_cluster_region                = var.eks_region
   k8s_cluster_name                  = var.eks_cluster_name
   k8s_cluster_endpoint              = module.eks_aws.cluster_endpoint

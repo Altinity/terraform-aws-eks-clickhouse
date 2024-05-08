@@ -13,11 +13,11 @@ This Terraform module configures essential networking components within AWS, spe
 
 ### NAT Gateway
 - **`module.eks_aws.module.vpc.aws_nat_gateway.this`**: Establishes a NAT gateway, utilizing an Elastic IP allocated with `module.eks_aws.module.vpc.aws_eip.nat`. This configuration allows instances in private subnets to access the internet while maintaining their security.
-- The `eks_enable_nat_gateway` variable, set to `true` by default, controls the creation of the NAT Gateway. Disabling it means private subnets and subsequently the NAT gateway will not be created, and EKS clusters will operate within public subnets.
+- The `vpc_enable_nat_gateway` variable, set to `true` by default, controls the creation of the NAT Gateway. Disabling it means private subnets and subsequently the NAT gateway will not be created, and EKS clusters will operate within public subnets.
 
 ### Public & Private Subnets
 - **`module.eks_aws.module.vpc.aws_subnet.private[0-N]`** and **`module.eks_aws.module.vpc.aws_subnet.public[0-N]`**: Create multiple public and private subnets across different availability zones for high availability. Private subnets house the EKS cluster by default.
-- Each subnet is assigned a unique CIDR block and an availability zone based on the variables `var.eks_availability_zones`, `eks_private_cidr`, and `eks_public_cidr`.
+- Each subnet is assigned a unique CIDR block and an availability zone based on the variables `var.vpc_availability_zones`, `vpc_private_cidr`, and `vpc_public_cidr`.
 - The `map_public_ip_on_launch` attribute is set to `true` for public subnets, assigning public IP addresses to instances within these subnets. This occurs when the NAT Gateway is disabled.
 
 ### Route Tables
