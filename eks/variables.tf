@@ -29,7 +29,7 @@ variable "vpc_id" {
 }
 
 variable "subnets" {
-  description = "Existing subnets to use ender specified VPC ID"
+  description = "Existing subnets to use for EKS cluster"
   type        = list(string)
   default     = [""]
 }
