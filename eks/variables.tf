@@ -70,13 +70,13 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.28"
+  default     = "1.29"
 }
 
 variable "autoscaler_version" {
   description = "Autoscaler version"
   type        = string
-  default     = "1.28.4"
+  default     = "1.29.2"
 }
 
 variable "node_pools_config" {
