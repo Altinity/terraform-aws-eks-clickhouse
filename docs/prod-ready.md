@@ -24,10 +24,10 @@ Utilizing public load balancers, especially for database clusters like ClickHous
 
 Switch to a private load balancer by setting `clickhouse_cluster_enable_loadbalancer` to `false`. This adjustment allows for dynamic creation or removal of the load balancer, aligning with security best practices.
 
-## Change Default Passwords (and K8S Secrets)
+## Change Default Passwords (and Kubernetes Secrets)
+When setting up the cluster, you can configure the ClickHouse default credentials by setting the `clickhouse_cluster_password` and `clickhouse_cluster_password` variables. If you don't provide a password, the module will generate a random one for you. The credentials will be store in the terraform state and also in a Kubernetes secret named `clickhouse-credentials`.
 
-> TBA
-
+Consider changing credential values in the Kubernetes secrets to enhance security. Even if you set random/strong passwords, the initial values will be part of state files, logs, or other artifacts, which could lead to unauthorized access.
 
 ## Cluster Monitoring and Logging
 

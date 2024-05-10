@@ -10,7 +10,7 @@ The deployment experience is simple but flexible. You can customize several sett
 
 We recommend keeping the defaults if you are new to EKS and ClickHouse. However, if you are familiar with EKS and ClickHouse, feel free to use this template as a starting point and customize it to your needs.
 
-> ⚠️ There are some configurations/resources that could not be considered "production-ready". Use these examples with caution and as a starting point for your learning and development process.
+> ⚠️ There are some configurations or resources that may not be considered "production-ready" depending your security guideliness. Use these examples with caution and as a starting point for your learning and development process.
 
 ## Components
 
@@ -18,16 +18,18 @@ This architecture provides a scalable, secure, and efficient environment for run
 
 - **EKS Cluster**: Utilizes AWS Elastic Kubernetes Service to manage Kubernetes clusters. Configuration specifies version, node groups, and IAM roles for cluster operations.
 
-- **VPC and Networking**: Sets up a VPC with subnets, internet gateway, and route tables for network isolation and internet access. Public subnets and an S3 VPC endpoint are created for external and internal communications, respectively.
+- **VPC and Networking**: Sets up a VPC with public and private subnets, NAT gateway, Internet gateway, and route tables for network isolation and internet access. Public subnets and an S3 VPC endpoint are created for external and internal communications, respectively.
 
-  > We know that this VPC configuration we've chosen may not be the most advisable for a real and productive environment. However, we believe it strikes a good balance between simplicity and user-friendliness for getting started with ClickHouse, while still preserving fundamental security aspects. The main idea behind this setup is to generate a ClickHouse cluster with a public URL to which you can easily connect once the provisioning is complete.
+  > The VPC configuration we've chosen is advisable for a real and productive environment. It strikes a good balance between simplicity and user-friendliness for getting started with ClickHouse, while still preserving fundamental security aspects. The main idea behind this setup is to generate a ClickHouse cluster with an optional public URL to which you can easily connect once the provisioning is complete.
 
 - **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
-- **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with Zookeeper for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class.
+- **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with **ClickHouse Keeper** for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class. The setups is performed using 3 different helm charts:
   - **Operator**: The operator facilitates the lifecycle of ClickHouse clusters, including scaling, backup, and recovery.
   - **Cluster**: Creates a ClickHouse cluster using a Altinity ClickHouse Operator, with configurations for namespace, user, and password.
-  - **Zookeeper**: Set up a Zookeeper cluster for ClickHouse coordination to enhance ClickHouse clusters by managing configuration and ensuring consistency.
+  - **ClickHouseKeeper**: Set up a ClickHouse Keeper cluster for ClickHouse coordination to enhance ClickHouse clusters by managing configuration and ensuring consistency.
+
+  > For more information about the Helm Charts, you can check the [kubernetes-blueprints-for-clickhouse](https://github.com/Altinity/kubernetes-blueprints-for-clickhouse) repository.
 
 
 - **Storage**:  We opted for Amazon EBS (Elastic Block Store) for our cluster's storage due to its cost-effectiveness compared to other AWS storage options. EBS provides high performance, durability, and the flexibility to scale, making it ideal for database workloads like ClickHouse. It offers a cost-efficient solution for maintaining data integrity and availability.
@@ -84,7 +86,7 @@ Verify that the EKS cluster is active and the nodes are ready.
 
 ```bash
 # Use this command to setup the `kubeconfig` for the EKS cluster.
-aws eks update-kubeconfig --name clickhouse-cluster --region us-east-1
+eval $(terraform output eks_configure_kubectl | tr -d '"')
 
 # Get aws, autoscaler, ebs-csi, clickhouse operator and other k8s pods
 kubectl get pods -n kube-system
