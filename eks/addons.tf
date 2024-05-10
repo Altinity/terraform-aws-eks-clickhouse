@@ -1,5 +1,6 @@
 module "eks_blueprints_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
+  source  = "aws-ia/eks-blueprints-addons/aws"
+  version = "~> 1.16.2"
 
   depends_on = [module.eks]
 
@@ -47,4 +48,19 @@ resource "kubernetes_storage_class" "gp3-encrypted" {
   reclaim_policy         = "Delete"
   volume_binding_mode    = "WaitForFirstConsumer"
   allow_volume_expansion = true
+}
+
+resource "kubernetes_annotations" "disable_gp2" {
+  depends_on = [module.eks_blueprints_addons]
+  annotations = {
+    "storageclass.kubernetes.io/is-default-class" : "false"
+  }
+
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  metadata {
+    name = "gp2"
+  }
+
+  force = true
 }
