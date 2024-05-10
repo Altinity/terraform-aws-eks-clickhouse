@@ -7,7 +7,8 @@
 # Creates a series of public subnets within the VPC based on the var.subnets input variable,
 # which contains details like CIDR blocks and availability zones.
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 5.8.1"
 
   name = "${var.cluster_name}-vpc"
   cidr = var.cidr
