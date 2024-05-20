@@ -14,7 +14,8 @@ It includes the ClickHouse Operator and a fully working ClickHouse cluster.
 ## Prerequisites
 
 - [terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (recommended `>= v1.5`)
-- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl).
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Usage
 ### Create an EKS Cluster with ClickHouse Operator and ClickHouse Cluster
