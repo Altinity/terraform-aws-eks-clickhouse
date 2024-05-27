@@ -27,6 +27,18 @@ module "eks" {
   create_iam_role                          = false
   iam_role_arn                             = aws_iam_role.eks_cluster_role.arn
 
+  node_security_group_additional_rules = {
+    ingress_self_all = {
+      description = "Node to node all ports/protocols"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
+      self        = true
+    }
+  }
+
+
   # Node Groups
   eks_managed_node_groups = { for idx, np in local.node_pool_combinations : "node-group-${tostring(idx)}" => {
     desired_capacity = var.node_pools_config.scaling_config.desired_size
