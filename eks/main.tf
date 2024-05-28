@@ -1,17 +1,43 @@
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
-  subnets = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
+  zones           = { for k, v in data.aws_subnet.subnets : k => v.availability_zone }
+  subnets_by_zone = { for id, subnet in data.aws_subnet.subnets : subnet.availability_zone => id }
+  subnets         = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
 
-  # Generate all node pools possible combinations of subnets and instance types
-  node_pool_combinations = [for idx, np in flatten([
-    for subnet in local.subnets : [
-      for itype in var.node_pools_config.instance_types : {
-        subnet_id     = subnet
-        instance_type = itype
-      }
+  # Generate all node pools possible combinations of subnets and node pools
+  node_pool_combinations = flatten([
+    for np in var.node_pools : [
+      for zone in(np.zones != null ? np.zones : keys(local.subnets_by_zone)) : [
+        {
+          name          = np.name
+          subnet_id     = local.subnets_by_zone[zone]
+          instance_type = np.instance_type
+          labels        = np.labels
+          taints        = np.taints
+          ami_type      = np.ami_type
+          desired_size  = np.desired_size
+          max_size      = np.max_size
+          min_size      = np.min_size
+          disk_size     = np.disk_size
+        }
+      ]
     ]
-  ]) : np]
+  ])
+
+  node_pool_defaults = {
+    ami_type  = "AL2_x86_64"
+    disk_size = 20
+  }
+}
+
+data "aws_subnet" "subnets" {
+  for_each = toset(local.subnets)
+  id       = each.value
+}
+
+output "vpc" {
+  value = local.subnets_by_zone
 }
 
 module "eks" {
@@ -38,14 +64,13 @@ module "eks" {
     }
   }
 
-
   # Node Groups
   eks_managed_node_groups = { for idx, np in local.node_pool_combinations : "node-group-${tostring(idx)}" => {
-    desired_capacity = var.node_pools_config.scaling_config.desired_size
-    max_capacity     = var.node_pools_config.scaling_config.max_size
-    min_capacity     = var.node_pools_config.scaling_config.min_size
+    desired_size = np.desired_size
+    max_size     = np.max_size
+    min_size     = np.min_size
 
-    name            = "${var.cluster_name}-${tostring(idx)}"
+    name            = np.name
     use_name_prefix = true
 
     iam_role_use_name_prefix = false
@@ -54,10 +79,11 @@ module "eks" {
 
     instance_types = [np.instance_type]
     subnet_ids     = [np.subnet_id]
-    disk_size      = var.node_pools_config.disk_size
+    disk_size      = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
+    ami_type       = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
 
-    labels = var.node_pools_config.labels
-    taints = var.node_pools_config.taints
+    labels = np.labels
+    taints = np.taints
 
     tags = merge(
       var.tags,

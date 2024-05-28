@@ -95,6 +95,18 @@ variable "eks_autoscaler_version" {
   default     = "1.29.2"
 }
 
+variable "eks_autoscaler_replicas" {
+  description = "Number of replicas for AWS Autoscaler"
+  type        = number
+  default     = 1
+}
+
+variable "autoscaler_replicas" {
+  description = "Autoscaler replicas"
+  type        = number
+  default     = 1
+}
+
 variable "eks_tags" {
   description = "A map of AWS tags"
   type        = map(string)
@@ -107,15 +119,18 @@ variable "eks_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "eks_node_pools_config" {
+variable "eks_node_pools" {
   description = "Node pools configuration. The module will create a node pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different node pools."
 
-  type = object({
-    scaling_config = object({
-      desired_size = number
-      max_size     = number
-      min_size     = number
-    })
+  type = list(object({
+    name          = string
+    instance_type = string
+    ami_type      = optional(string)
+    disk_size     = optional(number)
+    desired_size  = number
+    max_size      = number
+    min_size      = number
+    zones         = optional(list(string))
 
     labels = optional(map(string))
     taints = optional(list(object({
@@ -123,24 +138,30 @@ variable "eks_node_pools_config" {
       value  = string
       effect = string
     })), [])
+  }))
 
-    disk_size      = number
-    instance_types = list(string)
-  })
-
-  default = {
-    scaling_config = {
-      desired_size = 2
-      max_size     = 10
-      min_size     = 0
+  default = [
+    {
+      name          = "clickhouse"
+      instance_type = "m6i.large"
+      ami_type      = "AL2_x86_64"
+      desired_size  = 0
+      disk_size     = 20
+      max_size      = 10
+      min_size      = 0
+      zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+    },
+    {
+      name          = "system"
+      instance_type = "t3.large"
+      ami_type      = "AL2_x86_64"
+      disk_size     = 20
+      desired_size  = 1
+      max_size      = 10
+      min_size      = 0
+      zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
     }
-
-    labels = {}
-    taints = []
-
-    disk_size      = 20
-    instance_types = ["m5.large"]
-  }
+  ]
 }
 
 variable "eks_enable_nat_gateway" {

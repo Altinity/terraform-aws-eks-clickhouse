@@ -37,7 +37,8 @@ module "eks_aws" {
   availability_zones  = var.eks_availability_zones
   cluster_version     = var.eks_cluster_version
   autoscaler_version  = var.eks_autoscaler_version
-  node_pools_config   = var.eks_node_pools_config
+  autoscaler_replicas = var.autoscaler_replicas
+  node_pools          = var.eks_node_pools
   tags                = var.eks_tags
   enable_nat_gateway  = var.eks_enable_nat_gateway
 }
@@ -60,7 +61,7 @@ module "clickhouse_cluster" {
   clickhouse_cluster_namespace           = var.clickhouse_cluster_namespace
   clickhouse_cluster_password            = var.clickhouse_cluster_password
   clickhouse_cluster_user                = var.clickhouse_cluster_user
-  clickhouse_cluster_instance_type       = var.eks_node_pools_config.instance_types[0]
+  clickhouse_cluster_instance_type       = var.eks_node_pools[0].instance_type
   clickhouse_cluster_enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
 
   k8s_availability_zones            = var.eks_availability_zones

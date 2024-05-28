@@ -19,10 +19,11 @@ module "eks_blueprints_addons" {
   cluster_autoscaler = {
     timeout = "300"
     values = [templatefile("${path.module}/helm/cluster-autoscaler.yaml.tpl", {
-      aws_region         = var.region,
-      eks_cluster_id     = var.cluster_name,
-      autoscaler_version = "v${var.autoscaler_version}",
-      role_arn           = aws_iam_role.cluster_autoscaler.arn
+      aws_region          = var.region,
+      eks_cluster_id      = var.cluster_name,
+      autoscaler_version  = "v${var.autoscaler_version}",
+      autoscaler_replicas = var.autoscaler_replicas,
+      role_arn            = aws_iam_role.cluster_autoscaler.arn
     })]
   }
 }
