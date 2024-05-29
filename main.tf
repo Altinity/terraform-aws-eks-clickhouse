@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.eks_region
-}
-
 provider "kubernetes" {
   host                   = module.eks_aws.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
