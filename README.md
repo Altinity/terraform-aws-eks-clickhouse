@@ -36,6 +36,7 @@ provider "aws" {
 module "eks_clickhouse" {
   source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
 
+  aws_profile = "sandbox"
   install_clickhouse_operator = true
   install_clickhouse_cluster  = true
 
