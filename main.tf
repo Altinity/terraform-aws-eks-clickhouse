@@ -1,10 +1,14 @@
+locals {
+  eks_get_token_args = var.aws_profile != null ? ["eks", "get-token", "--cluster-name", var.eks_cluster_name, "--region", var.eks_region, "--profile", var.aws_profile] : ["eks", "get-token", "--cluster-name", var.eks_cluster_name, "--region", var.eks_region]
+}
+
 provider "kubernetes" {
   host                   = module.eks_aws.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
 
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", var.eks_cluster_name, "--region", var.eks_region]
+    args        = local.eks_get_token_args
     command     = "aws"
   }
 }
@@ -15,7 +19,7 @@ provider "helm" {
     cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
-      args        = ["eks", "get-token", "--cluster-name", var.eks_cluster_name, "--region", var.eks_region]
+      args        = local.eks_get_token_args
       command     = "aws"
     }
   }

@@ -13,6 +13,12 @@ variable "install_clickhouse_operator" {
   default     = true
 }
 
+variable "aws_profile" {
+  description = "AWS profile of deployed cluster."
+  type        = string
+  default     = "null"
+}
+
 ################################################################################
 # ClickHouse Operator
 ################################################################################
