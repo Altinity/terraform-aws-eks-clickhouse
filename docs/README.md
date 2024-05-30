@@ -45,12 +45,13 @@ This architecture is provides a scalable, secure, and efficient environment for 
 ## Usage
 
 ```hcl
-provider "aws" {
-  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
-}
-
 locals {
   region = "us-east-1"
+}
+
+provider "aws" {
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  region = local.region
 }
 
 module "eks_clickhouse" {
