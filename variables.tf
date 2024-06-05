@@ -159,7 +159,7 @@ variable "eks_node_pools" {
       desired_size  = 1
       max_size      = 10
       min_size      = 0
-      zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+      zones         = ["us-east-1a"]
     }
   ]
 }

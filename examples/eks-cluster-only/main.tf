@@ -41,7 +41,7 @@ module "eks_clickhouse" {
     }
 
     disk_size      = 20
-    instance_types = ["m5.large"]
+    instance_types = ["m6i.large"]
   }
 
   eks_tags = {
