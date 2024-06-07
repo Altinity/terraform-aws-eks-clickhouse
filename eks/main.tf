@@ -1,9 +1,13 @@
 locals {
   account_id = data.aws_caller_identity.current.account_id
 
-  zones           = { for k, v in data.aws_subnet.subnets : k => v.availability_zone }
-  subnets_by_zone = { for id, subnet in data.aws_subnet.subnets : subnet.availability_zone => id }
   subnets         = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
+  subnets_by_zone = { for id, subnet in data.aws_subnet.subnets : subnet.availability_zone => id }
+
+  node_pool_defaults = {
+    ami_type  = "AL2_x86_64"
+    disk_size = 20
+  }
 
   # Generate all node pools possible combinations of subnets and node pools
   node_pool_combinations = flatten([
@@ -15,29 +19,20 @@ locals {
           instance_type = np.instance_type
           labels        = np.labels
           taints        = np.taints
-          ami_type      = np.ami_type
           desired_size  = np.desired_size
           max_size      = np.max_size
           min_size      = np.min_size
-          disk_size     = np.disk_size
+          disk_size     = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
+          ami_type      = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
         }
       ]
     ]
   ])
-
-  node_pool_defaults = {
-    ami_type  = "AL2_x86_64"
-    disk_size = 20
-  }
 }
 
 data "aws_subnet" "subnets" {
   for_each = toset(local.subnets)
   id       = each.value
-}
-
-output "vpc" {
-  value = local.subnets_by_zone
 }
 
 module "eks" {
@@ -79,8 +74,8 @@ module "eks" {
 
     instance_types = [np.instance_type]
     subnet_ids     = [np.subnet_id]
-    disk_size      = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
-    ami_type       = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
+    disk_size      = np.disk_size
+    ami_type       = np.ami_type
 
     labels = np.labels
     taints = np.taints
