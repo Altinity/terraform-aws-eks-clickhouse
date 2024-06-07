@@ -5,8 +5,11 @@ locals {
   subnets_by_zone = { for id, subnet in data.aws_subnet.subnets : subnet.availability_zone => id }
 
   node_pool_defaults = {
-    ami_type  = "AL2_x86_64"
-    disk_size = 20
+    ami_type     = "AL2_x86_64"
+    disk_size    = 20
+    desired_size = 1
+    max_size     = 10
+    min_size     = 0
   }
 
   # Generate all node pools possible combinations of subnets and node pools
@@ -14,14 +17,14 @@ locals {
     for np in var.node_pools : [
       for zone in(np.zones != null ? np.zones : keys(local.subnets_by_zone)) : [
         {
-          name          = np.name
+          name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
           labels        = np.labels
           taints        = np.taints
-          desired_size  = np.desired_size
-          max_size      = np.max_size
-          min_size      = np.min_size
+          desired_size  = np.desired_size != null ? np.desired_size : local.node_pool_defaults.desired_size
+          max_size      = np.max_size != null ? np.max_size : local.node_pool_defaults.max_size
+          min_size      = np.min_size != null ? np.min_size : local.node_pool_defaults.min_size
           disk_size     = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
           ami_type      = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
         }
@@ -31,7 +34,7 @@ locals {
 }
 
 data "aws_subnet" "subnets" {
-  for_each = toset(local.subnets)
+  for_each = { for idx, subnet_id in local.subnets : idx => subnet_id }
   id       = each.value
 }
 
