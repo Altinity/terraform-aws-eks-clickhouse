@@ -34,3 +34,7 @@ output "clickhouse_cluster_url" {
   description = "The public URL for the ClickHouse cluster"
   value       = length(module.clickhouse_cluster) > 0 ? module.clickhouse_cluster[0].clickhouse_cluster_url : ""
 }
+
+output "cluster_node_pools" {
+  value = module.eks_aws.cluster_node_pools
+}

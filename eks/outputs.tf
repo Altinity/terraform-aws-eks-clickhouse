@@ -1,3 +1,7 @@
+output "cluster_node_pools" {
+  value = local.node_pool_combinations
+}
+
 output "cluster_arn" {
   value       = module.eks.cluster_arn
   description = "The Amazon Resource Name (ARN) of the cluster"

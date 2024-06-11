@@ -25,6 +25,10 @@ provider "helm" {
   }
 }
 
+provider "aws" {
+  region = var.eks_region
+}
+
 module "eks_aws" {
   source = "./eks"
 

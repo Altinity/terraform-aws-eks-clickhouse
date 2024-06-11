@@ -2,7 +2,7 @@ locals {
   account_id = data.aws_caller_identity.current.account_id
 
   subnets         = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
-  subnets_by_zone = { for id, subnet in data.aws_subnet.subnets : subnet.availability_zone => id }
+  subnets_by_zone = { for _, subnet in data.aws_subnet.subnets : subnet.availability_zone => subnet.id }
 
   node_pool_defaults = {
     ami_type     = "AL2_x86_64"
