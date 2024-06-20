@@ -33,16 +33,24 @@ module "eks_clickhouse" {
     "10.0.102.0/24",
     "10.0.103.0/24"
   ]
-  eks_node_pools_config = {
-    scaling_config = {
-      desired_size = 2
-      max_size     = 10
-      min_size     = 0
+  eks_node_pools = [
+    {
+      name          = "clickhouse"
+      instance_type = "m6i.large"
+      desired_size  = 0
+      max_size      = 10
+      min_size      = 0
+      zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+    },
+    {
+      name          = "system"
+      instance_type = "t3.large"
+      desired_size  = 1
+      max_size      = 10
+      min_size      = 0
+      zones         = ["us-east-1a"]
     }
-
-    disk_size      = 20
-    instance_types = ["m6i.large"]
-  }
+  ]
 
   eks_tags = {
     CreatedBy = "mr-robot"
