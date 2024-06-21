@@ -40,7 +40,7 @@ module "eks_clickhouse" {
       desired_size  = 0
       max_size      = 10
       min_size      = 0
-      zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+      zones         = ["${local.region}a", "${local.region}b", "${local.region}c"]
     },
     {
       name          = "system"
@@ -48,7 +48,7 @@ module "eks_clickhouse" {
       desired_size  = 1
       max_size      = 10
       min_size      = 0
-      zones         = ["us-east-1a"]
+      zones         = ["${local.region}a"]
     }
   ]
 
