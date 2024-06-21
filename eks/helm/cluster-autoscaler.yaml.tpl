@@ -18,17 +18,18 @@ rbac:
   create: true
 
 extraArgs:
-  logtostderr: "true"
+  logtostderr: true
   stderrthreshold: info
   v: 4
-  balance-similar-node-groups: "true"
-  skip-nodes-with-local-storage: "false"
-  skip-nodes-with-system-pods: "false"
+  balance-similar-node-groups: true
+  skip-nodes-with-local-storage: false
+  skip-nodes-with-system-pods: false
+  expander: most-pods
 
 image:
   tag: ${autoscaler_version}
 
-replicaCount: 1
+replicaCount: ${autoscaler_replicas}
 
 resources:
   limits:
