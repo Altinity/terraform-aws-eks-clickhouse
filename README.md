@@ -8,8 +8,8 @@
   <img src="https://img.shields.io/static/v1?logo=slack&logoColor=959DA5&label=Slack&labelColor=333a41&message=join%20conversation&color=3AC358" alt="AltinityDB Slack" />
 </a>
 
-Terraform module for creating EKS clusters optimized for ClickHouse with EBS and autoscaling.
-It includes the ClickHouse Operator and a fully working ClickHouse cluster.
+Terraform module for creating EKS clusters optimized for ClickHouse® with EBS and autoscaling.
+It includes the Altinity Kubernetes Operator for ClickHouse and a fully working ClickHouse cluster.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ It includes the ClickHouse Operator and a fully working ClickHouse cluster.
 - [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Usage
-### Create an EKS Cluster with ClickHouse Operator and ClickHouse Cluster
+### Create an EKS Cluster with Altinity Kubernetes Operator for ClickHouse and ClickHouse Cluster
 
 Paste the following Terraform sample module into a tf file (`main.tf`) in a new directory. Adjust properties as desired.
 The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
