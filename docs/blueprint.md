@@ -1,8 +1,8 @@
-# ClickHouse Cluster on EKS with Terraform
+# ClickHouse® Cluster on EKS with Terraform
 
-With this pattern, you can deploy a ClickHouse cluster on AWS EKS (Elastic Kubernetes Service) with a single Terraform file. This module sets up the EKS cluster and node groups with all the tooling required to run ClickHouse clusters on Kubernetes.
+With this pattern, you can deploy a ClickHouse® cluster on AWS EKS (Elastic Kubernetes Service) with a single Terraform file. This module sets up the EKS cluster and node groups with all the tooling required to run ClickHouse clusters on Kubernetes.
 
-![](./architecture.png)
+![](./aws_eks_blueprint_architecture_diagram.svg)
 
 The module uses opinionated defaults for the EKS cluster and node groups, including the EBS CSI driver, Kubernetes autoscaler, and IAM roles and policies. It also includes configurations for VPCs, public subnets, route tables, and internet gateways, which are essential for the network infrastructure of the EKS cluster.
 
@@ -26,7 +26,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 
 - **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with **ClickHouse Keeper** for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class. The setups is performed using 3 different helm charts:
   - **Operator**: The operator facilitates the lifecycle of ClickHouse clusters, including scaling, backup, and recovery.
-  - **Cluster**: Creates a ClickHouse cluster using a Altinity ClickHouse Operator, with configurations for namespace, user, and password.
+  - **Cluster**: Creates a ClickHouse cluster using the Altinity Kubernetes operator for ClickHouse, with configurations for namespace, user, and password.
   - **ClickHouseKeeper**: Set up a ClickHouse Keeper cluster for ClickHouse coordination to enhance ClickHouse clusters by managing configuration and ensuring consistency.
 
   > For more information about the Helm Charts, you can check the [kubernetes-blueprints-for-clickhouse](https://github.com/Altinity/kubernetes-blueprints-for-clickhouse) repository.

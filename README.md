@@ -18,7 +18,7 @@ It includes the Altinity Kubernetes Operator for ClickHouse and a fully working 
 - [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Usage
-### Create an EKS Cluster with Altinity Kubernetes Operator for ClickHouse and ClickHouse Cluster
+### Create an EKS Cluster with the Altinity Kubernetes Operator for ClickHouse and ClickHouse Cluster
 
 Paste the following Terraform sample module into a tf file (`main.tf`) in a new directory. Adjust properties as desired.
 The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
