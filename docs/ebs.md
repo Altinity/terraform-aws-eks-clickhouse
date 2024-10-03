@@ -22,7 +22,7 @@ This Terraform module is configuring the AWS Elastic Block Store (EBS) Container
 
 ### CSI Driver and Storage Class
 - `kubernetes_csi_driver_v1.ebs_csi_aws_com`: Registers the `ebs.csi.aws.com` CSI driver in the Kubernetes cluster.
-- `kubernetes_storage_class.gp3-encrypted`: Defines a storage class for provisioning EBS volumes. This particular storage class is set to use the `gp3` volume type and encrypt the volumes. (which is what we recommended for ClickHouse)
+- `kubernetes_storage_class.gp3-encrypted`: Defines a storage class for provisioning EBS volumes. This particular storage class is set to use the `gp3` volume type and encrypt the volumes. (which is what we recommended for ClickHouse®)
 
 
 

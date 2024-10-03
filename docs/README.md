@@ -1,8 +1,8 @@
-# Terraform Module for EKS ClickHouse Cluster
+# Terraform Module for EKS ClickHouse® Cluster
 
-This Terraform module automates the deployment of a [ClickHouse](https://clickhouse.com) database cluster on [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service). It is designed to create and configure the necessary resources for a robust and scalable ClickHouse deployment.
+This Terraform module automates the deployment of a [ClickHouse®](https://clickhouse.com) database cluster on [Amazon EKS](https://aws.amazon.com/eks/) (Elastic Kubernetes Service). It is designed to create and configure the necessary resources for a robust and scalable ClickHouse deployment.
 
-The code is separated in different modules: one for the EKS cluster, one for the Altinity ClickHouse operator, and one for ClickHouse (and ClickHouse Keeper) cluster. Variables are used to customize the deployment, including AWS region, cluster name, node configurations, and networking settings.
+The code is separated in different modules: one for the EKS cluster, one for the Altinity Kubernetes operator for ClickHouse, and one for ClickHouse (and ClickHouse Keeper) cluster. Variables are used to customize the deployment, including AWS region, cluster name, node configurations, and networking settings.
 
 ## Components
 
@@ -15,7 +15,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 - **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
 - **ClickHouse Deployment**:
-  - **Operator**: Deploys ClickHouse and its operator using a the Altinity helm charts, with configurations for namespace, user, and password (among ohters).
+  - **Operator**: Deploys ClickHouse and its operator using the Altinity helm charts, with configurations for namespace, user, and password (among ohters).
   - **ClickHouse Keeper**: Configures a ClickHouse Keeper cluster for ClickHouse coordination (deployed in the same ClickHouse namespace).
 
 - **Storage**:
@@ -28,7 +28,7 @@ This architecture is provides a scalable, secure, and efficient environment for 
 
 ## Architecture:
 
-![](./architecture.png)
+![](./aws_eks_blueprint_architecture_diagram.svg)
 
 - [VPC & Subnets](./vpc.md)
 - [EKS Cluster & Node Groups](./eks.md)

@@ -20,7 +20,7 @@ aws eks update-cluster-config \
 
 ## Remove Public Load Balancer
 
-Utilizing public load balancers, especially for database clusters like ClickHouse, poses a significant security risk by exposing your services to the public internet. This can lead to unauthorized access and potential data exploitation.
+Utilizing public load balancers, especially for database clusters like ClickHouse®, poses a significant security risk by exposing your services to the public internet. This can lead to unauthorized access and potential data exploitation.
 
 Switch to a private load balancer by setting `clickhouse_cluster_enable_loadbalancer` to `false`. This adjustment allows for dynamic creation or removal of the load balancer, aligning with security best practices.
 

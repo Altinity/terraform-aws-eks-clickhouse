@@ -8,7 +8,7 @@ variable "install_clickhouse_cluster" {
 }
 
 variable "install_clickhouse_operator" {
-  description = "Enable the installation of the ClickHouse operator"
+  description = "Enable the installation of the Altinity Kubernetes operator for ClickHouse"
   type        = bool
   default     = true
 }
@@ -23,13 +23,13 @@ variable "aws_profile" {
 # ClickHouse Operator
 ################################################################################
 variable "clickhouse_operator_namespace" {
-  description = "Namespace to install the clickhouse operator"
+  description = "Namespace to install the Altinity Kubernetes operator for ClickHouse"
   default     = "kube-system"
   type        = string
 }
 
 variable "clickhouse_operator_version" {
-  description = "Version of the clickhouse operator"
+  description = "Version of the Altinity Kubernetes operator for ClickHouse"
   default     = "0.23.4"
   type        = string
 }

@@ -1,13 +1,13 @@
-# Altinity ClickHouse Operator & ClickHouse Cluster Deployment with Zookeeper Integration on AWS EKS
+# Altinity Kubernetes Operator for ClickHouse® & ClickHouse Cluster Deployment with Zookeeper Integration on AWS EKS
 
-> 💡 **TL;DR**: This Terraform module automates the deployment of the Altinity ClickHouse Operator and a ClickHouse cluster with Zookeeper on K8S. It meticulously manages dependencies, streamlines password generation, and applies necessary Kubernetes manifests, culminating in a robust, maintainable, and secure setup for cloud-native database management. The configuration leverages local values for parsing YAML manifests of both the ClickHouse operator and the Zookeeper cluster, ensuring a modular and dynamic deployment process. By integrating Zookeeper, the module supports high-availability and distributed ClickHouse configurations, enhancing the resilience and scalability of the database infrastructure.
+> 💡 **TL;DR**: This Terraform module automates the deployment of the Altinity Kubernetes operator for ClickHouse® and a ClickHouse cluster with Zookeeper on K8S. It meticulously manages dependencies, streamlines password generation, and applies necessary Kubernetes manifests, culminating in a robust, maintainable, and secure setup for cloud-native database management. The configuration leverages local values for parsing YAML manifests of both the ClickHouse operator and the Zookeeper cluster, ensuring a modular and dynamic deployment process. By integrating Zookeeper, the module supports high-availability and distributed ClickHouse configurations, enhancing the resilience and scalability of the database infrastructure.
 
-This Terraform module orchestrates the deployment of the [Altinity ClickHouse Operator](https://github.com/Altinity/clickhouse-operator) on an AWS EKS cluster and sets up a ClickHouse cluster with Zookeeper integration. It is designed to streamline the process of managing ClickHouse databases within a Kubernetes environment, emphasizing automation and ease of use on AWS EKS.
+This Terraform module orchestrates the deployment of the [Altinity Kubernetes operator for ClickHouse](https://github.com/Altinity/clickhouse-operator) on an AWS EKS cluster and sets up a ClickHouse cluster with Zookeeper integration. It is designed to streamline the process of managing ClickHouse databases within a Kubernetes environment, emphasizing automation and ease of use on AWS EKS.
 
 ### Random Password Generation
 - `resource "random_password" "this"`: Generates a random password for the ClickHouse cluster if a predefined one is not supplied. The password has 22 characters, excluding special characters, and includes a lifecycle policy to disregard changes, preserving the password across Terraform `apply` operations.
 
-### Altinity ClickHouse Operator
+### Altinity Kubernetes operator for ClickHouse
 - **Operator Deployment**: Utilizes `resource "kubectl_manifest" "clickhouse_operator"` to apply the necessary manifests (CRD, Service, ConfigMap, Deployment) for the ClickHouse operator. It iterates over `local.clickhouse_operator_manifests`, applying each manifest individually.
 
 ### Zookeeper Cluster Deployment

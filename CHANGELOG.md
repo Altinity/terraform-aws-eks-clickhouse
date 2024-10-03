@@ -11,6 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0](https://github.com/Altinity/terraform-aws-eks-clickhouse/releases/tag/v0.1.0)
 ### Added
-- EKS cluster optimized for ClickHouse with EBS driver and autoscaling.
+- EKS cluster optimized for ClickHouse® with EBS driver and autoscaling.
 - VPC, subnets, and security groups.
 - Node Pools for each combination of instance type and subnet.
