@@ -15,18 +15,26 @@ locals {
   # Generate all node pools possible combinations of subnets and node pools
   node_pool_combinations = flatten([
     for np in var.node_pools : [
-      for zone in(np.zones != null ? np.zones : keys(local.subnets_by_zone)) : [
+      for i, zone in(np.zones != null ? np.zones : keys(local.subnets_by_zone)) : [
         {
           name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
           labels        = np.labels
           taints        = np.taints
-          desired_size  = np.desired_size != null ? np.desired_size : local.node_pool_defaults.desired_size
-          max_size      = np.max_size != null ? np.max_size : local.node_pool_defaults.max_size
-          min_size      = np.min_size != null ? np.min_size : local.node_pool_defaults.min_size
-          disk_size     = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
-          ami_type      = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
+          desired_size = np.desired_size == null ? (
+            local.node_pool_defaults.desired_size
+            ) : (
+            np.name == "system" && i == 0 && np.desired_size == 0 ? (
+              local.node_pool_defaults.desired_size
+              ) : (
+              np.desired_size
+            )
+          )
+          max_size  = np.max_size != null ? np.max_size : local.node_pool_defaults.max_size
+          min_size  = np.min_size != null ? np.min_size : local.node_pool_defaults.min_size
+          disk_size = np.disk_size != null ? np.disk_size : local.node_pool_defaults.disk_size
+          ami_type  = np.ami_type != null ? np.ami_type : local.node_pool_defaults.ami_type
         }
       ]
     ]
