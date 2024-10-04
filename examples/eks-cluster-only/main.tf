@@ -33,6 +33,7 @@ module "eks_clickhouse" {
     "10.0.102.0/24",
     "10.0.103.0/24"
   ]
+
   eks_node_pools = [
     {
       name          = "clickhouse"

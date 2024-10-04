@@ -30,11 +30,12 @@ When setting up the cluster, you can configure the ClickHouse default credential
 Consider changing credential values in the Kubernetes secrets to enhance security. Even if you set random/strong passwords, the initial values will be part of state files, logs, or other artifacts, which could lead to unauthorized access.
 
 ## Cluster Monitoring and Logging
-
 > TBA
 
-## Clickhouse Sharding
+## Clickhouse Cluster Sharding
+> TBA
 
-## Keeper HA
+## Clickhouse Keeper High Availability
+> TBA
 
 
