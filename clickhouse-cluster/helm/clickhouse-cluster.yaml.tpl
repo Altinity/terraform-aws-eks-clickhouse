@@ -15,4 +15,4 @@ clickhouse:
   storage_class_name: gp3-encrypted
   password: ${password}
   user: ${user}
-  keeper_name: keeper-${name}
+  keeper_name: clickhouse-keeper-sts

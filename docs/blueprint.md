@@ -24,7 +24,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 
 - **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
-- **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with **ClickHouse Keeper** for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a shard and replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class. The setups is performed using 3 different helm charts:
+- **ClickHouse Deployment**: This ClickHouse cluster, is designed for flexibility and high availability. It integrates with **ClickHouse Keeper** for cluster management and coordination, and allows external access with enhanced security. The cluster's architecture supports high availability with a replica structure across multiple zones, ensuring fault tolerance. Storage is secured and performant, utilizing an encrypted gp3 class. The setups is performed using 3 different helm charts:
   - **Operator**: The operator facilitates the lifecycle of ClickHouse clusters, including scaling, backup, and recovery.
   - **Cluster**: Creates a ClickHouse cluster using the Altinity Kubernetes operator for ClickHouse, with configurations for namespace, user, and password.
   - **ClickHouseKeeper**: Set up a ClickHouse Keeper cluster for ClickHouse coordination to enhance ClickHouse clusters by managing configuration and ensuring consistency.

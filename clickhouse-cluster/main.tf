@@ -1,7 +1,7 @@
 locals {
   clickhouse_cluster_chart_name     = "clickhouse-eks"
-  clickhouse_keeper_chart_name      = "keeper-sts"
-  clickhouse_helm_charts_repository = "https://altinity.github.io/kubernetes-blueprints-for-clickhouse"
+  clickhouse_keeper_chart_name      = "clickhouse-keeper-sts"
+  clickhouse_helm_charts_repository = "https://helm.altinity.com"
   clickhouse_password               = var.clickhouse_cluster_password == null ? join("", random_password.this[*].result) : var.clickhouse_cluster_password
 }
 
@@ -33,12 +33,6 @@ resource "helm_release" "clickhouse_keeper" {
   namespace  = kubernetes_namespace.clickhouse.metadata[0].name
   repository = local.clickhouse_helm_charts_repository
   version    = var.clickhouse_keeper_chart_version
-
-  values = [templatefile("${path.module}/helm/keeper-sts.yaml.tpl", {
-    zones         = var.k8s_availability_zones
-    instance_type = var.clickhouse_cluster_instance_type
-    name          = var.clickhouse_name
-  })]
 }
 
 
