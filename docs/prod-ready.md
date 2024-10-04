@@ -33,3 +33,8 @@ Consider changing credential values in the Kubernetes secrets to enhance securit
 
 > TBA
 
+## Clickhouse Sharding
+
+## Keeper HA
+
+
