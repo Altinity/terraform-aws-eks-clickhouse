@@ -20,7 +20,7 @@ This Terraform module orchestrates an AWS EKS (Elastic Kubernetes Service) deplo
 - Tags node groups for integration with the Kubernetes Cluster Autoscaler.
 - Specifies disk size and instance types for the node groups, which are essential for defining the resources available to your Kubernetes pods.
 - Defines the desired, minimum, and maximum size for the auto-scaling of the node groups.
-
+- The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
 
 
 

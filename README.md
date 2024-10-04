@@ -87,6 +87,8 @@ module "eks_clickhouse" {
 }
 ```
 
+> ⚠️ The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+
 ### Run Terraform to create the cluster
 
 Execute commands to initialize and apply the Terraform module. It will create an EKS cluster and install a ClickHouse sample database.
