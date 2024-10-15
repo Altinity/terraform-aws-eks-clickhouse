@@ -20,7 +20,7 @@ locals {
           name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
-          labels        = np.labels
+          labels        = merge(np.labels, { "altinity.cloud/created-by" = "terraform-aws-eks-clickhouse" })
           taints        = np.taints
           desired_size = np.desired_size == null ? (
             local.node_pool_defaults.desired_size
