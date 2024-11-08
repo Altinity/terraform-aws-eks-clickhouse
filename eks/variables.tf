@@ -128,6 +128,14 @@ variable "node_pools" {
       zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
     }
   ]
+
+  validation {
+    condition = alltrue([
+      for np in var.node_pools :
+      startswith(np.name, "clickhouse") || startswith(np.name, "system")
+    ])
+    error_message = "Each node pool name must start with either 'clickhouse' or 'system' prefix."
+  }
 }
 
 variable "public_access_cidrs" {

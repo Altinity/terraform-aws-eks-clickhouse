@@ -162,6 +162,14 @@ variable "eks_node_pools" {
       zones         = ["us-east-1a"]
     }
   ]
+
+  validation {
+    condition = alltrue([
+      for np in var.eks_node_pools :
+      startswith(np.name, "clickhouse") || startswith(np.name, "system")
+    ])
+    error_message = "Each node pool name must start with either 'clickhouse' or 'system' prefix."
+  }
 }
 
 variable "eks_enable_nat_gateway" {
