@@ -1,6 +1,8 @@
 locals {
-  account_id = data.aws_caller_identity.current.account_id
+  CLICKHOUSE_NODE_POOL_PREFIX = "clickhouse"
+  SYSTEM_NODE_POOL_PREFIX     = "system"
 
+  account_id      = data.aws_caller_identity.current.account_id
   subnets         = var.enable_nat_gateway ? module.vpc.private_subnets : module.vpc.public_subnets
   subnets_by_zone = { for _, subnet in data.aws_subnet.subnets : subnet.availability_zone => subnet.id }
 
@@ -12,6 +14,18 @@ locals {
     min_size     = 0
   }
 
+  labels = {
+    "altinity.cloud/created-by" = "terraform-aws-eks-clickhouse"
+  }
+
+  clickhouse_taints = [
+    {
+      key    = "dedicated"
+      value  = "clickhouse"
+      effect = "NO_SCHEDULE"
+    },
+  ]
+
   # Generate all node pools possible combinations of subnets and node pools
   node_pool_combinations = flatten([
     for np in var.node_pools : [
@@ -20,12 +34,13 @@ locals {
           name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
-          labels        = merge(np.labels, { "altinity.cloud/created-by" = "terraform-aws-eks-clickhouse" })
-          taints        = np.taints
+          labels        = merge(np.labels, local.labels)
+          taints        = startswith(np.name, local.CLICKHOUSE_NODE_POOL_PREFIX) ? concat(np.taints, local.clickhouse_taints) : np.taints
+
           desired_size = np.desired_size == null ? (
             local.node_pool_defaults.desired_size
             ) : (
-            np.name == "system" && i == 0 && np.desired_size == 0 ? (
+            startswith(np.name, local.SYSTEM_NODE_POOL_PREFIX) && i == 0 && np.desired_size == 0 ? (
               local.node_pool_defaults.desired_size
               ) : (
               np.desired_size
