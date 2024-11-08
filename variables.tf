@@ -171,7 +171,7 @@ variable "eks_enable_nat_gateway" {
 }
 
 variable "eks_private_cidr" {
-  description = "List of private CIDR"
+  description = "List of private CIDR. When set, the number of private CIDRs must match the number of availability zones"
   type        = list(string)
   default = [
     "10.0.1.0/24",
@@ -181,7 +181,7 @@ variable "eks_private_cidr" {
 }
 
 variable "eks_public_cidr" {
-  description = "List of public CIDR"
+  description = "List of public CIDR. When set, The number of public CIDRs must match the number of availability zones"
   type        = list(string)
   default = [
     "10.0.101.0/24",
