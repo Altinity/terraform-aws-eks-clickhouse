@@ -34,7 +34,6 @@ variable "clickhouse_operator_version" {
   type        = string
 }
 
-
 ################################################################################
 # ClickHouse Cluster
 ################################################################################
@@ -66,6 +65,18 @@ variable "clickhouse_cluster_enable_loadbalancer" {
   description = "Enable waiting for the ClickHouse LoadBalancer to receive a hostname"
   type        = bool
   default     = false
+}
+
+variable "clickhouse_cluster_chart_version" {
+  description = "Version of the ClickHouse cluster helm chart version"
+  default     = "0.1.5"
+  type        = string
+}
+
+variable "clickhouse_keeper_chart_version" {
+  description = "Version of the ClickHouse Keeper cluster helm chart version"
+  default     = "0.1.4"
+  type        = string
 }
 
 ################################################################################

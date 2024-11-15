@@ -15,7 +15,7 @@ variable "clickhouse_cluster_name" {
 
 variable "clickhouse_cluster_chart_version" {
   description = "Version of the ClickHouse cluster helm chart version"
-  default     = "0.1.4"
+  default     = "0.1.5"
   type        = string
 }
 
