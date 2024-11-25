@@ -69,7 +69,7 @@ variable "clickhouse_cluster_enable_loadbalancer" {
 
 variable "clickhouse_cluster_chart_version" {
   description = "Version of the ClickHouse cluster helm chart version"
-  default     = "0.1.5"
+  default     = "0.1.6"
   type        = string
 }
 
