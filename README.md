@@ -1,5 +1,3 @@
-**🚨 This module is still under development and not fully ready for production use; use it at your own risk.**
-
 # terraform-aws-eks-clickhouse
 
 [![License](http://img.shields.io/:license-apache%202.0-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
