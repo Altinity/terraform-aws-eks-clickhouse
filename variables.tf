@@ -97,13 +97,13 @@ variable "eks_cluster_name" {
 variable "eks_cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.29"
+  default     = "1.32"
 }
 
 variable "eks_autoscaler_version" {
   description = "Version of AWS Autoscaler"
   type        = string
-  default     = "1.29.2"
+  default     = "1.32.0"
 }
 
 variable "eks_autoscaler_replicas" {

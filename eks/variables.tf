@@ -70,13 +70,13 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.29"
+  default     = "1.32"
 }
 
 variable "autoscaler_version" {
   description = "Autoscaler version"
   type        = string
-  default     = "1.29.2"
+  default     = "1.32.0"
 }
 
 variable "autoscaler_replicas" {
