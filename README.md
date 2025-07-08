@@ -16,12 +16,33 @@ It includes the Altinity Kubernetes Operator for ClickHouse and a fully working 
 - [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Usage
+###  Compatibility Notice
+⚠️ This module is not yet compatible with the latest versions of the following providers:
+  - AWS Provider v6.x.x
+  - Helm Provider v3.x.x
+
+Please use supported versions until compatibility updates are released. Contributions are welcome 🙌
+
+
 ### Create an EKS Cluster with the Altinity Kubernetes Operator for ClickHouse and ClickHouse Cluster
 
 Paste the following Terraform sample module into a tf file (`main.tf`) in a new directory. Adjust properties as desired.
 The sample module will create a Node Pool for each combination of instance type and subnet. For example, if you have 3 subnets and 2 instance types, this module will create 6 different Node Pools.
 
 ```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.40"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.12"
+    }
+  }
+}
+
 locals {
   region = "us-east-1"
 }
