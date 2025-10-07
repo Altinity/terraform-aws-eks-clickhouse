@@ -16,6 +16,12 @@ serviceAccount:
 
 rbac:
   create: true
+  # Fix for volumeattachments permission issue in K8s 1.33+
+  clusterRole:
+    extraRules:
+    - apiGroups: ["storage.k8s.io"]
+      resources: ["volumeattachments"]
+      verbs: ["list", "watch", "get"]
 
 extraArgs:
   logtostderr: true
