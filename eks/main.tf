@@ -7,7 +7,7 @@ locals {
   subnets_by_zone = { for _, subnet in data.aws_subnet.subnets : subnet.availability_zone => subnet.id }
 
   node_pool_defaults = {
-    ami_type     = "AL2_x86_64"
+    ami_type     = var.default_ami_type
     disk_size    = 20
     desired_size = 1
     max_size     = 10

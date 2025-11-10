@@ -97,13 +97,19 @@ variable "eks_cluster_name" {
 variable "eks_cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.33"
+  default     = "1.34"
 }
 
 variable "eks_autoscaler_version" {
   description = "Version of AWS Autoscaler"
   type        = string
-  default     = "1.33.2"
+  default     = "1.34.0"
+}
+
+variable "eks_default_ami_type" {
+  description = "Default AMI type for EKS node groups"
+  type        = string
+  default     = "AL2023_x86_64_STANDARD"
 }
 
 variable "eks_autoscaler_replicas" {
@@ -155,7 +161,7 @@ variable "eks_node_pools" {
     {
       name          = "clickhouse"
       instance_type = "m6i.large"
-      ami_type      = "AL2_x86_64"
+      ami_type      = null # Uses eks_default_ami_type when null
       desired_size  = 0
       disk_size     = 20
       max_size      = 10
@@ -165,7 +171,7 @@ variable "eks_node_pools" {
     {
       name          = "system"
       instance_type = "t3.large"
-      ami_type      = "AL2_x86_64"
+      ami_type      = null # Uses eks_default_ami_type when null
       disk_size     = 20
       desired_size  = 1
       max_size      = 10

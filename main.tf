@@ -40,6 +40,7 @@ module "eks_aws" {
   private_cidr        = var.eks_private_cidr
   availability_zones  = var.eks_availability_zones
   cluster_version     = var.eks_cluster_version
+  default_ami_type    = var.eks_default_ami_type
   autoscaler_version  = var.eks_autoscaler_version
   autoscaler_replicas = var.autoscaler_replicas
   node_pools          = var.eks_node_pools

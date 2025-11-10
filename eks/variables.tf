@@ -70,13 +70,19 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Version of the cluster"
   type        = string
-  default     = "1.33"
+  default     = "1.34"
 }
 
 variable "autoscaler_version" {
   description = "Autoscaler version"
   type        = string
-  default     = "1.33.2"
+  default     = "1.34.0"
+}
+
+variable "default_ami_type" {
+  description = "Default AMI type for node groups"
+  type        = string
+  default     = "AL2023_x86_64_STANDARD"
 }
 
 variable "autoscaler_replicas" {
@@ -110,7 +116,7 @@ variable "node_pools" {
     {
       name          = "clickhouse"
       instance_type = "m6i.large"
-      ami_type      = "AL2_x86_64"
+      ami_type      = null # Uses default_ami_type when null
       desired_size  = 0
       max_size      = 10
       min_size      = 0
@@ -120,7 +126,7 @@ variable "node_pools" {
     {
       name          = "system"
       instance_type = "t3.large"
-      ami_type      = "AL2_x86_64"
+      ami_type      = null # Uses default_ami_type when null
       desired_size  = 1
       max_size      = 10
       min_size      = 0
