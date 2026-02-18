@@ -28,7 +28,7 @@ module "eks_blueprints_addons" {
   }
 }
 
-resource "kubernetes_storage_class" "gp3-encrypted" {
+resource "kubernetes_storage_class_v1" "gp3-encrypted" {
   depends_on = [module.eks_blueprints_addons]
 
   metadata {
