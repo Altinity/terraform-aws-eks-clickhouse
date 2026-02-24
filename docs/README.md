@@ -67,6 +67,8 @@ module "eks_clickhouse" {
   eks_region       = local.region
   eks_cidr         = "10.0.0.0/16"
 
+  # ⚠️ The number of CIDR blocks in eks_private_cidr and eks_public_cidr must match
+  # the number of availability zones. There must be exactly one CIDR per AZ.
   eks_availability_zones = [
     "${local.region}a",
     "${local.region}b",
