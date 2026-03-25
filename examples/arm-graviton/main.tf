@@ -42,7 +42,7 @@ module "eks_clickhouse" {
 
   # Example using AWS Graviton (ARM) instances
   # Storage-optimized instances (i4g, im4gn, is4gen) are ideal for ClickHouse workloads
-  # ⚠️ The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+  # ⚠️ The instance type of the first node pool with the "clickhouse" name prefix will be used for the ClickHouse cluster replicas.
   eks_node_pools = [
     {
       name          = "clickhouse"

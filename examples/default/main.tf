@@ -40,7 +40,7 @@ module "eks_clickhouse" {
   # eks_default_ami_type     = "AL2023_x86_64_STANDARD"  # Default for x86_64 instances
   # eks_default_ami_type_arm = "AL2023_ARM_64_STANDARD"  # Default for ARM64 instances (t4g, m7g, etc.)
 
-  # ⚠️ The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+  # ⚠️ The instance type of the first node pool with the "clickhouse" name prefix will be used for the ClickHouse cluster replicas.
   eks_node_pools = [
     {
       name          = "clickhouse"

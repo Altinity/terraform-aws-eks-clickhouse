@@ -6,7 +6,7 @@ This Terraform module orchestrates an AWS EKS (Elastic Kubernetes Service) deplo
 
 ### Policy Attachments
 - `aws_iam_role.eks_cluster_role`: An IAM role for the EKS cluster with permissions to make AWS API calls on your behalf.
-- `aws_iam_role_policy_attachment` resources: Attach AWS-managed policies to the EKS cluster role. These include policies for EKS cluster management, service roles, and VPC resource controllers.
+- `aws_iam_role_policy_attachment` resources: Attach AWS-managed policies to the EKS cluster role, including `AmazonEKSClusterPolicy` and `AmazonEKSVPCResourceController`.
 - `aws_iam_policy.eks_admin_policy` and `aws_iam_role.eks_admin_role`: Define an administrative policy and role for EKS. This setup includes permissions for creating and managing EKS clusters and associated IAM roles.
 - `aws_iam_role.eks_node_role`: An IAM role for EKS worker nodes to allow them to make AWS API calls.
 - `aws_iam_role_policy_attachment` resources for the node role: Attach necessary policies for EKS worker nodes, including EKS worker node policy, CNI plugin policy, and read-only access to ECR (Elastic Container Registry).
@@ -20,7 +20,7 @@ This Terraform module orchestrates an AWS EKS (Elastic Kubernetes Service) deplo
 - Tags node groups for integration with the Kubernetes Cluster Autoscaler.
 - Specifies disk size and instance types for the node groups, which are essential for defining the resources available to your Kubernetes pods.
 - Defines the desired, minimum, and maximum size for the auto-scaling of the node groups.
-- The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+- The instance type of the first node pool with the `clickhouse` name prefix will be used for setting up the ClickHouse cluster replicas.
 
 
 
