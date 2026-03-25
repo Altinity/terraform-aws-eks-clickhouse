@@ -7,7 +7,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
 
   exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
+    api_version = "client.authentication.k8s.io/v1"
     args        = local.eks_get_token_args
     command     = "aws"
   }
@@ -18,7 +18,7 @@ provider "helm" {
     host                   = module.eks_aws.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
     exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
+      api_version = "client.authentication.k8s.io/v1"
       args        = local.eks_get_token_args
       command     = "aws"
     }
