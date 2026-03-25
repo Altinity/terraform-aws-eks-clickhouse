@@ -25,6 +25,8 @@ When setting up the cluster, you can configure the ClickHouse default credential
 
 Consider changing credential values in the Kubernetes secrets to enhance security. Even if you set random/strong passwords, the initial values will be part of state files, logs, or other artifacts, which could lead to unauthorized access.
 
+> **Important:** The ClickHouse password is stored in plaintext in the Terraform state file. This is a Terraform limitation that affects all sensitive values. For production environments, use a [remote backend](https://developer.hashicorp.com/terraform/language/backend) with encryption enabled (e.g., S3 with SSE) and restrict access to the state file.
+
 ## Enable Secrets Encryption
 
 By default, Kubernetes secrets are stored without envelope encryption in etcd. While AWS encrypts the underlying EBS volumes of the EKS control plane, enabling envelope encryption adds a layer of protection using a customer-managed KMS key.
