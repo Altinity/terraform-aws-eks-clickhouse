@@ -64,7 +64,7 @@ locals {
           name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
-          labels        = merge(np.labels, local.labels)
+          labels        = merge(coalesce(np.labels, {}), local.labels)
           taints        = startswith(np.name, local.CLICKHOUSE_NODE_POOL_PREFIX) ? concat(np.taints, local.clickhouse_taints) : np.taints
 
           desired_size = np.desired_size == null ? (

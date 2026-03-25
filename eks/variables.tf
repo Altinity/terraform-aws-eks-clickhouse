@@ -46,9 +46,9 @@ variable "availability_zones" {
   description = "List of AWS availability zones"
   type        = list(string)
   default = [
-    "us-east-1",
-    "us-east-2",
-    "us-east-3"
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c"
   ]
 }
 
