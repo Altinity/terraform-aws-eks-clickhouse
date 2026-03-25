@@ -38,7 +38,9 @@ resource "null_resource" "wait_for_clickhouse" {
   provisioner "local-exec" {
     command = <<-EOT
       KUBECONFIG_PATH=$(mktemp)
-      echo '${local.kubeconfig}' > $KUBECONFIG_PATH
+      cat > "$KUBECONFIG_PATH" <<'KUBECONFIG'
+${local.kubeconfig}
+KUBECONFIG
       NAMESPACE=${var.clickhouse_cluster_namespace}
       SECONDS=0
       SLEEP_TIME=10
