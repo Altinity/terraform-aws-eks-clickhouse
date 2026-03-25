@@ -105,6 +105,14 @@ data "aws_subnet" "subnets" {
       condition     = !var.enable_nat_gateway || length(var.private_cidr) == length(var.availability_zones)
       error_message = "The number of private CIDRs (${length(var.private_cidr)}) must match the number of availability zones (${length(var.availability_zones)})."
     }
+    precondition {
+      condition = alltrue([
+        for np in var.node_pools : alltrue([
+          for zone in coalesce(np.zones, []) : contains(var.availability_zones, zone)
+        ])
+      ])
+      error_message = "All zones specified in node_pools must be included in the availability_zones list."
+    }
   }
 }
 
