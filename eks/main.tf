@@ -155,5 +155,12 @@ module "eks" {
   cluster_endpoint_public_access       = true
   cluster_endpoint_public_access_cidrs = var.public_access_cidrs
 
+  # Secrets encryption
+  create_kms_key            = var.enable_secrets_encryption
+  cluster_encryption_config = var.enable_secrets_encryption ? { resources = ["secrets"] } : {}
+
+  # Control plane logging
+  cluster_enabled_log_types = var.cluster_enabled_log_types
+
   tags = var.tags
 }

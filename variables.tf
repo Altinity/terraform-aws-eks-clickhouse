@@ -225,6 +225,18 @@ variable "eks_availability_zones" {
   ]
 }
 
+variable "eks_enable_secrets_encryption" {
+  description = "Enable envelope encryption for Kubernetes secrets using a KMS key"
+  type        = bool
+  default     = false
+}
+
+variable "eks_cluster_enabled_log_types" {
+  description = "List of EKS control plane log types to enable. Valid values: api, audit, authenticator, controllerManager, scheduler"
+  type        = list(string)
+  default     = []
+}
+
 variable "eks_public_access_cidrs" {
   description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
   type        = list(string)

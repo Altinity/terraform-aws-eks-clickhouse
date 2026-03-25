@@ -29,8 +29,25 @@ When setting up the cluster, you can configure the ClickHouse default credential
 
 Consider changing credential values in the Kubernetes secrets to enhance security. Even if you set random/strong passwords, the initial values will be part of state files, logs, or other artifacts, which could lead to unauthorized access.
 
-## Cluster Monitoring and Logging
-> TBA
+## Enable Secrets Encryption
+
+By default, Kubernetes secrets are stored without envelope encryption in etcd. While AWS encrypts the underlying EBS volumes of the EKS control plane, enabling envelope encryption adds a layer of protection using a customer-managed KMS key.
+
+```hcl
+eks_enable_secrets_encryption = true
+```
+
+This creates a KMS key and configures EKS to use it for encrypting secrets at rest. This is recommended for any environment handling sensitive data.
+
+## Enable Control Plane Logging
+
+EKS control plane logs provide visibility into API calls, authentication events, and cluster operations. These logs are sent to CloudWatch and can help with debugging, auditing, and security monitoring.
+
+```hcl
+eks_cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+```
+
+> **Note:** Control plane logs incur CloudWatch costs. For cost-sensitive environments, start with `["audit", "authenticator"]` as a minimum.
 
 ## Clickhouse Cluster Sharding
 > TBA

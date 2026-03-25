@@ -45,8 +45,10 @@ module "eks_aws" {
   autoscaler_version   = var.eks_autoscaler_version
   autoscaler_replicas  = var.autoscaler_replicas
   node_pools           = var.eks_node_pools
-  tags                 = var.eks_tags
-  enable_nat_gateway   = var.eks_enable_nat_gateway
+  tags                       = var.eks_tags
+  enable_nat_gateway         = var.eks_enable_nat_gateway
+  enable_secrets_encryption  = var.eks_enable_secrets_encryption
+  cluster_enabled_log_types  = var.eks_cluster_enabled_log_types
 }
 
 module "clickhouse_operator" {

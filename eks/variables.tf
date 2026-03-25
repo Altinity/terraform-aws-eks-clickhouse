@@ -150,6 +150,18 @@ variable "node_pools" {
   }
 }
 
+variable "enable_secrets_encryption" {
+  description = "Enable envelope encryption for Kubernetes secrets using a KMS key"
+  type        = bool
+  default     = false
+}
+
+variable "cluster_enabled_log_types" {
+  description = "List of EKS control plane log types to enable. Valid values: api, audit, authenticator, controllerManager, scheduler"
+  type        = list(string)
+  default     = []
+}
+
 variable "public_access_cidrs" {
   description = "List of CIDRs for public access, use this variable to restrict access to the EKS control plane."
   type        = list(string)
