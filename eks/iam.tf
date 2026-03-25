@@ -147,6 +147,12 @@ data "aws_iam_policy_document" "ebs_csi_driver_assume_role_policy" {
       variable = "${replace(module.eks.oidc_provider, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks.oidc_provider, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
   }
 }
 
@@ -218,7 +224,8 @@ resource "aws_iam_role" "cluster_autoscaler" {
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "${replace(module.eks.oidc_provider, "https://", "")}:sub": "system:serviceaccount:kube-system:cluster-autoscaler"
+          "${replace(module.eks.oidc_provider, "https://", "")}:sub": "system:serviceaccount:kube-system:cluster-autoscaler",
+          "${replace(module.eks.oidc_provider, "https://", "")}:aud": "sts.amazonaws.com"
         }
       }
     }
