@@ -32,25 +32,25 @@ provider "aws" {
 module "eks_aws" {
   source = "./eks"
 
-  region               = var.eks_region
-  cluster_name         = var.eks_cluster_name
-  cidr                 = var.eks_cidr
-  public_cidr          = var.eks_public_cidr
-  public_access_cidrs  = var.eks_public_access_cidrs
-  private_cidr         = var.eks_private_cidr
-  availability_zones   = var.eks_availability_zones
-  cluster_version      = var.eks_cluster_version
-  default_ami_type     = var.eks_default_ami_type
-  default_ami_type_arm = var.eks_default_ami_type_arm
-  autoscaler_version   = var.eks_autoscaler_version
-  autoscaler_replicas  = coalesce(var.eks_autoscaler_replicas, var.autoscaler_replicas)
-  node_pools           = var.eks_node_pools
-  tags                       = var.eks_tags
-  enable_nat_gateway         = var.eks_enable_nat_gateway
-  single_nat_gateway         = var.eks_single_nat_gateway
-  endpoint_public_access     = var.eks_endpoint_public_access
-  enable_secrets_encryption  = var.eks_enable_secrets_encryption
-  cluster_enabled_log_types  = var.eks_cluster_enabled_log_types
+  region                    = var.eks_region
+  cluster_name              = var.eks_cluster_name
+  cidr                      = var.eks_cidr
+  public_cidr               = var.eks_public_cidr
+  public_access_cidrs       = var.eks_public_access_cidrs
+  private_cidr              = var.eks_private_cidr
+  availability_zones        = var.eks_availability_zones
+  cluster_version           = var.eks_cluster_version
+  default_ami_type          = var.eks_default_ami_type
+  default_ami_type_arm      = var.eks_default_ami_type_arm
+  autoscaler_version        = var.eks_autoscaler_version
+  autoscaler_replicas       = coalesce(var.eks_autoscaler_replicas, var.autoscaler_replicas)
+  node_pools                = var.eks_node_pools
+  tags                      = var.eks_tags
+  enable_nat_gateway        = var.eks_enable_nat_gateway
+  single_nat_gateway        = var.eks_single_nat_gateway
+  endpoint_public_access    = var.eks_endpoint_public_access
+  enable_secrets_encryption = var.eks_enable_secrets_encryption
+  cluster_enabled_log_types = var.eks_cluster_enabled_log_types
 }
 
 module "clickhouse_operator" {
