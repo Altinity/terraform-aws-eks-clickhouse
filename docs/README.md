@@ -55,7 +55,7 @@ provider "aws" {
 }
 
 module "eks_clickhouse" {
-  source  = "github.com/Altinity/terraform-aws-eks-clickhouse"
+  source  = "github.com/Altinity/terraform-aws-eks-clickhouse?ref=v0.5.7"
 
   install_clickhouse_operator = true
   install_clickhouse_cluster  = true
@@ -67,6 +67,8 @@ module "eks_clickhouse" {
   eks_region       = local.region
   eks_cidr         = "10.0.0.0/16"
 
+  # ⚠️ The number of CIDR blocks in eks_private_cidr and eks_public_cidr must match
+  # the number of availability zones. There must be exactly one CIDR per AZ.
   eks_availability_zones = [
     "${local.region}a",
     "${local.region}b",

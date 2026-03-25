@@ -17,7 +17,7 @@ locals {
     - name: eks-user
       user:
         exec:
-          apiVersion: client.authentication.k8s.io/v1beta1
+          apiVersion: client.authentication.k8s.io/v1
           command: aws
           args:
             - "eks"
@@ -30,7 +30,7 @@ locals {
 }
 
 
-# This is a "hack" wich waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
+# This is a "hack" which waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
 resource "null_resource" "wait_for_clickhouse" {
   depends_on = [helm_release.clickhouse_cluster]
   count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
@@ -38,7 +38,10 @@ resource "null_resource" "wait_for_clickhouse" {
   provisioner "local-exec" {
     command = <<-EOT
       KUBECONFIG_PATH=$(mktemp)
-      echo '${local.kubeconfig}' > $KUBECONFIG_PATH
+      trap 'rm -f "$KUBECONFIG_PATH"' EXIT
+      cat > "$KUBECONFIG_PATH" <<'KUBECONFIG'
+${local.kubeconfig}
+KUBECONFIG
       NAMESPACE=${var.clickhouse_cluster_namespace}
       SECONDS=0
       SLEEP_TIME=10

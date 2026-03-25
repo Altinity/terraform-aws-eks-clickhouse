@@ -21,7 +21,7 @@ module "vpc" {
   map_public_ip_on_launch = !var.enable_nat_gateway
   enable_vpn_gateway      = !var.enable_nat_gateway
   enable_nat_gateway      = var.enable_nat_gateway
-  single_nat_gateway      = true
+  single_nat_gateway      = var.single_nat_gateway
 
   tags = var.tags
 }

@@ -102,10 +102,6 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-}
 
 resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
@@ -146,6 +142,12 @@ data "aws_iam_policy_document" "ebs_csi_driver_assume_role_policy" {
       test     = "StringEquals"
       variable = "${replace(module.eks.oidc_provider, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks.oidc_provider, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
     }
   }
 }
@@ -218,7 +220,8 @@ resource "aws_iam_role" "cluster_autoscaler" {
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "${replace(module.eks.oidc_provider, "https://", "")}:sub": "system:serviceaccount:kube-system:cluster-autoscaler"
+          "${replace(module.eks.oidc_provider, "https://", "")}:sub": "system:serviceaccount:kube-system:cluster-autoscaler",
+          "${replace(module.eks.oidc_provider, "https://", "")}:aud": "sts.amazonaws.com"
         }
       }
     }

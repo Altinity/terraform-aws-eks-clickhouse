@@ -7,7 +7,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
 
   exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
+    api_version = "client.authentication.k8s.io/v1"
     args        = local.eks_get_token_args
     command     = "aws"
   }
@@ -18,7 +18,7 @@ provider "helm" {
     host                   = module.eks_aws.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks_aws.cluster_certificate_authority)
     exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
+      api_version = "client.authentication.k8s.io/v1"
       args        = local.eks_get_token_args
       command     = "aws"
     }
@@ -43,10 +43,14 @@ module "eks_aws" {
   default_ami_type     = var.eks_default_ami_type
   default_ami_type_arm = var.eks_default_ami_type_arm
   autoscaler_version   = var.eks_autoscaler_version
-  autoscaler_replicas  = var.autoscaler_replicas
+  autoscaler_replicas  = coalesce(var.eks_autoscaler_replicas, var.autoscaler_replicas)
   node_pools           = var.eks_node_pools
-  tags                 = var.eks_tags
-  enable_nat_gateway   = var.eks_enable_nat_gateway
+  tags                       = var.eks_tags
+  enable_nat_gateway         = var.eks_enable_nat_gateway
+  single_nat_gateway         = var.eks_single_nat_gateway
+  endpoint_public_access     = var.eks_endpoint_public_access
+  enable_secrets_encryption  = var.eks_enable_secrets_encryption
+  cluster_enabled_log_types  = var.eks_cluster_enabled_log_types
 }
 
 module "clickhouse_operator" {
@@ -67,7 +71,7 @@ module "clickhouse_cluster" {
   clickhouse_cluster_namespace           = var.clickhouse_cluster_namespace
   clickhouse_cluster_password            = var.clickhouse_cluster_password
   clickhouse_cluster_user                = var.clickhouse_cluster_user
-  clickhouse_cluster_instance_type       = var.eks_node_pools[0].instance_type
+  clickhouse_cluster_instance_type       = [for np in var.eks_node_pools : np.instance_type if startswith(np.name, "clickhouse")][0]
   clickhouse_cluster_enable_loadbalancer = var.clickhouse_cluster_enable_loadbalancer
   clickhouse_cluster_chart_version       = var.clickhouse_cluster_chart_version
   clickhouse_keeper_chart_version        = var.clickhouse_keeper_chart_version

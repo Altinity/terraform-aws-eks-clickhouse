@@ -64,7 +64,7 @@ locals {
           name          = np.name != null ? np.name : np.instance_type
           subnet_id     = local.subnets_by_zone[zone]
           instance_type = np.instance_type
-          labels        = merge(np.labels, local.labels)
+          labels        = merge(coalesce(np.labels, {}), local.labels)
           taints        = startswith(np.name, local.CLICKHOUSE_NODE_POOL_PREFIX) ? concat(np.taints, local.clickhouse_taints) : np.taints
 
           desired_size = np.desired_size == null ? (
@@ -95,6 +95,17 @@ locals {
 data "aws_subnet" "subnets" {
   for_each = { for idx, subnet_id in local.subnets : idx => subnet_id }
   id       = each.value
+
+  lifecycle {
+    precondition {
+      condition     = length(var.public_cidr) == length(var.availability_zones)
+      error_message = "The number of public CIDRs (${length(var.public_cidr)}) must match the number of availability zones (${length(var.availability_zones)})."
+    }
+    precondition {
+      condition     = !var.enable_nat_gateway || length(var.private_cidr) == length(var.availability_zones)
+      error_message = "The number of private CIDRs (${length(var.private_cidr)}) must match the number of availability zones (${length(var.availability_zones)})."
+    }
+  }
 }
 
 module "eks" {
@@ -152,8 +163,15 @@ module "eks" {
   } }
 
   cluster_endpoint_private_access      = true
-  cluster_endpoint_public_access       = true
+  cluster_endpoint_public_access       = var.endpoint_public_access
   cluster_endpoint_public_access_cidrs = var.public_access_cidrs
+
+  # Secrets encryption
+  create_kms_key            = var.enable_secrets_encryption
+  cluster_encryption_config = var.enable_secrets_encryption ? { resources = ["secrets"] } : {}
+
+  # Control plane logging
+  cluster_enabled_log_types = var.cluster_enabled_log_types
 
   tags = var.tags
 }

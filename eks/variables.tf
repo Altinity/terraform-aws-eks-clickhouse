@@ -46,14 +46,20 @@ variable "availability_zones" {
   description = "List of AWS availability zones"
   type        = list(string)
   default = [
-    "us-east-1",
-    "us-east-2",
-    "us-east-3"
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c"
   ]
 }
 
 variable "enable_nat_gateway" {
-  description = "Enable NAT Gateway and private subnets (recommeded)"
+  description = "Enable NAT Gateway and private subnets (recommended)"
+  type        = bool
+  default     = true
+}
+
+variable "single_nat_gateway" {
+  description = "Use a single NAT Gateway for all AZs. Set to false to create one NAT Gateway per AZ for higher availability"
   type        = bool
   default     = true
 }
@@ -148,6 +154,24 @@ variable "node_pools" {
     ])
     error_message = "Each node pool name must start with either 'clickhouse' or 'system' prefix."
   }
+}
+
+variable "endpoint_public_access" {
+  description = "Enable public access to the EKS cluster API endpoint"
+  type        = bool
+  default     = true
+}
+
+variable "enable_secrets_encryption" {
+  description = "Enable envelope encryption for Kubernetes secrets using a KMS key"
+  type        = bool
+  default     = false
+}
+
+variable "cluster_enabled_log_types" {
+  description = "List of EKS control plane log types to enable. Valid values: api, audit, authenticator, controllerManager, scheduler"
+  type        = list(string)
+  default     = []
 }
 
 variable "public_access_cidrs" {

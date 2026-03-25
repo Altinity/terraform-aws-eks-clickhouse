@@ -119,13 +119,13 @@ variable "eks_default_ami_type_arm" {
 }
 
 variable "eks_autoscaler_replicas" {
-  description = "Number of replicas for AWS Autoscaler"
+  description = "Number of replicas for the cluster autoscaler"
   type        = number
-  default     = 1
+  default     = null
 }
 
 variable "autoscaler_replicas" {
-  description = "Autoscaler replicas"
+  description = "Deprecated: use eks_autoscaler_replicas instead"
   type        = number
   default     = 1
 }
@@ -193,10 +193,21 @@ variable "eks_node_pools" {
     ])
     error_message = "Each node pool name must start with either 'clickhouse' or 'system' prefix."
   }
+
+  validation {
+    condition     = anytrue([for np in var.eks_node_pools : startswith(np.name, "clickhouse")])
+    error_message = "At least one node pool with the 'clickhouse' prefix is required."
+  }
 }
 
 variable "eks_enable_nat_gateway" {
-  description = "Enable NAT Gateway and private subnets (recommeded)"
+  description = "Enable NAT Gateway and private subnets (recommended)"
+  type        = bool
+  default     = true
+}
+
+variable "eks_single_nat_gateway" {
+  description = "Use a single NAT Gateway for all AZs. Set to false to create one NAT Gateway per AZ for higher availability"
   type        = bool
   default     = true
 }
@@ -222,13 +233,31 @@ variable "eks_public_cidr" {
 }
 
 variable "eks_availability_zones" {
-  description = ""
+  description = "List of AWS availability zones for the EKS cluster"
   type        = list(string)
   default = [
     "us-east-1a",
     "us-east-1b",
     "us-east-1c"
   ]
+}
+
+variable "eks_endpoint_public_access" {
+  description = "Enable public access to the EKS cluster API endpoint"
+  type        = bool
+  default     = true
+}
+
+variable "eks_enable_secrets_encryption" {
+  description = "Enable envelope encryption for Kubernetes secrets using a KMS key"
+  type        = bool
+  default     = false
+}
+
+variable "eks_cluster_enabled_log_types" {
+  description = "List of EKS control plane log types to enable. Valid values: api, audit, authenticator, controllerManager, scheduler"
+  type        = list(string)
+  default     = []
 }
 
 variable "eks_public_access_cidrs" {
