@@ -102,10 +102,6 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-}
 
 resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
