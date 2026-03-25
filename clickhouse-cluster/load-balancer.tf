@@ -30,7 +30,7 @@ locals {
 }
 
 
-# This is a "hack" wich waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
+# This is a "hack" which waits for the ClickHouse cluster to receive a hostname from the LoadBalancer service.
 resource "null_resource" "wait_for_clickhouse" {
   depends_on = [helm_release.clickhouse_cluster]
   count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
