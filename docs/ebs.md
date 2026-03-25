@@ -12,7 +12,7 @@ This Terraform module configures the AWS Elastic Block Store (EBS) Container Sto
 - **`module.eks_blueprints_addons`**: Configures the AWS EBS CSI driver as an EKS managed addon via the EKS Blueprints Addons module. This simplifies management and ensures the driver is kept up-to-date with the latest releases and security patches.
 
 ### Kubernetes Storage Class
-- **`kubernetes_storage_class_vi.gp3-encrypted`**: Defines a storage class named `gp3-encrypted`, set as the default class for dynamic volume provisioning:
+- **`kubernetes_storage_class_v1.gp3-encrypted`**: Defines a storage class named `gp3-encrypted`, set as the default class for dynamic volume provisioning:
   - **Type**: `gp3` (latest generation general purpose SSD)
   - **Encryption**: Enabled by default
   - **Filesystem**: `ext4`
