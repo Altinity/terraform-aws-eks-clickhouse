@@ -118,8 +118,14 @@ variable "eks_default_ami_type_arm" {
   default     = "AL2023_ARM_64_STANDARD"
 }
 
-variable "autoscaler_replicas" {
+variable "eks_autoscaler_replicas" {
   description = "Number of replicas for the cluster autoscaler"
+  type        = number
+  default     = null
+}
+
+variable "autoscaler_replicas" {
+  description = "Deprecated: use eks_autoscaler_replicas instead"
   type        = number
   default     = 1
 }

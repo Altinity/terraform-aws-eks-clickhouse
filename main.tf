@@ -43,7 +43,7 @@ module "eks_aws" {
   default_ami_type     = var.eks_default_ami_type
   default_ami_type_arm = var.eks_default_ami_type_arm
   autoscaler_version   = var.eks_autoscaler_version
-  autoscaler_replicas  = var.autoscaler_replicas
+  autoscaler_replicas  = coalesce(var.eks_autoscaler_replicas, var.autoscaler_replicas)
   node_pools           = var.eks_node_pools
   tags                       = var.eks_tags
   enable_nat_gateway         = var.eks_enable_nat_gateway
