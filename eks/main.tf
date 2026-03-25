@@ -152,7 +152,7 @@ module "eks" {
   } }
 
   cluster_endpoint_private_access      = true
-  cluster_endpoint_public_access       = true
+  cluster_endpoint_public_access       = var.endpoint_public_access
   cluster_endpoint_public_access_cidrs = var.public_access_cidrs
 
   # Secrets encryption

@@ -4,19 +4,15 @@ Deploying applications in a production environment necessitates stringent securi
 
 ## Restrict Kubernetes API Access
 
-You can simply restrict the access to the Kubernetes API by setting the module variable `eks_endpoint_public_access` to `false`.
-This will restrict access to the Kubernetes API to the VPC only, **that means that the module needs to be run from within the VPC**.
+You can restrict access to the Kubernetes API by setting the module variable `eks_endpoint_public_access` to `false`:
 
-If you don't want to do that, a possible workaround is to manually change this property using the AWS CLI after the cluster is created.
-
-```sh
-aws eks update-cluster-config \
-  --region <region> \
-  --name <cluster-name> \
-  --resources-vpc-config endpointPublicAccess=false
+```hcl
+eks_endpoint_public_access = false
 ```
 
-> If for some reason you still need to access the Kubernetes API from the public Internet, consider restricting access to specific IP addresses using the `eks_public_access_cidrs` variable.
+This will restrict access to the Kubernetes API to the VPC only, **that means that the module needs to be run from within the VPC**.
+
+> If you still need to access the Kubernetes API from the public Internet, consider restricting access to specific IP addresses using the `eks_public_access_cidrs` variable.
 
 ## Remove Public Load Balancer
 

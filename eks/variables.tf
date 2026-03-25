@@ -150,6 +150,12 @@ variable "node_pools" {
   }
 }
 
+variable "endpoint_public_access" {
+  description = "Enable public access to the EKS cluster API endpoint"
+  type        = bool
+  default     = true
+}
+
 variable "enable_secrets_encryption" {
   description = "Enable envelope encryption for Kubernetes secrets using a KMS key"
   type        = bool

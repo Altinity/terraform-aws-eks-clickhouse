@@ -47,6 +47,7 @@ module "eks_aws" {
   node_pools           = var.eks_node_pools
   tags                       = var.eks_tags
   enable_nat_gateway         = var.eks_enable_nat_gateway
+  endpoint_public_access     = var.eks_endpoint_public_access
   enable_secrets_encryption  = var.eks_enable_secrets_encryption
   cluster_enabled_log_types  = var.eks_cluster_enabled_log_types
 }
