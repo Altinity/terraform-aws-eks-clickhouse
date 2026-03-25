@@ -57,6 +57,13 @@ eks_single_nat_gateway = false
 
 > **Note:** Each NAT Gateway has an hourly cost plus data processing charges. A NAT Gateway per AZ increases networking costs but eliminates a single point of failure.
 
+## Data Backup and Recovery
+
+The default StorageClass (`gp3-encrypted`) uses `reclaimPolicy: Delete`, which means EBS volumes are destroyed when their PVC is deleted. Do not rely on storage reclaim policies for data protection. Instead, implement a proper backup strategy:
+
+- **EBS Snapshots**: Schedule automated snapshots of ClickHouse data volumes via AWS Backup or lifecycle policies.
+- **clickhouse-backup**: Use [clickhouse-backup](https://github.com/Altinity/clickhouse-backup) to create logical or physical backups to S3.
+
 ## Clickhouse Cluster Sharding
 > TBA
 
