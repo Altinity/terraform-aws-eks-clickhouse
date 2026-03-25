@@ -6,16 +6,16 @@ The code is separated in different modules: one for the EKS cluster, one for the
 
 ## Components
 
-This architecture is provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations its suitability for enterprise-level deployments using the following resources:
+This architecture provides a scalable, secure, and efficient environment for running a ClickHouse database on Kubernetes within AWS EKS. The focus on autoscaling, storage management, and proper IAM configurations ensures its suitability for enterprise-level deployments using the following resources:
 
 - **EKS Cluster**: Utilizes AWS Elastic Kubernetes Service to manage Kubernetes clusters. Configuration specifies version, node groups, and IAM roles for cluster operations.
 
-- **VPC and Networking**: Sets up a VPC with public and private subnets, internet gateway, and route tables for network isolation and internet access. Default behaviour will create a NAT gateway and locate the EKS cluster under private subnets. If the NAT gatewway is disabled, cluster's node will be automatically move to public subnets and the private subnets will be ommited or destroyed.
+- **VPC and Networking**: Sets up a VPC with public and private subnets, internet gateway, and route tables for network isolation and internet access. Default behaviour will create a NAT gateway and locate the EKS cluster under private subnets. If the NAT gateway is disabled, cluster nodes will automatically move to public subnets and the private subnets will be omitted.
 
 - **IAM Roles and Policies**: Defines roles and policies for EKS cluster, node groups, and service accounts, facilitating secure interaction with AWS services.
 
 - **ClickHouse Deployment**:
-  - **Operator**: Deploys ClickHouse and its operator using the Altinity helm charts, with configurations for namespace, user, and password (among ohters).
+  - **Operator**: Deploys ClickHouse and its operator using the Altinity helm charts, with configurations for namespace, user, and password (among others).
   - **ClickHouse Keeper**: Configures a ClickHouse Keeper cluster for ClickHouse coordination (deployed in the same ClickHouse namespace).
 
 - **Storage**:
@@ -85,7 +85,7 @@ module "eks_clickhouse" {
     "10.0.103.0/24"
   ]
 
-  # ⚠️ The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+  # ⚠️ The instance type of the first node pool with the "clickhouse" name prefix will be used for the ClickHouse cluster replicas.
   eks_node_pools = [
     {
       name          = "clickhouse"

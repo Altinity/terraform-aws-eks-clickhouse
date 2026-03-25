@@ -30,7 +30,7 @@ module "eks_clickhouse" {
     "10.0.103.0/24"
   ]
 
-  # ⚠️ The instance type of `eks_node_pools` at index `0` will be used for setting up the clickhouse cluster replicas.
+  # ⚠️ The instance type of the first node pool with the "clickhouse" name prefix will be used for the ClickHouse cluster replicas.
   eks_node_pools = [
     {
       name          = "clickhouse"
