@@ -193,6 +193,11 @@ variable "eks_node_pools" {
     ])
     error_message = "Each node pool name must start with either 'clickhouse' or 'system' prefix."
   }
+
+  validation {
+    condition     = anytrue([for np in var.eks_node_pools : startswith(np.name, "clickhouse")])
+    error_message = "At least one node pool with the 'clickhouse' prefix is required."
+  }
 }
 
 variable "eks_enable_nat_gateway" {
