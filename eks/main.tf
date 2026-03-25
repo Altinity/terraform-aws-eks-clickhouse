@@ -86,6 +86,8 @@ locals {
             local.node_pool_defaults.ami_type_arm :
             local.node_pool_defaults.ami_type_x86
           )
+
+          tags = np.tags
         }
       ]
     ]
@@ -155,6 +157,7 @@ module "eks" {
 
     tags = merge(
       var.tags,
+      np.tags,
       {
         "k8s.io/cluster-autoscaler/enabled"             = "true",
         "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"

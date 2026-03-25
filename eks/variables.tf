@@ -117,6 +117,7 @@ variable "node_pools" {
     zones         = optional(list(string))
 
     labels = optional(map(string))
+    tags   = optional(map(string), {})
     taints = optional(list(object({
       key    = string
       value  = string
