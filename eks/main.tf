@@ -95,6 +95,17 @@ locals {
 data "aws_subnet" "subnets" {
   for_each = { for idx, subnet_id in local.subnets : idx => subnet_id }
   id       = each.value
+
+  lifecycle {
+    precondition {
+      condition     = length(var.public_cidr) == length(var.availability_zones)
+      error_message = "The number of public CIDRs (${length(var.public_cidr)}) must match the number of availability zones (${length(var.availability_zones)})."
+    }
+    precondition {
+      condition     = !var.enable_nat_gateway || length(var.private_cidr) == length(var.availability_zones)
+      error_message = "The number of private CIDRs (${length(var.private_cidr)}) must match the number of availability zones (${length(var.availability_zones)})."
+    }
+  }
 }
 
 module "eks" {

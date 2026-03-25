@@ -222,7 +222,7 @@ variable "eks_public_cidr" {
 }
 
 variable "eks_availability_zones" {
-  description = ""
+  description = "List of AWS availability zones for the EKS cluster"
   type        = list(string)
   default = [
     "us-east-1a",
