@@ -36,5 +36,6 @@ output "clickhouse_cluster_url" {
 }
 
 output "cluster_node_pools" {
-  value = module.eks_aws.cluster_node_pools
+  description = "List of node pool configurations created for the EKS cluster"
+  value       = module.eks_aws.cluster_node_pools
 }
