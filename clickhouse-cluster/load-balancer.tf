@@ -38,6 +38,7 @@ resource "null_resource" "wait_for_clickhouse" {
   provisioner "local-exec" {
     command = <<-EOT
       KUBECONFIG_PATH=$(mktemp)
+      trap 'rm -f "$KUBECONFIG_PATH"' EXIT
       cat > "$KUBECONFIG_PATH" <<'KUBECONFIG'
 ${local.kubeconfig}
 KUBECONFIG
