@@ -9,7 +9,7 @@ provider "aws" {
 
 
 module "eks_clickhouse" {
-  source = "github.com/Altinity/terraform-aws-eks-clickhouse"
+  source = "github.com/Altinity/terraform-aws-eks-clickhouse?ref=v0.5.7"
 
   install_clickhouse_operator = false
   install_clickhouse_cluster  = false
