@@ -47,6 +47,16 @@ eks_cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerMan
 
 > **Note:** Control plane logs incur CloudWatch costs. For cost-sensitive environments, start with `["audit", "authenticator"]` as a minimum.
 
+## High Availability NAT Gateway
+
+By default, the module creates a single NAT Gateway shared across all availability zones. If the AZ hosting the NAT Gateway goes down, all nodes in private subnets lose Internet connectivity. For production, create one NAT Gateway per AZ:
+
+```hcl
+eks_single_nat_gateway = false
+```
+
+> **Note:** Each NAT Gateway has an hourly cost plus data processing charges. A NAT Gateway per AZ increases networking costs but eliminates a single point of failure.
+
 ## Clickhouse Cluster Sharding
 > TBA
 

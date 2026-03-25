@@ -190,7 +190,13 @@ variable "eks_node_pools" {
 }
 
 variable "eks_enable_nat_gateway" {
-  description = "Enable NAT Gateway and private subnets (recommeded)"
+  description = "Enable NAT Gateway and private subnets (recommended)"
+  type        = bool
+  default     = true
+}
+
+variable "eks_single_nat_gateway" {
+  description = "Use a single NAT Gateway for all AZs. Set to false to create one NAT Gateway per AZ for higher availability"
   type        = bool
   default     = true
 }
