@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: true
+  commands:
+    terraform-fmt:
+      glob: "*.tf"
+      run: terraform fmt -check -recursive
+    terraform-validate-eks:
+      glob: "eks/*.tf"
+      run: terraform -chdir=eks init -backend=false -no-color > /dev/null 2>&1 && terraform -chdir=eks validate -no-color
+    terraform-validate-clickhouse-operator:
+      glob: "clickhouse-operator/*.tf"
+      run: terraform -chdir=clickhouse-operator init -backend=false -no-color > /dev/null 2>&1 && terraform -chdir=clickhouse-operator validate -no-color
+    terraform-validate-clickhouse-cluster:
+      glob: "clickhouse-cluster/*.tf"
+      run: terraform -chdir=clickhouse-cluster init -backend=false -no-color > /dev/null 2>&1 && terraform -chdir=clickhouse-cluster validate -no-color
+    tflint:
+      glob: "*.tf"
+      run: tflint --init > /dev/null 2>&1 && tflint
+    check-merge-conflict:
+      run: git diff --check HEAD
+    trailing-whitespace:
+      glob: "*.{tf,yml,yaml,md}"
+      run: grep -rn ' $' {staged_files} && exit 1 || exit 0

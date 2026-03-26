@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive
+
+  validate:
+    name: Validate (${{ matrix.module }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - eks
+          - clickhouse-operator
+          - clickhouse-cluster
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform -chdir=${{ matrix.module }} init -backend=false
+      - name: Terraform Validate
+        run: terraform -chdir=${{ matrix.module }} validate
+
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: terraform-linters/setup-tflint@v4
+      - name: Init TFLint
+        run: tflint --init
+      - name: Run TFLint
+        run: tflint
+
+  validate-examples:
+    name: Validate Example (${{ matrix.example }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example:
+          - default
+          - eks-cluster-only
+          - arm-graviton
+          - public-loadbalancer
+          - public-subnets-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform -chdir=examples/${{ matrix.example }} init -backend=false
+      - name: Terraform Validate
+        run: terraform -chdir=examples/${{ matrix.example }} validate
