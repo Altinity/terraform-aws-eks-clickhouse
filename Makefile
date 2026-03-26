@@ -1,7 +1,7 @@
 MODULES := eks clickhouse-operator clickhouse-cluster
 EXAMPLES := default eks-cluster-only arm-graviton public-loadbalancer public-subnets-only
 
-.PHONY: fmt validate lint validate-examples check check-all
+.PHONY: fmt validate lint security validate-examples check check-all
 
 fmt:
 	@find . -name '*.tf' -not -path '*/.terraform/*' -execdir terraform fmt -check {} +
@@ -24,6 +24,9 @@ validate-examples:
 		terraform -chdir=examples/$$e validate -no-color; \
 	done
 
-check: fmt validate lint
+security:
+	trivy config .
+
+check: fmt validate lint security
 
 check-all: check validate-examples

@@ -1,0 +1,9 @@
+# Public EKS access is enabled by default to simplify local development and testing.
+# For production environments, set `eks_endpoint_public_access = false` and
+# restrict `eks_public_access_cidrs` to specific CIDRs.
+AVD-AWS-0040
+AVD-AWS-0041
+
+# Public subnets with auto-assign public IP are used intentionally in some examples.
+# For production, use private subnets or set `map_public_ip_on_launch = false`.
+AVD-AWS-0164
