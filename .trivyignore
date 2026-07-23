@@ -7,3 +7,12 @@ AVD-AWS-0041
 # Public subnets with auto-assign public IP are used intentionally in some examples.
 # For production, use private subnets or set `map_public_ip_on_launch = false`.
 AVD-AWS-0164
+
+# Unrestricted egress on the node/cluster security groups comes from the upstream
+# terraform-aws-modules/eks defaults (egress_all) and is required for image pulls,
+# the EKS API endpoint, and ECR/S3 access. Not patchable from this module.
+AVD-AWS-0104
+
+# Secrets envelope encryption is opt-in via `eks_enable_secrets_encryption`;
+# enabling it by default would create a KMS key and change behavior for existing users.
+AVD-AWS-0039
