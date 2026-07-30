@@ -5,10 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/Altinity/terraform-aws-eks-clickhouse/compare/v0.5.7...HEAD)
+## [0.6.0](https://github.com/Altinity/terraform-aws-eks-clickhouse/compare/v0.5.7...v0.6.0)
 ### Added
 - Identify node AMI type based on instance selection ([383b21f](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/383b21f)).
 - Migrate to EKS 1.34 ([a2e03fa](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/a2e03fa)).
+- Add optional secrets encryption and control plane logging ([6852279](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/6852279)).
+- Add `eks_endpoint_public_access` variable ([9d80e03](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/9d80e03)).
+- Add `eks_single_nat_gateway` variable for HA networking ([2a01854](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/2a01854)).
+- Add `eks_autoscaler_replicas` variable ([7d6235d](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/7d6235d)).
+- Add a CI workflow (fmt, validate, tflint, examples), a Makefile, and pre-commit hooks ([6e549da](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/6e549da)).
+- Add a data backup and recovery section to the prod-ready guide ([0c4a330](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0c4a330)).
+- Add `eks_autoscaler_chart_version` (`autoscaler_chart_version`) variable to pin the cluster-autoscaler Helm chart version ([#35](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/35), [0abd589](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0abd589)).
+- Add an EKS upgrade runbook at `docs/upgrading-eks.md` ([#35](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/35), [0abd589](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0abd589)).
+- Add a trivy security scan job to CI ([#35](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/35), [0abd589](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0abd589)).
 
 ### Changed
 - Bump eks_blueprints_addons to 1.22.0 ([94ff930](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/94ff930)).
@@ -16,6 +25,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump EKS version to 1.33 ([c20336a](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/c20336a)).
 - Improve README and add contributing guide ([5b18c41](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/5b18c41)).
 - Add compatibility note and fixed examples ([82edc95](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/82edc95)).
+- Upgrade exec credential API from v1beta1 to v1 ([7cbc458](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/7cbc458)).
+- Update examples to consume the local module source (`../..`) so CI validates the working tree ([#35](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/35), [0abd589](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0abd589)).
+
+### Deprecated
+- Deprecate `autoscaler_replicas` in favor of `eks_autoscaler_replicas` ([7d6235d](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/7d6235d)).
+
+### Fixed
+- Fix cluster-autoscaler never scaling on EKS 1.34 by pinning the Helm chart to 9.53.0 — the previous chart (9.35.0) shipped a ClusterRole missing `volumeattachments` RBAC, which blocked the autoscaler's informer sync and silently stopped scaling; also ensure `eks_autoscaler_version` actually controls the deployed image via `image_tag_override` (previously silently ignored), and bump the default autoscaler image to 1.34.5 ([#35](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/35), [0abd589](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/0abd589)).
+- Validate node pool zones exist in the configured availability zones ([fb7daec](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/fb7daec)).
+- Correct default availability zones, fix a crash on null node pool labels, and remove a dead variable ([#33](https://github.com/Altinity/terraform-aws-eks-clickhouse/pull/33), [56cd791](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/56cd791)).
+- Resolve ClickHouse instance type by name instead of by index ([26788a2](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/26788a2)).
+- Validate that at least one ClickHouse node pool exists ([5dde29d](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/5dde29d)).
+- Add CIDR and availability zone count validation ([9799fbf](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/9799fbf)).
+- Add `aud` condition to OIDC trust policies ([549c9bf](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/549c9bf)).
+- Use a heredoc instead of `echo` for kubeconfig in the local-exec provisioner ([a11f288](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/a11f288)).
+- Clean up the temporary kubeconfig file in the load-balancer script ([fbcb5b9](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/fbcb5b9)).
+- Remove deprecated `AmazonEKSServicePolicy` attachment ([dbc703c](https://github.com/Altinity/terraform-aws-eks-clickhouse/commit/dbc703c)).
 
 ## [0.5.7](https://github.com/Altinity/terraform-aws-eks-clickhouse/compare/v0.5.6...v0.5.7)
 ### Changed
