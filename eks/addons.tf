@@ -17,7 +17,10 @@ module "eks_blueprints_addons" {
 
   enable_cluster_autoscaler = true
   cluster_autoscaler = {
-    timeout = "300"
+    chart_version = var.autoscaler_chart_version
+    # Required: the module's default image.tag (a Helm `set`, which beats these values) falls back to v<cluster_version>.0
+    image_tag_override = "v${var.autoscaler_version}"
+    timeout            = "300"
     values = [templatefile("${path.module}/helm/cluster-autoscaler.yaml.tpl", {
       aws_region          = var.region,
       eks_cluster_id      = var.cluster_name,

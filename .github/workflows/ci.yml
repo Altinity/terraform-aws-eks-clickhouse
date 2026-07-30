@@ -45,6 +45,19 @@ jobs:
       - name: Run TFLint
         run: tflint
 
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: .
+          exit-code: 1
+          severity: HIGH,CRITICAL
+
   validate-examples:
     name: Validate Example (${{ matrix.example }})
     runs-on: ubuntu-latest

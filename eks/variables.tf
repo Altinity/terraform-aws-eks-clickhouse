@@ -82,7 +82,14 @@ variable "cluster_version" {
 variable "autoscaler_version" {
   description = "Autoscaler version"
   type        = string
-  default     = "1.34.0"
+  default     = "1.34.5"
+}
+
+# Charts < 9.47.0 lack volumeattachments RBAC; CA >= 1.32 blocks on that informer and never scales (kubernetes/autoscaler#7663)
+variable "autoscaler_chart_version" {
+  description = "Cluster autoscaler Helm chart version (must be >= 9.47.0)"
+  type        = string
+  default     = "9.53.0"
 }
 
 variable "default_ami_type" {

@@ -35,6 +35,7 @@ This architecture provides a scalable, secure, and efficient environment for run
 - [K8S Autoscaler](./autoscaler.md)
 - [EBS & CSI Driver](./ebs.md)
 - [ClickHouse](./clickhouse.md)
+- [Upgrading EKS](./upgrading-eks.md)
 
 ## Prerequisites
 
