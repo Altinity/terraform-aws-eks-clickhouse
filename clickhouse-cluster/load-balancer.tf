@@ -66,7 +66,7 @@ KUBECONFIG
   }
 }
 
-data "kubernetes_service" "clickhouse_load_balancer" {
+data "kubernetes_service_v1" "clickhouse_load_balancer" {
   depends_on = [null_resource.wait_for_clickhouse]
   count      = var.clickhouse_cluster_enable_loadbalancer ? 1 : 0
 
